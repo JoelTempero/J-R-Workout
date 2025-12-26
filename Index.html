@@ -20,972 +20,234 @@
             --rachel-secondary: #67e8f9;
             --success: #10b981;
             --warning: #f59e0b;
+            --danger: #ef4444;
             --text-primary: #f1f5f9;
             --text-secondary: #94a3b8;
             --text-muted: #64748b;
             --ring-bg: #2d2d4a;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            font-family: 'Nunito', sans-serif;
-            background: var(--bg-dark);
-            color: var(--text-primary);
-            min-height: 100vh;
-            min-height: 100dvh;
-            overflow-x: hidden;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Nunito', sans-serif; background: var(--bg-dark); color: var(--text-primary); min-height: 100vh; min-height: 100dvh; overflow-x: hidden; }
+        .hidden { display: none !important; }
 
         /* PIN Screen */
-        .pin-screen {
-            position: fixed;
-            inset: 0;
-            background: var(--bg-dark);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            padding: 2rem;
-        }
-
-        .pin-screen.hidden {
-            display: none;
-        }
-
-        .pin-logo {
-            font-family: 'Fredoka', sans-serif;
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, var(--joel-primary), var(--rachel-primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .pin-subtitle {
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-        }
-
-        .pin-dots {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .pin-dot {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: var(--bg-input);
-            border: 2px solid var(--text-muted);
-            transition: all 0.2s;
-        }
-
-        .pin-dot.filled {
-            background: var(--success);
-            border-color: var(--success);
-            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
-        }
-
-        .pin-dot.error {
-            background: #ef4444;
-            border-color: #ef4444;
-            animation: shake 0.5s;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-
-        .pin-keypad {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            max-width: 280px;
-        }
-
-        .pin-key {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            border: none;
-            background: var(--bg-card);
-            color: var(--text-primary);
-            font-size: 1.5rem;
-            font-weight: 600;
-            font-family: 'Nunito', sans-serif;
-            cursor: pointer;
-            transition: all 0.15s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .pin-key:active {
-            transform: scale(0.95);
-            background: var(--bg-input);
-        }
-
-        .pin-key.empty {
-            visibility: hidden;
-        }
-
-        .pin-key.backspace {
-            font-size: 1.2rem;
-        }
+        .pin-screen { position: fixed; inset: 0; background: var(--bg-dark); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; padding: 2rem; }
+        .pin-logo { font-family: 'Fredoka', sans-serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; background: linear-gradient(135deg, var(--joel-primary), var(--rachel-primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .pin-subtitle { color: var(--text-secondary); margin-bottom: 2rem; }
+        .pin-dots { display: flex; gap: 1rem; margin-bottom: 2rem; }
+        .pin-dot { width: 16px; height: 16px; border-radius: 50%; background: var(--bg-input); border: 2px solid var(--text-muted); transition: all 0.2s; }
+        .pin-dot.filled { background: var(--success); border-color: var(--success); box-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
+        .pin-dot.error { background: var(--danger); border-color: var(--danger); animation: shake 0.5s; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        .pin-keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; max-width: 280px; }
+        .pin-key { width: 70px; height: 70px; border-radius: 50%; border: none; background: var(--bg-card); color: var(--text-primary); font-size: 1.5rem; font-weight: 600; font-family: 'Nunito', sans-serif; cursor: pointer; transition: all 0.15s; }
+        .pin-key:active { transform: scale(0.95); background: var(--bg-input); }
+        .pin-key.empty { visibility: hidden; }
 
         /* Profile Selection */
-        .profile-screen {
-            position: fixed;
-            inset: 0;
-            background: var(--bg-dark);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 999;
-            padding: 2rem;
-        }
-
-        .profile-screen.active {
-            display: flex;
-        }
-
-        .profile-title {
-            font-family: 'Fredoka', sans-serif;
-            font-size: 1.5rem;
-            margin-bottom: 2rem;
-            color: var(--text-secondary);
-        }
-
-        .profile-buttons {
-            display: flex;
-            gap: 2rem;
-        }
-
-        .profile-btn {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 4px solid;
-            background: var(--bg-card);
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .profile-btn.joel {
-            border-color: var(--joel-primary);
-        }
-
-        .profile-btn.rachel {
-            border-color: var(--rachel-primary);
-        }
-
-        .profile-btn:hover, .profile-btn:active {
-            transform: scale(1.05);
-        }
-
-        .profile-btn.joel:hover, .profile-btn.joel:active {
-            box-shadow: 0 0 30px rgba(124, 58, 237, 0.4);
-        }
-
-        .profile-btn.rachel:hover, .profile-btn.rachel:active {
-            box-shadow: 0 0 30px rgba(6, 182, 212, 0.4);
-        }
-
-        .profile-icon {
-            font-size: 2.5rem;
-        }
-
-        .profile-name {
-            font-weight: 700;
-            font-size: 1rem;
-        }
-
-        .profile-btn.joel .profile-name {
-            color: var(--joel-secondary);
-        }
-
-        .profile-btn.rachel .profile-name {
-            color: var(--rachel-secondary);
-        }
+        .profile-screen { position: fixed; inset: 0; background: var(--bg-dark); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 999; padding: 2rem; }
+        .profile-screen.active { display: flex; }
+        .profile-title { font-family: 'Fredoka', sans-serif; font-size: 1.5rem; margin-bottom: 2rem; color: var(--text-secondary); }
+        .profile-buttons { display: flex; gap: 2rem; }
+        .profile-btn { width: 120px; height: 120px; border-radius: 50%; border: 4px solid; background: var(--bg-card); cursor: pointer; transition: all 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; }
+        .profile-btn.joel { border-color: var(--joel-primary); }
+        .profile-btn.rachel { border-color: var(--rachel-primary); }
+        .profile-btn:active { transform: scale(1.05); }
+        .profile-icon { font-size: 2.5rem; }
+        .profile-name { font-weight: 700; font-size: 1rem; }
+        .profile-btn.joel .profile-name { color: var(--joel-secondary); }
+        .profile-btn.rachel .profile-name { color: var(--rachel-secondary); }
 
         /* Main App */
-        .app {
-            display: none;
-            flex-direction: column;
-            min-height: 100vh;
-            min-height: 100dvh;
-            padding-bottom: 80px;
-        }
-
-        .app.active {
-            display: flex;
-        }
+        .app { display: none; flex-direction: column; min-height: 100vh; min-height: 100dvh; padding-bottom: 80px; }
+        .app.active { display: flex; }
 
         /* Header */
-        .header {
-            padding: 1rem 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--bg-card);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .current-profile {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .current-profile:active {
-            transform: scale(0.95);
-        }
-
-        .current-profile.joel {
-            background: linear-gradient(135deg, var(--joel-primary), var(--joel-secondary));
-        }
-
-        .current-profile.rachel {
-            background: linear-gradient(135deg, var(--rachel-primary), var(--rachel-secondary));
-        }
-
-        .header-title {
-            font-family: 'Fredoka', sans-serif;
-            font-size: 1.25rem;
-            font-weight: 600;
-        }
-
-        .header-date {
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-        }
+        .header { padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; background: var(--bg-card); border-bottom: 1px solid rgba(255,255,255,0.05); position: sticky; top: 0; z-index: 50; }
+        .header-left { display: flex; align-items: center; gap: 0.75rem; }
+        .current-profile { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; transition: transform 0.2s; }
+        .current-profile:active { transform: scale(0.95); }
+        .current-profile.joel { background: linear-gradient(135deg, var(--joel-primary), var(--joel-secondary)); }
+        .current-profile.rachel { background: linear-gradient(135deg, var(--rachel-primary), var(--rachel-secondary)); }
+        .header-title { font-family: 'Fredoka', sans-serif; font-size: 1.25rem; font-weight: 600; }
+        .header-date { color: var(--text-secondary); font-size: 0.875rem; }
 
         /* Pages */
-        .page {
-            display: none;
-            flex: 1;
-            padding: 1rem;
-            overflow-y: auto;
-        }
+        .page { display: none; flex: 1; padding: 1rem; overflow-y: auto; }
+        .page.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .page.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
+        /* Cards */
+        .card { background: var(--bg-card); border-radius: 16px; padding: 1.25rem; margin-bottom: 1rem; }
+        .card-title { font-family: 'Fredoka', sans-serif; font-size: 1.1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        /* Workouts List */
+        .workout-log-item { background: var(--bg-input); border-radius: 12px; padding: 1rem; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 1rem; }
+        .workout-log-item.joel { border-left: 4px solid var(--joel-primary); }
+        .workout-log-item.rachel { border-left: 4px solid var(--rachel-primary); }
+        .workout-log-icon { font-size: 1.5rem; width: 40px; text-align: center; }
+        .workout-log-details { flex: 1; }
+        .workout-log-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem; }
+        .workout-log-meta { font-size: 0.8rem; color: var(--text-secondary); }
+        .workout-log-actions { display: flex; gap: 0.5rem; }
+        .workout-log-actions button { width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--bg-card); color: var(--text-secondary); font-size: 1rem; cursor: pointer; }
+        .workout-log-actions button:active { transform: scale(0.95); }
+        .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
+        .empty-state-icon { font-size: 3rem; margin-bottom: 1rem; }
 
-        /* Section Cards */
-        .card {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 1.25rem;
-            margin-bottom: 1rem;
-        }
+        /* FAB */
+        .fab { position: fixed; bottom: 100px; right: 1.5rem; width: 60px; height: 60px; border-radius: 50%; border: none; background: var(--success); color: white; font-size: 2rem; cursor: pointer; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4); z-index: 90; }
+        .fab:active { transform: scale(0.95); }
 
-        .card-title {
-            font-family: 'Fredoka', sans-serif;
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+        /* Log Options Modal */
+        .log-options-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: flex-end; z-index: 200; }
+        .log-options-modal.active { display: flex; }
+        .log-options-content { background: var(--bg-card); width: 100%; border-radius: 24px 24px 0 0; padding: 1.5rem; padding-bottom: max(1.5rem, env(safe-area-inset-bottom)); max-height: 70vh; overflow-y: auto; }
+        .log-options-title { font-family: 'Fredoka', sans-serif; font-size: 1.25rem; text-align: center; margin-bottom: 1.5rem; }
+        .log-option-btn { display: flex; align-items: center; gap: 1rem; width: 100%; padding: 1rem; background: var(--bg-input); border: none; border-radius: 12px; color: var(--text-primary); font-family: 'Nunito', sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; margin-bottom: 0.75rem; }
+        .log-option-btn:active { transform: scale(0.98); background: var(--bg-card); }
+        .log-option-btn .icon { font-size: 1.5rem; width: 40px; text-align: center; }
+        .log-option-close { width: 100%; padding: 1rem; margin-top: 0.5rem; background: transparent; border: 2px solid var(--text-muted); border-radius: 12px; color: var(--text-secondary); font-family: 'Fredoka', sans-serif; font-size: 1rem; cursor: pointer; }
 
-        /* Log Workout Page */
-        .datetime-row {
-            display: flex;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-        }
+        /* Log Page */
+        .log-page { position: fixed; inset: 0; background: var(--bg-dark); display: none; flex-direction: column; z-index: 300; overflow-y: auto; }
+        .log-page.active { display: flex; }
+        .log-page-header { padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; background: var(--bg-card); border-bottom: 1px solid rgba(255,255,255,0.05); position: sticky; top: 0; }
+        .log-page-back { width: 40px; height: 40px; border-radius: 50%; border: none; background: var(--bg-input); color: var(--text-primary); font-size: 1.25rem; cursor: pointer; }
+        .log-page-title { font-family: 'Fredoka', sans-serif; font-size: 1.25rem; flex: 1; }
+        .log-page-content { flex: 1; padding: 1rem; padding-bottom: 100px; }
 
-        .datetime-input {
-            flex: 1;
-            background: var(--bg-input);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 0.875rem 1rem;
-            color: var(--text-primary);
-            font-family: 'Nunito', sans-serif;
-            font-size: 1rem;
-        }
+        /* Inputs */
+        .datetime-row { display: flex; gap: 0.75rem; margin-bottom: 1rem; }
+        .datetime-input { flex: 1; background: var(--bg-input); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0.875rem 1rem; color: var(--text-primary); font-family: 'Nunito', sans-serif; font-size: 1rem; }
+        .datetime-input:focus { outline: none; border-color: var(--success); }
 
-        .datetime-input:focus {
-            outline: none;
-            border-color: var(--joel-primary);
-        }
+        /* Exercise Item */
+        .exercise-item { background: var(--bg-input); border-radius: 12px; padding: 1rem; margin-bottom: 0.75rem; }
+        .exercise-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+        .exercise-name { font-weight: 700; }
+        .exercise-toggle { width: 50px; height: 28px; border-radius: 14px; background: var(--ring-bg); border: none; cursor: pointer; position: relative; transition: background 0.2s; }
+        .exercise-toggle.active { background: var(--success); }
+        .exercise-toggle::after { content: ''; position: absolute; width: 22px; height: 22px; border-radius: 50%; background: white; top: 3px; left: 3px; transition: transform 0.2s; }
+        .exercise-toggle.active::after { transform: translateX(22px); }
+        .exercise-inputs { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .exercise-inputs.disabled { opacity: 0.4; pointer-events: none; }
+        .input-group { display: flex; flex-direction: column; gap: 0.25rem; }
+        .input-group label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
+        .input-group input { width: 70px; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 0.5rem; color: var(--text-primary); font-family: 'Nunito', sans-serif; font-size: 1rem; text-align: center; }
+        .input-group input:focus { outline: none; border-color: var(--success); }
 
-        .workout-types {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.75rem;
-        }
-
-        .workout-type {
-            background: var(--bg-input);
-            border: 2px solid transparent;
-            border-radius: 12px;
-            padding: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .workout-type:active {
-            transform: scale(0.98);
-        }
-
-        .workout-type.selected {
-            border-color: var(--success);
-            background: rgba(16, 185, 129, 0.1);
-        }
-
-        .workout-type .icon {
-            font-size: 1.5rem;
-        }
-
-        .workout-type .label {
-            font-weight: 600;
-        }
-
-        .checkbox {
-            width: 22px;
-            height: 22px;
-            border-radius: 6px;
-            border: 2px solid var(--text-muted);
-            margin-left: auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-
-        .workout-type.selected .checkbox {
-            background: var(--success);
-            border-color: var(--success);
-        }
-
-        .checkbox::after {
-            content: '✓';
-            color: white;
-            font-size: 0.875rem;
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        .workout-type.selected .checkbox::after {
-            opacity: 1;
-        }
-
-        /* Weight Inputs */
-        .weight-inputs {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .weight-row {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            background: var(--bg-input);
-            border-radius: 12px;
-            padding: 0.875rem 1rem;
-        }
-
-        .weight-row .icon {
-            font-size: 1.25rem;
-        }
-
-        .weight-row label {
-            flex: 1;
-            font-weight: 600;
-        }
-
-        .weight-row input {
-            width: 80px;
-            background: var(--bg-card);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px;
-            padding: 0.5rem;
-            color: var(--text-primary);
-            font-family: 'Nunito', sans-serif;
-            font-size: 1rem;
-            text-align: center;
-        }
-
-        .weight-row input:focus {
-            outline: none;
-            border-color: var(--joel-primary);
-        }
-
-        .weight-row .unit {
-            color: var(--text-muted);
-            font-size: 0.875rem;
-            width: 24px;
-        }
+        /* Simple Input Row */
+        .simple-input-row { display: flex; align-items: center; gap: 1rem; background: var(--bg-input); border-radius: 12px; padding: 1rem; }
+        .simple-input-row .icon { font-size: 1.5rem; }
+        .simple-input-row label { flex: 1; font-weight: 600; }
+        .simple-input-row input { width: 100px; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 0.75rem; color: var(--text-primary); font-family: 'Nunito', sans-serif; font-size: 1.1rem; text-align: center; }
+        .simple-input-row input:focus { outline: none; border-color: var(--success); }
+        .simple-input-row .unit { color: var(--text-muted); width: 40px; }
 
         /* Submit Button */
-        .submit-btn {
-            width: 100%;
-            padding: 1rem;
-            border: none;
-            border-radius: 12px;
-            font-family: 'Fredoka', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-top: 1rem;
-        }
+        .submit-btn { position: fixed; bottom: 0; left: 0; right: 0; padding: 1rem; padding-bottom: max(1rem, env(safe-area-inset-bottom)); background: var(--bg-card); border-top: 1px solid rgba(255,255,255,0.05); }
+        .submit-btn button { width: 100%; padding: 1rem; border: none; border-radius: 12px; font-family: 'Fredoka', sans-serif; font-size: 1.1rem; font-weight: 600; cursor: pointer; }
+        .submit-btn button.joel { background: linear-gradient(135deg, var(--joel-primary), #9333ea); color: white; }
+        .submit-btn button.rachel { background: linear-gradient(135deg, var(--rachel-primary), #0891b2); color: white; }
+        .submit-btn button:active { transform: scale(0.98); }
+        .submit-btn button:disabled { opacity: 0.5; }
 
-        .submit-btn.joel {
-            background: linear-gradient(135deg, var(--joel-primary), #9333ea);
-            color: white;
-        }
+        /* Calendar */
+        .calendar-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+        .calendar-nav button { background: var(--bg-input); border: none; color: var(--text-primary); width: 40px; height: 40px; border-radius: 50%; font-size: 1.25rem; cursor: pointer; }
+        .calendar-nav button:active { background: var(--bg-card); }
+        .calendar-month { font-family: 'Fredoka', sans-serif; font-size: 1.25rem; }
+        .calendar-filter { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .calendar-filter button { padding: 0.5rem 0.75rem; border: 2px solid var(--text-muted); border-radius: 20px; background: transparent; color: var(--text-secondary); font-family: 'Nunito', sans-serif; font-weight: 600; font-size: 0.75rem; cursor: pointer; }
+        .calendar-filter button.active { border-color: var(--success); background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .calendar-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; margin-bottom: 0.5rem; }
+        .calendar-weekdays span { color: var(--text-muted); font-size: 0.75rem; font-weight: 600; padding: 0.5rem 0; }
+        .calendar-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.25rem; }
+        .calendar-day { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0.25rem; }
+        .calendar-day .date { font-size: 0.875rem; font-weight: 600; margin-bottom: 0.25rem; }
+        .calendar-day.empty .date { color: var(--text-muted); opacity: 0.3; }
+        .calendar-day.today .date { color: var(--success); }
+        .calendar-day .indicators { display: flex; gap: 2px; flex-wrap: wrap; justify-content: center; max-width: 100%; }
+        .half-circle { width: 14px; height: 7px; border-radius: 0 0 14px 14px; opacity: 0.9; }
+        .half-circle.joel { background: var(--joel-primary); }
+        .half-circle.rachel { background: var(--rachel-primary); }
+        .calendar-legend { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); justify-content: center; }
+        .legend-item { display: flex; align-items: center; gap: 0.35rem; font-size: 0.75rem; color: var(--text-secondary); }
+        .legend-half { width: 12px; height: 6px; border-radius: 0 0 12px 12px; }
 
-        .submit-btn.rachel {
-            background: linear-gradient(135deg, var(--rachel-primary), #0891b2);
-            color: white;
-        }
+        /* Tracking */
+        .time-filter { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+        .time-filter button { flex: 1; padding: 0.625rem; border: none; border-radius: 8px; background: var(--bg-input); color: var(--text-secondary); font-family: 'Nunito', sans-serif; font-weight: 600; font-size: 0.875rem; cursor: pointer; }
+        .time-filter button.active { background: var(--success); color: white; }
+        .chart-container { height: 200px; margin: 1rem 0; }
+        .chart-canvas { width: 100%; height: 100%; }
+        .tracking-selector { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+        .tracking-selector button { padding: 0.5rem 0.75rem; border: 2px solid var(--text-muted); border-radius: 20px; background: transparent; color: var(--text-secondary); font-family: 'Nunito', sans-serif; font-weight: 600; font-size: 0.8rem; cursor: pointer; }
+        .tracking-selector button.active { border-color: var(--success); background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .metric-selector { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+        .metric-selector button { padding: 0.4rem 0.6rem; border: 1px solid var(--text-muted); border-radius: 8px; background: transparent; color: var(--text-muted); font-size: 0.7rem; cursor: pointer; }
+        .metric-selector button.active { border-color: var(--joel-primary); color: var(--joel-primary); }
 
-        .submit-btn:active {
-            transform: scale(0.98);
-        }
-
-        .submit-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* Calendar Page */
-        .calendar-nav {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-        }
-
-        .calendar-nav button {
-            background: var(--bg-input);
-            border: none;
-            color: var(--text-primary);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            font-size: 1.25rem;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .calendar-nav button:active {
-            background: var(--bg-card);
-        }
-
-        .calendar-month {
-            font-family: 'Fredoka', sans-serif;
-            font-size: 1.25rem;
-        }
-
-        .calendar-weekdays {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            text-align: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .calendar-weekdays span {
-            color: var(--text-muted);
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 0.5rem 0;
-        }
-
-        .calendar-days {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 0.5rem;
-        }
-
-        .calendar-day {
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        .calendar-day .ring {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        .calendar-day .ring svg {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            transform: rotate(-90deg);
-        }
-
-        .calendar-day .ring circle {
-            fill: none;
-            stroke-width: 3;
-        }
-
-        .calendar-day .ring .bg {
-            stroke: var(--ring-bg);
-        }
-
-        .calendar-day .ring .joel-ring {
-            stroke: var(--joel-primary);
-            stroke-linecap: round;
-            transition: stroke-dashoffset 0.5s ease;
-        }
-
-        .calendar-day .ring .rachel-ring {
-            stroke: var(--rachel-primary);
-            stroke-linecap: round;
-            transition: stroke-dashoffset 0.5s ease;
-        }
-
-        .calendar-day .date {
-            font-size: 0.875rem;
-            font-weight: 600;
-            z-index: 1;
-        }
-
-        .calendar-day.empty .date {
-            color: var(--text-muted);
-            opacity: 0.3;
-        }
-
-        .calendar-day.today .date {
-            color: var(--success);
-        }
-
-        .calendar-legend {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-        }
-
-        .legend-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-
-        .legend-dot.joel {
-            background: var(--joel-primary);
-        }
-
-        .legend-dot.rachel {
-            background: var(--rachel-primary);
-        }
-
-        /* Tracking Page */
-        .time-filter {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .time-filter button {
-            flex: 1;
-            padding: 0.625rem;
-            border: none;
-            border-radius: 8px;
-            background: var(--bg-input);
-            color: var(--text-secondary);
-            font-family: 'Nunito', sans-serif;
-            font-weight: 600;
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .time-filter button.active {
-            background: var(--success);
-            color: white;
-        }
-
-        .chart-container {
-            height: 200px;
-            margin: 1rem 0;
-            position: relative;
-        }
-
-        .chart-canvas {
-            width: 100%;
-            height: 100%;
-        }
-
-        .weight-selector {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .weight-selector button {
-            padding: 0.5rem 1rem;
-            border: 2px solid var(--text-muted);
-            border-radius: 20px;
-            background: transparent;
-            color: var(--text-secondary);
-            font-family: 'Nunito', sans-serif;
-            font-weight: 600;
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .weight-selector button.active {
-            border-color: var(--success);
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success);
-        }
-
-        /* Rewards Page */
-        .reward-card {
-            background: var(--bg-input);
-            border-radius: 12px;
-            padding: 1rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .reward-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 0.75rem;
-        }
-
-        .reward-title {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 600;
-        }
-
-        .reward-title .icon {
-            font-size: 1.25rem;
-        }
-
-        .reward-count {
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-        }
-
-        .progress-bar {
-            height: 12px;
-            background: var(--ring-bg);
-            border-radius: 6px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .progress-fill {
-            height: 100%;
-            border-radius: 6px;
-            transition: width 0.5s ease;
-        }
-
-        .progress-fill.joel {
-            background: linear-gradient(90deg, var(--joel-primary), var(--joel-secondary));
-        }
-
-        .progress-fill.rachel {
-            background: linear-gradient(90deg, var(--rachel-primary), var(--rachel-secondary));
-        }
-
-        .reward-milestone {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 0.5rem;
-            text-align: right;
-        }
-
-        .awards-grid {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            margin-top: 0.75rem;
-        }
-
-        .award-badge {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-        }
-
-        .award-badge.joel {
-            background: linear-gradient(135deg, var(--joel-primary), var(--joel-secondary));
-        }
-
-        .award-badge.rachel {
-            background: linear-gradient(135deg, var(--rachel-primary), var(--rachel-secondary));
-        }
-
-        .award-badge.locked {
-            background: var(--ring-bg);
-            opacity: 0.4;
-        }
+        /* Rewards */
+        .reward-card { background: var(--bg-input); border-radius: 12px; padding: 1rem; margin-bottom: 0.75rem; }
+        .reward-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+        .reward-title { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; }
+        .reward-count { color: var(--text-secondary); font-size: 0.875rem; }
+        .progress-bar { height: 12px; background: var(--ring-bg); border-radius: 6px; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 6px; transition: width 0.5s ease; }
+        .progress-fill.joel { background: linear-gradient(90deg, var(--joel-primary), var(--joel-secondary)); }
+        .progress-fill.rachel { background: linear-gradient(90deg, var(--rachel-primary), var(--rachel-secondary)); }
+        .reward-milestone { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem; text-align: right; }
+        .awards-grid { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem; }
+        .award-badge { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+        .award-badge.joel { background: linear-gradient(135deg, var(--joel-primary), var(--joel-secondary)); }
+        .award-badge.rachel { background: linear-gradient(135deg, var(--rachel-primary), var(--rachel-secondary)); }
+        .award-badge.locked { background: var(--ring-bg); opacity: 0.4; }
 
         /* Bottom Nav */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--bg-card);
-            border-top: 1px solid rgba(255,255,255,0.05);
-            display: flex;
-            justify-content: space-around;
-            padding: 0.5rem 0;
-            padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
-            z-index: 100;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.25rem;
-            padding: 0.5rem 1rem;
-            border: none;
-            background: none;
-            color: var(--text-muted);
-            font-family: 'Nunito', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        .nav-item .icon {
-            font-size: 1.5rem;
-        }
-
-        .nav-item.active {
-            color: var(--success);
-        }
-
-        .nav-item.add-btn {
-            background: var(--success);
-            color: white;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            margin-top: -1.5rem;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
-            justify-content: center;
-            padding: 0;
-        }
-
-        .nav-item.add-btn .icon {
-            font-size: 2rem;
-        }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-card); border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; padding: 0.5rem 0; padding-bottom: max(0.5rem, env(safe-area-inset-bottom)); z-index: 100; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; padding: 0.5rem 1rem; border: none; background: none; color: var(--text-muted); font-family: 'Nunito', sans-serif; font-size: 0.7rem; font-weight: 600; cursor: pointer; }
+        .nav-item .icon { font-size: 1.5rem; }
+        .nav-item.active { color: var(--success); }
 
         /* Toast */
-        .toast {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: var(--success);
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            font-weight: 600;
-            opacity: 0;
-            transition: all 0.3s;
-            z-index: 200;
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
+        .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--success); color: white; padding: 1rem 1.5rem; border-radius: 12px; font-weight: 600; opacity: 0; transition: all 0.3s; z-index: 400; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4); }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .toast.error { background: var(--danger); }
 
         /* Sync Status */
-        .sync-status {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: transparent;
-            z-index: 300;
-        }
+        .sync-status { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 500; }
+        .sync-status.syncing { background: linear-gradient(90deg, transparent, var(--success), transparent); animation: syncPulse 1.5s infinite; }
+        @keyframes syncPulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
 
-        .sync-status.syncing {
-            background: linear-gradient(90deg, transparent, var(--success), transparent);
-            animation: syncPulse 1.5s infinite;
-        }
-
-        @keyframes syncPulse {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
-        }
-
-        /* Settings Modal */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.7);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 500;
-            padding: 1rem;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal {
-            background: var(--bg-card);
-            border-radius: 20px;
-            padding: 1.5rem;
-            width: 100%;
-            max-width: 340px;
-        }
-
-        .modal-title {
-            font-family: 'Fredoka', sans-serif;
-            font-size: 1.25rem;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-
-        .modal-input {
-            width: 100%;
-            background: var(--bg-input);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 0.875rem 1rem;
-            color: var(--text-primary);
-            font-family: 'Nunito', sans-serif;
-            font-size: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .modal-input:focus {
-            outline: none;
-            border-color: var(--success);
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 0.75rem;
-        }
-
-        .modal-btn {
-            flex: 1;
-            padding: 0.875rem;
-            border: none;
-            border-radius: 12px;
-            font-family: 'Fredoka', sans-serif;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .modal-btn.cancel {
-            background: var(--bg-input);
-            color: var(--text-secondary);
-        }
-
-        .modal-btn.save {
-            background: var(--success);
-            color: white;
-        }
-
-        .modal-btn:active {
-            transform: scale(0.98);
-        }
-
-        /* Loading spinner */
-        .loading {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid var(--ring-bg);
-            border-top-color: var(--success);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        /* Modal */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 500; padding: 1rem; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: var(--bg-card); border-radius: 20px; padding: 1.5rem; width: 100%; max-width: 380px; max-height: 80vh; overflow-y: auto; }
+        .modal-title { font-family: 'Fredoka', sans-serif; font-size: 1.25rem; margin-bottom: 1.5rem; text-align: center; }
+        .modal-section { margin-bottom: 1.5rem; }
+        .modal-section-title { font-weight: 700; font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.75rem; text-transform: uppercase; }
+        .modal-input { width: 100%; background: var(--bg-input); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0.875rem 1rem; color: var(--text-primary); font-family: 'Nunito', sans-serif; font-size: 1rem; margin-bottom: 0.75rem; }
+        .modal-input:focus { outline: none; border-color: var(--success); }
+        .modal-buttons { display: flex; gap: 0.75rem; }
+        .modal-btn { flex: 1; padding: 0.875rem; border: none; border-radius: 12px; font-family: 'Fredoka', sans-serif; font-weight: 600; cursor: pointer; }
+        .modal-btn.cancel { background: var(--bg-input); color: var(--text-secondary); }
+        .modal-btn.save { background: var(--success); color: white; }
+        .modal-btn.danger { background: var(--danger); color: white; }
+        .modal-btn:active { transform: scale(0.98); }
+        .confirm-text { text-align: center; margin-bottom: 1.5rem; color: var(--text-secondary); }
+        .settings-tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+        .settings-tab { flex: 1; padding: 0.6rem; border: none; border-radius: 8px; background: var(--bg-input); color: var(--text-secondary); font-family: 'Nunito', sans-serif; font-weight: 600; font-size: 0.8rem; cursor: pointer; }
+        .settings-tab.active { background: var(--success); color: white; }
+        .settings-panel { display: none; }
+        .settings-panel.active { display: block; }
+        .base-setting-row { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem; background: var(--bg-input); border-radius: 8px; margin-bottom: 0.5rem; }
+        .base-setting-row label { font-size: 0.875rem; }
+        .base-setting-row input { width: 80px; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 0.4rem; color: var(--text-primary); font-family: 'Nunito', sans-serif; font-size: 0.875rem; text-align: center; }
     </style>
 </head>
 <body>
-    <!-- Sync Status Bar -->
     <div class="sync-status" id="syncStatus"></div>
 
     <!-- PIN Screen -->
@@ -993,10 +255,7 @@
         <div class="pin-logo">J&R Workout</div>
         <div class="pin-subtitle">Enter PIN to continue</div>
         <div class="pin-dots" id="pinDots">
-            <div class="pin-dot"></div>
-            <div class="pin-dot"></div>
-            <div class="pin-dot"></div>
-            <div class="pin-dot"></div>
+            <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
         </div>
         <div class="pin-keypad">
             <button class="pin-key" data-num="1">1</button>
@@ -1010,7 +269,7 @@
             <button class="pin-key" data-num="9">9</button>
             <button class="pin-key empty"></button>
             <button class="pin-key" data-num="0">0</button>
-            <button class="pin-key backspace" data-action="back">⌫</button>
+            <button class="pin-key" data-action="back">⌫</button>
         </div>
     </div>
 
@@ -1031,10 +290,9 @@
 
     <!-- Main App -->
     <div class="app" id="app">
-        <!-- Header -->
         <header class="header">
             <div class="header-left">
-                <div class="current-profile" id="currentProfile" title="Switch profile">💪</div>
+                <div class="current-profile" id="currentProfile">💪</div>
                 <div>
                     <div class="header-title" id="headerTitle">Hey Joel!</div>
                     <div class="header-date" id="headerDate"></div>
@@ -1042,77 +300,18 @@
             </div>
         </header>
 
-        <!-- Log Workout Page -->
-        <div class="page active" id="pageLog">
+        <!-- Workouts Page -->
+        <div class="page active" id="pageWorkouts">
             <div class="card">
-                <div class="card-title">📅 Date & Time</div>
-                <div class="datetime-row">
-                    <input type="date" class="datetime-input" id="workoutDate">
-                    <input type="time" class="datetime-input" id="workoutTime">
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">🏋️ Workout Type</div>
-                <div class="workout-types" id="workoutTypes">
-                    <div class="workout-type" data-type="walk">
-                        <span class="icon">🚶</span>
-                        <span class="label">Walk</span>
-                        <div class="checkbox"></div>
-                    </div>
-                    <div class="workout-type" data-type="run">
-                        <span class="icon">🏃</span>
-                        <span class="label">Run</span>
-                        <div class="checkbox"></div>
-                    </div>
-                    <div class="workout-type" data-type="treadmill">
-                        <span class="icon">🎽</span>
-                        <span class="label">Treadmill</span>
-                        <div class="checkbox"></div>
-                    </div>
-                    <div class="workout-type" data-type="upper">
-                        <span class="icon">💪</span>
-                        <span class="label">Upper Body</span>
-                        <div class="checkbox"></div>
-                    </div>
-                    <div class="workout-type" data-type="lower">
-                        <span class="icon">🦵</span>
-                        <span class="label">Lower Body</span>
-                        <div class="checkbox"></div>
-                    </div>
-                    <div class="workout-type" data-type="core">
-                        <span class="icon">🎯</span>
-                        <span class="label">Core</span>
-                        <div class="checkbox"></div>
+                <div class="card-title">📋 Your Workouts</div>
+                <div id="workoutsList">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🏋️</div>
+                        <p>No workouts logged yet</p>
+                        <p style="font-size: 0.875rem; margin-top: 0.5rem;">Tap + to log your first workout!</p>
                     </div>
                 </div>
             </div>
-
-            <div class="card">
-                <div class="card-title">⚖️ Log Weight Increase</div>
-                <div class="weight-inputs">
-                    <div class="weight-row">
-                        <span class="icon">🧍</span>
-                        <label>Body Weight</label>
-                        <input type="number" id="bodyWeight" step="0.1" placeholder="—">
-                        <span class="unit">kg</span>
-                    </div>
-                    <div class="weight-row">
-                        <span class="icon">🏋️</span>
-                        <label>Dumbbell</label>
-                        <input type="number" id="dumbbellWeight" step="0.5" placeholder="—">
-                        <span class="unit">kg</span>
-                    </div>
-                    <div class="weight-row">
-                        <span class="icon">🏋️‍♂️</span>
-                        <label>Barbell</label>
-                        <input type="number" id="barbellWeight" step="0.5" placeholder="—">
-                        <span class="unit">kg</span>
-                    </div>
-                </div>
-            </div>
-
-            <button class="submit-btn joel" id="submitBtn">Log Workout 🎉</button>
         </div>
 
         <!-- Calendar Page -->
@@ -1123,19 +322,23 @@
                     <span class="calendar-month" id="calendarMonth">December 2025</span>
                     <button id="nextMonth">›</button>
                 </div>
+                <div class="calendar-filter" id="calendarFilter">
+                    <button data-filter="all" class="active">All</button>
+                    <button data-filter="sidon">🐕 Sidon</button>
+                    <button data-filter="steps">👟 Steps</button>
+                    <button data-filter="upper">💪 Upper</button>
+                    <button data-filter="lower">🦵 Lower</button>
+                    <button data-filter="core">🎯 Core</button>
+                    <button data-filter="custom">⚡ Custom</button>
+                    <button data-filter="weight">⚖️ Weight</button>
+                </div>
                 <div class="calendar-weekdays">
                     <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
                 </div>
                 <div class="calendar-days" id="calendarDays"></div>
                 <div class="calendar-legend">
-                    <div class="legend-item">
-                        <div class="legend-dot joel"></div>
-                        <span>Joel</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-dot rachel"></div>
-                        <span>Rachel</span>
-                    </div>
+                    <div class="legend-item"><div class="legend-half" style="background:var(--joel-primary)"></div><span>Joel</span></div>
+                    <div class="legend-item"><div class="legend-half" style="background:var(--rachel-primary)"></div><span>Rachel</span></div>
                 </div>
             </div>
         </div>
@@ -1143,30 +346,32 @@
         <!-- Tracking Page -->
         <div class="page" id="pageTracking">
             <div class="card">
-                <div class="card-title">📈 Weight Progress</div>
+                <div class="card-title">📈 Progress Tracking</div>
                 <div class="time-filter" id="timeFilter">
                     <button data-range="week" class="active">Week</button>
                     <button data-range="month">Month</button>
                     <button data-range="year">Year</button>
                     <button data-range="all">All</button>
                 </div>
-                <div class="weight-selector" id="weightSelector">
-                    <button data-type="body" class="active">Body</button>
-                    <button data-type="dumbbell">Dumbbell</button>
-                    <button data-type="barbell">Barbell</button>
+                <div class="tracking-selector" id="trackingSelector">
+                    <button data-track="bodyWeight" class="active">⚖️ Body</button>
+                    <button data-track="steps">👟 Steps</button>
+                    <button data-track="sidon">🐕 Sidon</button>
+                    <button data-track="upper">💪 Upper</button>
+                    <button data-track="lower">🦵 Lower</button>
+                    <button data-track="core">🎯 Core</button>
+                </div>
+                <div class="metric-selector" id="metricSelector" style="display:none;">
+                    <button data-metric="weight" class="active">Weight</button>
+                    <button data-metric="reps">Reps</button>
+                    <button data-metric="sets">Sets</button>
                 </div>
                 <div class="chart-container">
-                    <canvas class="chart-canvas" id="weightChart"></canvas>
+                    <canvas class="chart-canvas" id="trackingChart"></canvas>
                 </div>
                 <div class="calendar-legend">
-                    <div class="legend-item">
-                        <div class="legend-dot joel"></div>
-                        <span>Joel</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-dot rachel"></div>
-                        <span>Rachel</span>
-                    </div>
+                    <div class="legend-item"><div class="legend-half" style="background:var(--joel-primary)"></div><span>Joel</span></div>
+                    <div class="legend-item"><div class="legend-half" style="background:var(--rachel-primary)"></div><span>Rachel</span></div>
                 </div>
             </div>
         </div>
@@ -1175,75 +380,81 @@
         <div class="page" id="pageRewards">
             <div class="card">
                 <div class="card-title">🏆 Your Progress</div>
-                
                 <div class="reward-card">
                     <div class="reward-header">
-                        <div class="reward-title">
-                            <span class="icon">📝</span>
-                            <span>Workout Logs</span>
-                        </div>
+                        <div class="reward-title"><span>📝</span><span>Workout Logs</span></div>
                         <span class="reward-count" id="workoutCount">0 / 25</span>
                     </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill joel" id="workoutProgress" style="width: 0%"></div>
-                    </div>
+                    <div class="progress-bar"><div class="progress-fill joel" id="workoutProgress" style="width: 0%"></div></div>
                     <div class="reward-milestone">Next reward at 25 workouts</div>
                     <div class="awards-grid" id="workoutAwards"></div>
                 </div>
-
                 <div class="reward-card">
                     <div class="reward-header">
-                        <div class="reward-title">
-                            <span class="icon">⚖️</span>
-                            <span>Body Weight Gains</span>
-                        </div>
+                        <div class="reward-title"><span>⚖️</span><span>Body Weight Gains</span></div>
                         <span class="reward-count" id="bodyWeightCount">0 kg gained</span>
                     </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill joel" id="bodyWeightProgress" style="width: 0%"></div>
-                    </div>
+                    <div class="progress-bar"><div class="progress-fill joel" id="bodyWeightProgress" style="width: 0%"></div></div>
                     <div class="reward-milestone">Next reward at 1 kg</div>
                     <div class="awards-grid" id="bodyWeightAwards"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Bottom Navigation -->
+        <button class="fab" id="fabBtn">+</button>
+
         <nav class="bottom-nav">
-            <button class="nav-item" data-page="pageCalendar">
-                <span class="icon">📅</span>
-                <span>Calendar</span>
-            </button>
-            <button class="nav-item" data-page="pageTracking">
-                <span class="icon">📊</span>
-                <span>Stats</span>
-            </button>
-            <button class="nav-item add-btn" data-page="pageLog">
-                <span class="icon">+</span>
-            </button>
-            <button class="nav-item" data-page="pageRewards">
-                <span class="icon">🏆</span>
-                <span>Rewards</span>
-            </button>
-            <button class="nav-item" id="settingsBtn">
-                <span class="icon">⚙️</span>
-                <span>Settings</span>
-            </button>
+            <button class="nav-item active" data-page="pageWorkouts"><span class="icon">🏠</span><span>Workouts</span></button>
+            <button class="nav-item" data-page="pageCalendar"><span class="icon">📅</span><span>Calendar</span></button>
+            <button class="nav-item" data-page="pageTracking"><span class="icon">📊</span><span>Stats</span></button>
+            <button class="nav-item" data-page="pageRewards"><span class="icon">🏆</span><span>Rewards</span></button>
+            <button class="nav-item" id="settingsBtn"><span class="icon">⚙️</span><span>Settings</span></button>
         </nav>
     </div>
 
-    <!-- Toast -->
-    <div class="toast" id="toast">Workout logged! 💪</div>
+    <!-- Log Options Modal -->
+    <div class="log-options-modal" id="logOptionsModal">
+        <div class="log-options-content">
+            <div class="log-options-title">What are you logging?</div>
+            <button class="log-option-btn" data-log="sidon"><span class="icon">🐕</span> Sidon Walk</button>
+            <button class="log-option-btn" data-log="steps"><span class="icon">👟</span> Step Count</button>
+            <button class="log-option-btn" data-log="upper"><span class="icon">💪</span> Upper Body</button>
+            <button class="log-option-btn" data-log="lower"><span class="icon">🦵</span> Lower Body</button>
+            <button class="log-option-btn" data-log="core"><span class="icon">🎯</span> Core</button>
+            <button class="log-option-btn" data-log="custom"><span class="icon">⚡</span> Custom Workout</button>
+            <button class="log-option-btn" data-log="weight"><span class="icon">⚖️</span> Log Weight</button>
+            <button class="log-option-close" id="closeLogOptions">Cancel</button>
+        </div>
+    </div>
+
+    <div id="logPages"></div>
+    <div class="toast" id="toast"></div>
 
     <!-- Settings Modal -->
     <div class="modal-overlay" id="settingsModal">
         <div class="modal">
             <div class="modal-title">⚙️ Settings</div>
-            <label style="display: block; color: var(--text-secondary); margin-bottom: 0.5rem; font-size: 0.875rem;">GitHub Personal Access Token</label>
-            <input type="password" class="modal-input" id="patInput" placeholder="ghp_xxxxxxxxxxxx">
-            <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">
-                Create a token at GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens. Grant read/write access to Contents for J-R-Workout repo.
-            </p>
+            <div class="settings-tabs">
+                <button class="settings-tab active" data-tab="general">General</button>
+                <button class="settings-tab" data-tab="base">Base Settings</button>
+            </div>
+            <div class="settings-panel active" id="panelGeneral">
+                <div class="modal-section">
+                    <div class="modal-section-title">GitHub Token</div>
+                    <input type="password" class="modal-input" id="patInput" placeholder="ghp_xxxxxxxxxxxx">
+                    <p style="font-size: 0.7rem; color: var(--text-muted);">Create at GitHub → Settings → Developer settings → Fine-grained tokens</p>
+                </div>
+            </div>
+            <div class="settings-panel" id="panelBase">
+                <div class="modal-section">
+                    <div class="modal-section-title">Sidon Walk Default</div>
+                    <div class="base-setting-row"><label>Minutes</label><input type="number" id="baseSidonMins" value="10"></div>
+                </div>
+                <div class="modal-section">
+                    <div class="modal-section-title">Step Count Default</div>
+                    <div class="base-setting-row"><label>Steps</label><input type="number" id="baseSteps" value="15000"></div>
+                </div>
+            </div>
             <div class="modal-buttons">
                 <button class="modal-btn cancel" id="cancelSettings">Cancel</button>
                 <button class="modal-btn save" id="saveSettings">Save</button>
@@ -1251,788 +462,415 @@
         </div>
     </div>
 
-    <script>
-        // ===== CONFIG =====
-        const CONFIG = {
-            PIN: '3489',
-            REPO_OWNER: '', // Will be set from repo name
-            REPO_NAME: 'J-R-Workout',
-            DATA_FILE: 'data/workouts.json'
-        };
+    <!-- Delete Modal -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal">
+            <div class="modal-title">🗑️ Delete Workout</div>
+            <p class="confirm-text">Are you sure you want to delete this workout?</p>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" id="cancelDelete">Cancel</button>
+                <button class="modal-btn danger" id="confirmDelete">Delete</button>
+            </div>
+        </div>
+    </div>
 
-        // ===== STATE =====
-        let state = {
-            currentProfile: null,
-            enteredPin: '',
-            workoutData: { workouts: [], weights: { joel: [], rachel: [] } },
-            currentMonth: new Date(),
-            chartTimeRange: 'week',
-            chartWeightType: 'body',
-            pat: localStorage.getItem('github_pat') || ''
-        };
+<script>
+const CONFIG = { PIN: '3489', REPO_OWNER: '', REPO_NAME: 'J-R-Workout', DATA_FILE: 'data/workouts.json' };
 
-        // ===== DOM ELEMENTS =====
-        const $ = id => document.getElementById(id);
-        const $$ = sel => document.querySelectorAll(sel);
+const DEFAULT_BASE = {
+    rachel: { sidonMins: 10, steps: 15000,
+        upper: { pushups: {s:3,r:5,w:null,on:1}, tricepDips: {s:3,r:5,w:null,on:1}, latPulldowns: {s:3,r:10,w:30,on:1}, tricepPulldowns: {s:3,r:10,w:10,on:1}, bicepCurls: {s:3,r:10,w:7,on:1}, lateralRaises: {s:3,r:10,w:3,on:1} },
+        lower: { weightedSquats: {s:3,r:10,w:7,on:1}, jumpingLunges: {s:3,r:10,w:null,on:1}, deadlifts: {s:3,r:10,w:14,on:1}, hipThrusts: {s:3,r:10,w:7,on:1}, weightedStepUps: {s:3,r:10,w:7,on:1}, calfRaises: {s:3,r:15,w:null,on:1} },
+        core: { rotatingPlank: {s:3,m:2,on:1}, vSitTwists: {s:3,r:10,w:null,on:1}, mountainClimbers: {s:3,r:20,w:null,on:1}, situps: {s:3,r:15,w:null,on:1} }
+    },
+    joel: { sidonMins: 10, steps: 9000,
+        upper: { pushups: {s:3,r:5,w:null,on:1}, tricepDips: {s:3,r:5,w:null,on:1}, latPulldowns: {s:3,r:10,w:30,on:1}, tricepPulldowns: {s:3,r:10,w:10,on:1}, bicepCurls: {s:3,r:10,w:7,on:1}, lateralRaises: {s:3,r:10,w:3,on:1} },
+        lower: { weightedSquats: {s:3,r:10,w:7,on:1}, jumpingLunges: {s:3,r:10,w:null,on:1}, deadlifts: {s:3,r:10,w:14,on:1}, hipThrusts: {s:3,r:10,w:7,on:1}, weightedStepUps: {s:3,r:10,w:7,on:1}, calfRaises: {s:3,r:15,w:null,on:1} },
+        core: { rotatingPlank: {s:3,m:2,on:1}, vSitTwists: {s:3,r:10,w:null,on:1}, mountainClimbers: {s:3,r:20,w:null,on:1}, situps: {s:3,r:15,w:null,on:1} }
+    }
+};
 
-        // ===== PIN HANDLING =====
-        function updatePinDots() {
-            const dots = $$('#pinDots .pin-dot');
-            dots.forEach((dot, i) => {
-                dot.classList.toggle('filled', i < state.enteredPin.length);
-            });
-        }
+const EX_NAMES = { pushups:'Pushups', tricepDips:'Tricep Dips', latPulldowns:'Lat Pulldowns', tricepPulldowns:'Tricep Pulldowns', bicepCurls:'Bicep Curls', lateralRaises:'Lateral Raises', weightedSquats:'Weighted Squats', jumpingLunges:'Jumping Lunges', deadlifts:'Deadlifts', hipThrusts:'Hip Thrusts', weightedStepUps:'Weighted Step Ups', calfRaises:'Calf Raises', rotatingPlank:'Rotating Plank', vSitTwists:'V-Sit Twists', mountainClimbers:'Mountain Climbers', situps:'Situps' };
 
-        function handlePinInput(num) {
-            if (state.enteredPin.length < 4) {
-                state.enteredPin += num;
-                updatePinDots();
-                
-                if (state.enteredPin.length === 4) {
-                    setTimeout(() => {
-                        if (state.enteredPin === CONFIG.PIN) {
-                            $('pinScreen').classList.add('hidden');
-                            $('profileScreen').classList.add('active');
-                            localStorage.setItem('pin_verified', 'true');
-                        } else {
-                            const dots = $$('#pinDots .pin-dot');
-                            dots.forEach(d => d.classList.add('error'));
-                            setTimeout(() => {
-                                state.enteredPin = '';
-                                dots.forEach(d => {
-                                    d.classList.remove('error', 'filled');
-                                });
-                            }, 500);
-                        }
-                    }, 200);
-                }
-            }
-        }
+let state = {
+    profile: null, pin: '', data: { workouts: [], base: JSON.parse(JSON.stringify(DEFAULT_BASE)) },
+    month: new Date(), calFilter: 'all', chartRange: 'week', chartTrack: 'bodyWeight', chartMetric: 'weight',
+    pat: localStorage.getItem('github_pat') || '', deleteId: null
+};
 
-        function handlePinBackspace() {
-            state.enteredPin = state.enteredPin.slice(0, -1);
-            updatePinDots();
-        }
+const $ = id => document.getElementById(id);
+const $$ = sel => document.querySelectorAll(sel);
+const genId = () => Date.now().toString(36) + Math.random().toString(36).substr(2);
+const fmtDate = d => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+const fmtTime = t => { const [h,m] = t.split(':'); return `${h%12||12}:${m} ${h>=12?'PM':'AM'}`; };
+const getIcon = t => ({sidon:'🐕',steps:'👟',upper:'💪',lower:'🦵',core:'🎯',custom:'⚡',weight:'⚖️'}[t]||'🏋️');
+const getTitle = t => ({sidon:'Sidon Walk',steps:'Step Count',upper:'Upper Body',lower:'Lower Body',core:'Core',custom:'Custom',weight:'Weight Log'}[t]||'Workout');
 
-        $$('.pin-key').forEach(key => {
-            key.addEventListener('click', () => {
-                if (key.dataset.num !== undefined) {
-                    handlePinInput(key.dataset.num);
-                } else if (key.dataset.action === 'back') {
-                    handlePinBackspace();
-                }
-            });
-        });
-
-        // ===== PROFILE SELECTION =====
-        $$('.profile-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                state.currentProfile = btn.dataset.profile;
-                localStorage.setItem('current_profile', state.currentProfile);
-                $('profileScreen').classList.remove('active');
-                $('app').classList.add('active');
-                updateProfileUI();
-                loadData();
-            });
-        });
-
-        function updateProfileUI() {
-            const isJoel = state.currentProfile === 'joel';
-            $('currentProfile').className = `current-profile ${state.currentProfile}`;
-            $('currentProfile').textContent = isJoel ? '💪' : '✨';
-            $('headerTitle').textContent = `Hey ${isJoel ? 'Joel' : 'Rachel'}!`;
-            $('submitBtn').className = `submit-btn ${state.currentProfile}`;
-            
-            // Update progress bar colors
-            $$('.progress-fill').forEach(el => {
-                el.classList.remove('joel', 'rachel');
-                el.classList.add(state.currentProfile);
-            });
-        }
-
-        $('currentProfile').addEventListener('click', () => {
-            state.currentProfile = state.currentProfile === 'joel' ? 'rachel' : 'joel';
-            localStorage.setItem('current_profile', state.currentProfile);
-            updateProfileUI();
-            updateRewards();
-        });
-
-        // ===== DATE/TIME =====
-        function setCurrentDateTime() {
-            const now = new Date();
-            $('workoutDate').value = now.toISOString().split('T')[0];
-            $('workoutTime').value = now.toTimeString().slice(0, 5);
-            $('headerDate').textContent = now.toLocaleDateString('en-US', { 
-                weekday: 'long', month: 'long', day: 'numeric' 
-            });
-        }
-
-        // ===== WORKOUT TYPE SELECTION =====
-        $$('.workout-type').forEach(type => {
-            type.addEventListener('click', () => {
-                type.classList.toggle('selected');
-            });
-        });
-
-        // ===== NAVIGATION =====
-        $$('.nav-item[data-page]').forEach(item => {
-            item.addEventListener('click', () => {
-                const pageId = item.dataset.page;
-                $$('.page').forEach(p => p.classList.remove('active'));
-                $(pageId).classList.add('active');
-                $$('.nav-item').forEach(n => n.classList.remove('active'));
-                item.classList.add('active');
-                
-                if (pageId === 'pageCalendar') renderCalendar();
-                if (pageId === 'pageTracking') renderChart();
-                if (pageId === 'pageRewards') updateRewards();
-            });
-        });
-
-        // ===== GITHUB API =====
-        async function loadData() {
-            if (!state.pat) {
-                console.log('No PAT configured');
-                return;
-            }
-
-            $('syncStatus').classList.add('syncing');
-            
-            try {
-                // Get repo owner from API
-                const userResp = await fetch('https://api.github.com/user', {
-                    headers: { 'Authorization': `Bearer ${state.pat}` }
-                });
-                if (userResp.ok) {
-                    const userData = await userResp.json();
-                    CONFIG.REPO_OWNER = userData.login;
-                }
-
-                const resp = await fetch(
-                    `https://api.github.com/repos/${CONFIG.REPO_OWNER}/${CONFIG.REPO_NAME}/contents/${CONFIG.DATA_FILE}`,
-                    { headers: { 'Authorization': `Bearer ${state.pat}` } }
-                );
-                
-                if (resp.ok) {
-                    const data = await resp.json();
-                    state.workoutData = JSON.parse(atob(data.content));
-                    state.dataSha = data.sha;
-                }
-            } catch (e) {
-                console.error('Load error:', e);
-            }
-            
-            $('syncStatus').classList.remove('syncing');
-            updateRewards();
-        }
-
-        async function saveData() {
-            if (!state.pat || !CONFIG.REPO_OWNER) {
-                showToast('Please configure GitHub token in settings');
-                return false;
-            }
-
-            $('syncStatus').classList.add('syncing');
-            
-            try {
-                // Get current SHA
-                const getResp = await fetch(
-                    `https://api.github.com/repos/${CONFIG.REPO_OWNER}/${CONFIG.REPO_NAME}/contents/${CONFIG.DATA_FILE}`,
-                    { headers: { 'Authorization': `Bearer ${state.pat}` } }
-                );
-                
-                let sha = null;
-                if (getResp.ok) {
-                    const data = await getResp.json();
-                    sha = data.sha;
-                }
-
-                // Save
-                const body = {
-                    message: `Workout logged by ${state.currentProfile} - ${new Date().toISOString()}`,
-                    content: btoa(JSON.stringify(state.workoutData, null, 2)),
-                };
-                if (sha) body.sha = sha;
-
-                const saveResp = await fetch(
-                    `https://api.github.com/repos/${CONFIG.REPO_OWNER}/${CONFIG.REPO_NAME}/contents/${CONFIG.DATA_FILE}`,
-                    {
-                        method: 'PUT',
-                        headers: {
-                            'Authorization': `Bearer ${state.pat}`,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(body)
-                    }
-                );
-
-                $('syncStatus').classList.remove('syncing');
-                return saveResp.ok;
-            } catch (e) {
-                console.error('Save error:', e);
-                $('syncStatus').classList.remove('syncing');
-                return false;
-            }
-        }
-
-        // ===== SUBMIT WORKOUT =====
-        $('submitBtn').addEventListener('click', async () => {
-            const selectedTypes = [...$$('.workout-type.selected')].map(t => t.dataset.type);
-            const date = $('workoutDate').value;
-            const time = $('workoutTime').value;
-            const bodyWeight = parseFloat($('bodyWeight').value) || null;
-            const dumbbellWeight = parseFloat($('dumbbellWeight').value) || null;
-            const barbellWeight = parseFloat($('barbellWeight').value) || null;
-
-            if (selectedTypes.length === 0 && !bodyWeight && !dumbbellWeight && !barbellWeight) {
-                showToast('Select a workout or enter weight');
-                return;
-            }
-
-            $('submitBtn').disabled = true;
-
-            // Add workout
-            if (selectedTypes.length > 0) {
-                state.workoutData.workouts.push({
-                    profile: state.currentProfile,
-                    date,
-                    time,
-                    types: selectedTypes,
-                    timestamp: new Date(`${date}T${time}`).toISOString()
-                });
-            }
-
-            // Add weights
-            const weightEntry = { date, timestamp: new Date(`${date}T${time}`).toISOString() };
-            if (bodyWeight) weightEntry.body = bodyWeight;
-            if (dumbbellWeight) weightEntry.dumbbell = dumbbellWeight;
-            if (barbellWeight) weightEntry.barbell = barbellWeight;
-
-            if (Object.keys(weightEntry).length > 2) {
-                if (!state.workoutData.weights[state.currentProfile]) {
-                    state.workoutData.weights[state.currentProfile] = [];
-                }
-                state.workoutData.weights[state.currentProfile].push(weightEntry);
-            }
-
-            const success = await saveData();
-            
-            if (success) {
-                showToast('Workout logged! 💪');
-                // Reset form
-                $$('.workout-type').forEach(t => t.classList.remove('selected'));
-                $('bodyWeight').value = '';
-                $('dumbbellWeight').value = '';
-                $('barbellWeight').value = '';
-                setCurrentDateTime();
-            } else {
-                showToast('Failed to save. Check settings.');
-            }
-            
-            $('submitBtn').disabled = false;
-        });
-
-        // ===== TOAST =====
-        function showToast(msg) {
-            $('toast').textContent = msg;
-            $('toast').classList.add('show');
-            setTimeout(() => $('toast').classList.remove('show'), 3000);
-        }
-
-        // ===== CALENDAR =====
-        function renderCalendar() {
-            const year = state.currentMonth.getFullYear();
-            const month = state.currentMonth.getMonth();
-            
-            $('calendarMonth').textContent = state.currentMonth.toLocaleDateString('en-US', { 
-                month: 'long', year: 'numeric' 
-            });
-
-            const firstDay = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const today = new Date();
-
-            let html = '';
-            
-            // Empty cells for days before first of month
-            for (let i = 0; i < firstDay; i++) {
-                html += '<div class="calendar-day empty"><div class="ring"><span class="date"></span></div></div>';
-            }
-
-            // Days of month
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                const isToday = today.getFullYear() === year && today.getMonth() === month && today.getDate() === day;
-                
-                // Count workouts for this day
-                const joelWorkouts = state.workoutData.workouts.filter(w => w.date === dateStr && w.profile === 'joel').length;
-                const rachelWorkouts = state.workoutData.workouts.filter(w => w.date === dateStr && w.profile === 'rachel').length;
-                
-                // Calculate ring percentages (max 3 workouts = full ring)
-                const joelPct = Math.min(joelWorkouts / 3, 1);
-                const rachelPct = Math.min(rachelWorkouts / 3, 1);
-                
-                const circumference = 2 * Math.PI * 18; // radius 18
-                const joelOffset = circumference * (1 - joelPct);
-                const rachelOffset = circumference * (1 - rachelPct);
-
-                html += `
-                    <div class="calendar-day ${isToday ? 'today' : ''}">
-                        <div class="ring">
-                            <svg viewBox="0 0 44 44">
-                                <circle class="bg" cx="22" cy="22" r="18"/>
-                                <circle class="rachel-ring" cx="22" cy="22" r="18" 
-                                    stroke-dasharray="${circumference}" 
-                                    stroke-dashoffset="${rachelOffset}"/>
-                                <circle class="joel-ring" cx="22" cy="22" r="15" 
-                                    stroke-dasharray="${2 * Math.PI * 15}" 
-                                    stroke-dashoffset="${2 * Math.PI * 15 * (1 - joelPct)}"/>
-                            </svg>
-                            <span class="date">${day}</span>
-                        </div>
-                    </div>
-                `;
-            }
-
-            $('calendarDays').innerHTML = html;
-        }
-
-        $('prevMonth').addEventListener('click', () => {
-            state.currentMonth.setMonth(state.currentMonth.getMonth() - 1);
-            renderCalendar();
-        });
-
-        $('nextMonth').addEventListener('click', () => {
-            state.currentMonth.setMonth(state.currentMonth.getMonth() + 1);
-            renderCalendar();
-        });
-
-        // ===== TRACKING CHART =====
-        function renderChart() {
-            const canvas = $('weightChart');
-            const ctx = canvas.getContext('2d');
-            const rect = canvas.parentElement.getBoundingClientRect();
-            
-            canvas.width = rect.width * 2;
-            canvas.height = rect.height * 2;
-            ctx.scale(2, 2);
-            
-            const width = rect.width;
-            const height = rect.height;
-            const padding = { top: 20, right: 20, bottom: 30, left: 45 };
-
-            ctx.clearRect(0, 0, width, height);
-
-            // Filter data by time range
-            const now = new Date();
-            let startDate;
-            switch (state.chartTimeRange) {
-                case 'week': startDate = new Date(now - 7 * 24 * 60 * 60 * 1000); break;
-                case 'month': startDate = new Date(now - 30 * 24 * 60 * 60 * 1000); break;
-                case 'year': startDate = new Date(now - 365 * 24 * 60 * 60 * 1000); break;
-                default: startDate = new Date(0);
-            }
-
-            const weightType = state.chartWeightType;
-            
-            const joelData = (state.workoutData.weights.joel || [])
-                .filter(w => new Date(w.timestamp) >= startDate && w[weightType])
-                .map(w => ({ x: new Date(w.timestamp), y: w[weightType] }))
-                .sort((a, b) => a.x - b.x);
-
-            const rachelData = (state.workoutData.weights.rachel || [])
-                .filter(w => new Date(w.timestamp) >= startDate && w[weightType])
-                .map(w => ({ x: new Date(w.timestamp), y: w[weightType] }))
-                .sort((a, b) => a.x - b.x);
-
-            const allData = [...joelData, ...rachelData];
-            
-            if (allData.length === 0) {
-                ctx.fillStyle = '#64748b';
-                ctx.font = '14px Nunito';
-                ctx.textAlign = 'center';
-                ctx.fillText('No data yet', width / 2, height / 2);
-                return;
-            }
-
-            const minY = Math.min(...allData.map(d => d.y)) * 0.95;
-            const maxY = Math.max(...allData.map(d => d.y)) * 1.05;
-            const minX = startDate;
-            const maxX = now;
-
-            const chartWidth = width - padding.left - padding.right;
-            const chartHeight = height - padding.top - padding.bottom;
-
-            const scaleX = x => padding.left + (x - minX) / (maxX - minX) * chartWidth;
-            const scaleY = y => padding.top + chartHeight - (y - minY) / (maxY - minY) * chartHeight;
-
-            // Grid lines
-            ctx.strokeStyle = '#2d2d4a';
-            ctx.lineWidth = 1;
-            for (let i = 0; i <= 4; i++) {
-                const y = padding.top + (chartHeight / 4) * i;
-                ctx.beginPath();
-                ctx.moveTo(padding.left, y);
-                ctx.lineTo(width - padding.right, y);
-                ctx.stroke();
-                
-                const val = maxY - (maxY - minY) * (i / 4);
-                ctx.fillStyle = '#64748b';
-                ctx.font = '11px Nunito';
-                ctx.textAlign = 'right';
-                ctx.fillText(val.toFixed(1), padding.left - 8, y + 4);
-            }
-
-            function drawLine(data, color) {
-                if (data.length === 0) return;
-                if (data.length === 1) {
-                    ctx.beginPath();
-                    ctx.arc(scaleX(data[0].x), scaleY(data[0].y), 4, 0, Math.PI * 2);
-                    ctx.fillStyle = color;
-                    ctx.fill();
-                    return;
-                }
-                ctx.strokeStyle = color;
-                ctx.lineWidth = 2.5;
-                ctx.lineCap = 'round';
-                ctx.lineJoin = 'round';
-                ctx.beginPath();
-                data.forEach((d, i) => {
-                    const x = scaleX(d.x);
-                    const y = scaleY(d.y);
-                    if (i === 0) ctx.moveTo(x, y);
-                    else ctx.lineTo(x, y);
-                });
-                ctx.stroke();
-                data.forEach(d => {
-                    ctx.beginPath();
-                    ctx.arc(scaleX(d.x), scaleY(d.y), 4, 0, Math.PI * 2);
-                    ctx.fillStyle = color;
-                    ctx.fill();
-                });
-            }
-
-            drawLine(joelData, '#7c3aed');
-            drawLine(rachelData, '#06b6d4');
-        }
-
-        $$('#timeFilter button').forEach(btn => {
-            btn.addEventListener('click', () => {
-                $$('#timeFilter button').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                state.chartTimeRange = btn.dataset.range;
-                renderChart();
-            });
-        });
-
-        $$('#trackingSelector button').forEach(btn => {
-            btn.addEventListener('click', () => {
-                $$('#trackingSelector button').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                state.chartTrack = btn.dataset.track;
-                const showMetric = ['upper', 'lower', 'core'].includes(state.chartTrack);
-                $('metricSelector').style.display = showMetric ? 'flex' : 'none';
-                renderChart();
-            });
-        });
-
-        $$('#metricSelector button').forEach(btn => {
-            btn.addEventListener('click', () => {
-                $$('#metricSelector button').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                state.chartMetric = btn.dataset.metric;
-                renderChart();
-            });
-        });
-
-        // ===== REWARDS =====
-        function updateRewards() {
-            const profile = state.currentProfile;
-            const workouts = state.data.workouts.filter(w => 
-                w.profile === profile && 
-                ['upper', 'lower', 'core', 'custom'].includes(w.type)
-            );
-            
-            const workoutCount = workouts.length;
-            const nextWorkoutMilestone = Math.ceil((workoutCount + 1) / 25) * 25;
-            const workoutProgress = (workoutCount % 25) / 25 * 100;
-            
-            $('workoutCount').textContent = `${workoutCount} / ${nextWorkoutMilestone}`;
-            $('workoutProgress').style.width = `${workoutProgress}%`;
-            $('workoutProgress').className = `progress-fill ${profile}`;
-            
-            const workoutAwardsEarned = Math.floor(workoutCount / 25);
-            let workoutAwardsHtml = '';
-            for (let i = 0; i < Math.max(5, workoutAwardsEarned + 1); i++) {
-                workoutAwardsHtml += `<div class="award-badge ${i < workoutAwardsEarned ? profile : 'locked'}">🏅</div>`;
-            }
-            $('workoutAwards').innerHTML = workoutAwardsHtml;
-
-            const weightLogs = state.data.workouts.filter(w => w.profile === profile && w.type === 'weight' && w.bodyWeight);
-            const weights = weightLogs.map(w => w.bodyWeight).sort((a, b) => a - b);
-            let totalGain = 0;
-            if (weights.length >= 2) {
-                totalGain = Math.max(0, weights[weights.length - 1] - weights[0]);
-            }
-            
-            const nextKgMilestone = Math.ceil(totalGain + 0.01);
-            const kgProgress = (totalGain % 1) * 100;
-            
-            $('bodyWeightCount').textContent = `${totalGain.toFixed(1)} kg gained`;
-            $('bodyWeightProgress').style.width = `${kgProgress}%`;
-            $('bodyWeightProgress').className = `progress-fill ${profile}`;
-            
-            const bodyAwardsEarned = Math.floor(totalGain);
-            let bodyAwardsHtml = '';
-            for (let i = 0; i < Math.max(5, bodyAwardsEarned + 1); i++) {
-                bodyAwardsHtml += `<div class="award-badge ${i < bodyAwardsEarned ? profile : 'locked'}">⚖️</div>`;
-            }
-            $('bodyWeightAwards').innerHTML = bodyAwardsHtml;
-            
-            $$('.reward-milestone')[0].textContent = `Next reward at ${nextWorkoutMilestone} workouts`;
-            $$('.reward-milestone')[1].textContent = `Next reward at ${nextKgMilestone} kg`;
-        }
-
-        // ===== SETTINGS =====
-        $('settingsBtn').addEventListener('click', () => {
-            $('patInput').value = state.pat;
-            const base = state.data.baseSettings[state.currentProfile] || DEFAULT_BASE_SETTINGS[state.currentProfile];
-            $('baseSidonMins').value = base.sidonMins || 10;
-            $('baseSteps').value = base.steps || 15000;
-            $('settingsModal').classList.add('active');
-        });
-
-        $$('.settings-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                $$('.settings-tab').forEach(t => t.classList.remove('active'));
-                $$('.settings-panel').forEach(p => p.classList.remove('active'));
-                tab.classList.add('active');
-                $(`panel${tab.dataset.tab.charAt(0).toUpperCase() + tab.dataset.tab.slice(1)}`).classList.add('active');
-            });
-        });
-
-        $('cancelSettings').addEventListener('click', () => {
-            $('settingsModal').classList.remove('active');
-        });
-
-        $('saveSettings').addEventListener('click', async () => {
-            state.pat = $('patInput').value.trim();
-            localStorage.setItem('github_pat', state.pat);
-            
-            if (!state.data.baseSettings[state.currentProfile]) {
-                state.data.baseSettings[state.currentProfile] = JSON.parse(JSON.stringify(DEFAULT_BASE_SETTINGS[state.currentProfile]));
-            }
-            state.data.baseSettings[state.currentProfile].sidonMins = parseInt($('baseSidonMins').value) || 10;
-            state.data.baseSettings[state.currentProfile].steps = parseInt($('baseSteps').value) || 15000;
-            
-            $('settingsModal').classList.remove('active');
-            showToast('Settings saved!');
-            
-            if (state.pat && !CONFIG.REPO_OWNER) {
-                await loadData();
-            } else if (state.pat) {
-                await saveData();
-            }
-        });
-
-        $('settingsModal').addEventListener('click', (e) => {
-            if (e.target === $('settingsModal')) $('settingsModal').classList.remove('active');
-        });
-
-        $('deleteModal').addEventListener('click', (e) => {
-            if (e.target === $('deleteModal')) {
-                $('deleteModal').classList.remove('active');
-                state.deletingWorkoutId = null;
-            }
-        });
-
-        // ===== INIT =====
-        function init() {
-            setCurrentDateTime();
-            $('metricSelector').style.display = 'none';
-            
-            if (localStorage.getItem('pin_verified') === 'true') {
-                $('pinScreen').classList.add('hidden');
-                const savedProfile = localStorage.getItem('current_profile');
-                if (savedProfile) {
-                    state.currentProfile = savedProfile;
-                    $('app').classList.add('active');
-                    updateProfileUI();
-                    loadData();
-                } else {
+// PIN
+function updateDots() { $$('#pinDots .pin-dot').forEach((d,i) => d.classList.toggle('filled', i < state.pin.length)); }
+function pinInput(n) {
+    if (state.pin.length < 4) {
+        state.pin += n; updateDots();
+        if (state.pin.length === 4) {
+            setTimeout(() => {
+                if (state.pin === CONFIG.PIN) {
+                    $('pinScreen').classList.add('hidden');
                     $('profileScreen').classList.add('active');
-                }
-            }
-        }
-
-        init();
-    </script>
-</body>
-</html> * (i / 4);
-                ctx.fillStyle = '#64748b';
-                ctx.font = '11px Nunito';
-                ctx.textAlign = 'right';
-                ctx.fillText(val.toFixed(1), padding.left - 8, y + 4);
-            }
-
-            // Draw lines
-            function drawLine(data, color) {
-                if (data.length < 2) {
-                    data.forEach(d => {
-                        ctx.beginPath();
-                        ctx.arc(scaleX(d.x), scaleY(d.y), 4, 0, Math.PI * 2);
-                        ctx.fillStyle = color;
-                        ctx.fill();
-                    });
-                    return;
-                }
-
-                ctx.strokeStyle = color;
-                ctx.lineWidth = 2.5;
-                ctx.lineCap = 'round';
-                ctx.lineJoin = 'round';
-                ctx.beginPath();
-                data.forEach((d, i) => {
-                    const x = scaleX(d.x);
-                    const y = scaleY(d.y);
-                    if (i === 0) ctx.moveTo(x, y);
-                    else ctx.lineTo(x, y);
-                });
-                ctx.stroke();
-
-                // Points
-                data.forEach(d => {
-                    ctx.beginPath();
-                    ctx.arc(scaleX(d.x), scaleY(d.y), 4, 0, Math.PI * 2);
-                    ctx.fillStyle = color;
-                    ctx.fill();
-                });
-            }
-
-            drawLine(joelData, '#7c3aed');
-            drawLine(rachelData, '#06b6d4');
-        }
-
-        // Time filter
-        $$('#timeFilter button').forEach(btn => {
-            btn.addEventListener('click', () => {
-                $$('#timeFilter button').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                state.chartTimeRange = btn.dataset.range;
-                renderChart();
-            });
-        });
-
-        // Weight type selector
-        $$('#weightSelector button').forEach(btn => {
-            btn.addEventListener('click', () => {
-                $$('#weightSelector button').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                state.chartWeightType = btn.dataset.type;
-                renderChart();
-            });
-        });
-
-        // ===== REWARDS =====
-        function updateRewards() {
-            const profile = state.currentProfile;
-            const workouts = state.workoutData.workouts.filter(w => w.profile === profile);
-            const weights = state.workoutData.weights[profile] || [];
-
-            // Workout count rewards (every 25)
-            const workoutCount = workouts.length;
-            const nextWorkoutMilestone = Math.ceil((workoutCount + 1) / 25) * 25;
-            const workoutProgress = (workoutCount % 25) / 25 * 100;
-            
-            $('workoutCount').textContent = `${workoutCount} / ${nextWorkoutMilestone}`;
-            $('workoutProgress').style.width = `${workoutProgress}%`;
-            
-            // Workout awards
-            const workoutAwardsEarned = Math.floor(workoutCount / 25);
-            let workoutAwardsHtml = '';
-            for (let i = 0; i < Math.max(5, workoutAwardsEarned + 1); i++) {
-                workoutAwardsHtml += `<div class="award-badge ${i < workoutAwardsEarned ? profile : 'locked'}">🏅</div>`;
-            }
-            $('workoutAwards').innerHTML = workoutAwardsHtml;
-
-            // Body weight rewards (every 1kg gained)
-            const bodyWeights = weights.filter(w => w.body).map(w => w.body).sort((a, b) => a - b);
-            let totalGain = 0;
-            if (bodyWeights.length >= 2) {
-                totalGain = Math.max(0, bodyWeights[bodyWeights.length - 1] - bodyWeights[0]);
-            }
-            
-            const nextKgMilestone = Math.ceil(totalGain + 0.01);
-            const kgProgress = (totalGain % 1) * 100;
-            
-            $('bodyWeightCount').textContent = `${totalGain.toFixed(1)} kg gained`;
-            $('bodyWeightProgress').style.width = `${kgProgress}%`;
-            
-            // Body weight awards
-            const bodyAwardsEarned = Math.floor(totalGain);
-            let bodyAwardsHtml = '';
-            for (let i = 0; i < Math.max(5, bodyAwardsEarned + 1); i++) {
-                bodyAwardsHtml += `<div class="award-badge ${i < bodyAwardsEarned ? profile : 'locked'}">⚖️</div>`;
-            }
-            $('bodyWeightAwards').innerHTML = bodyAwardsHtml;
-            
-            // Update milestone text
-            $$('.reward-milestone')[0].textContent = `Next reward at ${nextWorkoutMilestone} workouts`;
-            $$('.reward-milestone')[1].textContent = `Next reward at ${nextKgMilestone} kg`;
-        }
-
-        // ===== SETTINGS =====
-        $('settingsBtn').addEventListener('click', () => {
-            $('patInput').value = state.pat;
-            $('settingsModal').classList.add('active');
-        });
-
-        $('cancelSettings').addEventListener('click', () => {
-            $('settingsModal').classList.remove('active');
-        });
-
-        $('saveSettings').addEventListener('click', async () => {
-            state.pat = $('patInput').value.trim();
-            localStorage.setItem('github_pat', state.pat);
-            $('settingsModal').classList.remove('active');
-            showToast('Settings saved!');
-            await loadData();
-        });
-
-        $('settingsModal').addEventListener('click', (e) => {
-            if (e.target === $('settingsModal')) {
-                $('settingsModal').classList.remove('active');
-            }
-        });
-
-        // ===== INIT =====
-        function init() {
-            setCurrentDateTime();
-            
-            // Check if already verified
-            if (localStorage.getItem('pin_verified') === 'true') {
-                $('pinScreen').classList.add('hidden');
-                
-                const savedProfile = localStorage.getItem('current_profile');
-                if (savedProfile) {
-                    state.currentProfile = savedProfile;
-                    $('app').classList.add('active');
-                    updateProfileUI();
-                    loadData();
+                    localStorage.setItem('pin_verified', 'true');
                 } else {
-                    $('profileScreen').classList.add('active');
+                    $$('#pinDots .pin-dot').forEach(d => d.classList.add('error'));
+                    setTimeout(() => { state.pin = ''; $$('#pinDots .pin-dot').forEach(d => d.classList.remove('error','filled')); }, 500);
                 }
-            }
-            
-            // Set nav active state
-            $$('.nav-item').forEach(item => {
-                if (item.dataset.page === 'pageLog') {
-                    item.classList.add('active');
-                }
-            });
+            }, 200);
         }
+    }
+}
+$$('.pin-key').forEach(k => k.addEventListener('click', () => {
+    if (k.dataset.num !== undefined) pinInput(k.dataset.num);
+    else if (k.dataset.action === 'back') { state.pin = state.pin.slice(0,-1); updateDots(); }
+}));
 
-        init();
-    </script>
+// Profile
+$$('.profile-btn').forEach(b => b.addEventListener('click', () => {
+    state.profile = b.dataset.profile;
+    localStorage.setItem('current_profile', state.profile);
+    $('profileScreen').classList.remove('active');
+    $('app').classList.add('active');
+    updateProfileUI(); loadData();
+}));
+
+function updateProfileUI() {
+    const j = state.profile === 'joel';
+    $('currentProfile').className = `current-profile ${state.profile}`;
+    $('currentProfile').textContent = j ? '💪' : '✨';
+    $('headerTitle').textContent = `Hey ${j ? 'Joel' : 'Rachel'}!`;
+    $$('.progress-fill').forEach(el => { el.classList.remove('joel','rachel'); el.classList.add(state.profile); });
+}
+
+$('currentProfile').addEventListener('click', () => {
+    state.profile = state.profile === 'joel' ? 'rachel' : 'joel';
+    localStorage.setItem('current_profile', state.profile);
+    updateProfileUI(); renderList(); updateRewards();
+});
+
+function setDate() { $('headerDate').textContent = new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' }); }
+
+// Nav
+$$('.nav-item[data-page]').forEach(n => n.addEventListener('click', () => {
+    const p = n.dataset.page;
+    $$('.page').forEach(x => x.classList.remove('active'));
+    $(p).classList.add('active');
+    $$('.nav-item').forEach(x => x.classList.remove('active'));
+    n.classList.add('active');
+    if (p === 'pageCalendar') renderCal();
+    if (p === 'pageTracking') renderChart();
+    if (p === 'pageRewards') updateRewards();
+    if (p === 'pageWorkouts') renderList();
+}));
+
+// GitHub
+async function loadData() {
+    if (!state.pat) return;
+    $('syncStatus').classList.add('syncing');
+    try {
+        const u = await fetch('https://api.github.com/user', { headers: { 'Authorization': `Bearer ${state.pat}` } });
+        if (u.ok) CONFIG.REPO_OWNER = (await u.json()).login;
+        const r = await fetch(`https://api.github.com/repos/${CONFIG.REPO_OWNER}/${CONFIG.REPO_NAME}/contents/${CONFIG.DATA_FILE}`, { headers: { 'Authorization': `Bearer ${state.pat}` } });
+        if (r.ok) { const d = await r.json(); state.data = JSON.parse(atob(d.content)); state.dataSha = d.sha; }
+    } catch(e) { console.error(e); }
+    $('syncStatus').classList.remove('syncing');
+    renderList(); updateRewards();
+}
+
+async function saveData() {
+    if (!state.pat || !CONFIG.REPO_OWNER) { showToast('Configure GitHub token', true); return false; }
+    $('syncStatus').classList.add('syncing');
+    try {
+        const g = await fetch(`https://api.github.com/repos/${CONFIG.REPO_OWNER}/${CONFIG.REPO_NAME}/contents/${CONFIG.DATA_FILE}`, { headers: { 'Authorization': `Bearer ${state.pat}` } });
+        let sha = g.ok ? (await g.json()).sha : null;
+        const body = { message: `Update ${new Date().toISOString()}`, content: btoa(unescape(encodeURIComponent(JSON.stringify(state.data, null, 2)))) };
+        if (sha) body.sha = sha;
+        const s = await fetch(`https://api.github.com/repos/${CONFIG.REPO_OWNER}/${CONFIG.REPO_NAME}/contents/${CONFIG.DATA_FILE}`, {
+            method: 'PUT', headers: { 'Authorization': `Bearer ${state.pat}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+        });
+        $('syncStatus').classList.remove('syncing');
+        return s.ok;
+    } catch(e) { console.error(e); $('syncStatus').classList.remove('syncing'); return false; }
+}
+
+function showToast(msg, err=false) {
+    const t = $('toast'); t.textContent = msg; t.classList.toggle('error', err);
+    t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Workouts List
+function renderList() {
+    const list = $('workoutsList');
+    const w = state.data.workouts.filter(x => x.profile === state.profile).sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+    if (!w.length) { list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🏋️</div><p>No workouts logged yet</p><p style="font-size:0.875rem;margin-top:0.5rem;">Tap + to log your first workout!</p></div>`; return; }
+    list.innerHTML = w.map(x => `<div class="workout-log-item ${x.profile}" data-id="${x.id}"><div class="workout-log-icon">${getIcon(x.type)}</div><div class="workout-log-details"><div class="workout-log-title">${getTitle(x.type)}</div><div class="workout-log-meta">${fmtDate(x.date)} at ${fmtTime(x.time)} ${x.summary||''}</div></div><div class="workout-log-actions"><button onclick="editW('${x.id}')">✏️</button><button onclick="deleteW('${x.id}')">🗑️</button></div></div>`).join('');
+}
+
+// Log Modal
+$('fabBtn').addEventListener('click', () => $('logOptionsModal').classList.add('active'));
+$('closeLogOptions').addEventListener('click', () => $('logOptionsModal').classList.remove('active'));
+$('logOptionsModal').addEventListener('click', e => { if (e.target === $('logOptionsModal')) $('logOptionsModal').classList.remove('active'); });
+$$('.log-option-btn').forEach(b => b.addEventListener('click', () => { $('logOptionsModal').classList.remove('active'); openLog(b.dataset.log); }));
+
+function openLog(type, edit=null) {
+    const c = $('logPages');
+    const now = new Date();
+    const dateVal = edit?.date || now.toISOString().split('T')[0];
+    const timeVal = edit?.time || now.toTimeString().slice(0,5);
+    const p = state.profile;
+    const base = state.data.base?.[p] || DEFAULT_BASE[p];
+    let content = '';
+
+    if (type === 'sidon') {
+        content = `<div class="card"><div class="card-title">📅 Date & Time</div><div class="datetime-row"><input type="date" class="datetime-input" id="logDate" value="${dateVal}"><input type="time" class="datetime-input" id="logTime" value="${timeVal}"></div></div><div class="card"><div class="card-title">🐕 Walk Duration</div><div class="simple-input-row"><span class="icon">⏱️</span><label>Minutes walked</label><input type="number" id="sidonMins" value="${edit?.minutes || base.sidonMins || 10}"><span class="unit">mins</span></div></div>`;
+    } else if (type === 'steps') {
+        content = `<div class="card"><div class="card-title">📅 Date & Time</div><div class="datetime-row"><input type="date" class="datetime-input" id="logDate" value="${dateVal}"><input type="time" class="datetime-input" id="logTime" value="${timeVal}"></div></div><div class="card"><div class="card-title">👟 Steps Today</div><div class="simple-input-row"><span class="icon">👣</span><label>Step count</label><input type="number" id="stepCount" value="${edit?.steps || base.steps || 15000}"><span class="unit">steps</span></div></div>`;
+    } else if (type === 'weight') {
+        content = `<div class="card"><div class="card-title">📅 Date & Time</div><div class="datetime-row"><input type="date" class="datetime-input" id="logDate" value="${dateVal}"><input type="time" class="datetime-input" id="logTime" value="${timeVal}"></div></div><div class="card"><div class="card-title">⚖️ Body Weight</div><div class="simple-input-row"><span class="icon">🧍</span><label>Weight</label><input type="number" id="bodyWeight" step="0.1" value="${edit?.bodyWeight || ''}" placeholder="0.0"><span class="unit">kg</span></div></div>`;
+    } else if (['upper','lower','core'].includes(type)) {
+        const exs = base[type] || DEFAULT_BASE[p][type];
+        const editEx = edit?.exercises || {};
+        content = `<div class="card"><div class="card-title">📅 Date & Time</div><div class="datetime-row"><input type="date" class="datetime-input" id="logDate" value="${dateVal}"><input type="time" class="datetime-input" id="logTime" value="${timeVal}"></div></div><div class="card"><div class="card-title">${getIcon(type)} Exercises</div>${Object.entries(exs).map(([k,ex]) => {
+            const ed = editEx[k] || {};
+            const on = edit ? ed.on !== 0 : ex.on;
+            return `<div class="exercise-item" data-ex="${k}"><div class="exercise-header"><span class="exercise-name">${EX_NAMES[k]}</span><button class="exercise-toggle ${on?'active':''}" data-k="${k}"></button></div><div class="exercise-inputs ${on?'':'disabled'}" data-k="${k}"><div class="input-group"><label>Sets</label><input type="number" data-f="s" value="${ed.s??ex.s}"></div>${ex.m!==undefined?`<div class="input-group"><label>Mins</label><input type="number" data-f="m" value="${ed.m??ex.m}"></div>`:`<div class="input-group"><label>Reps</label><input type="number" data-f="r" value="${ed.r??ex.r}"></div>`}${ex.w!=null?`<div class="input-group"><label>Kg</label><input type="number" data-f="w" step="0.5" value="${ed.w??ex.w}"></div>`:''}</div></div>`;
+        }).join('')}</div>`;
+    } else if (type === 'custom') {
+        const allEx = {...(base.upper||DEFAULT_BASE[p].upper), ...(base.lower||DEFAULT_BASE[p].lower), ...(base.core||DEFAULT_BASE[p].core)};
+        const editEx = edit?.exercises || {};
+        content = `<div class="card"><div class="card-title">📅 Date & Time</div><div class="datetime-row"><input type="date" class="datetime-input" id="logDate" value="${dateVal}"><input type="time" class="datetime-input" id="logTime" value="${timeVal}"></div></div><div class="card"><div class="card-title">⚡ Custom - Select Exercises</div>${Object.entries(allEx).map(([k,ex]) => {
+            const ed = editEx[k] || {};
+            const on = edit ? ed.on === 1 : false;
+            return `<div class="exercise-item" data-ex="${k}"><div class="exercise-header"><span class="exercise-name">${EX_NAMES[k]}</span><button class="exercise-toggle ${on?'active':''}" data-k="${k}"></button></div><div class="exercise-inputs ${on?'':'disabled'}" data-k="${k}"><div class="input-group"><label>Sets</label><input type="number" data-f="s" value="${ed.s??ex.s}"></div>${ex.m!==undefined?`<div class="input-group"><label>Mins</label><input type="number" data-f="m" value="${ed.m??ex.m}"></div>`:`<div class="input-group"><label>Reps</label><input type="number" data-f="r" value="${ed.r??ex.r}"></div>`}${ex.w!=null?`<div class="input-group"><label>Kg</label><input type="number" data-f="w" step="0.5" value="${ed.w??ex.w}"></div>`:''}</div></div>`;
+        }).join('')}</div>`;
+    }
+
+    c.innerHTML = `<div class="log-page active" id="logPage_${type}"><div class="log-page-header"><button class="log-page-back" onclick="closeLog('${type}')">←</button><div class="log-page-title">${edit?'Edit':'Log'} ${getTitle(type)}</div></div><div class="log-page-content">${content}</div><div class="submit-btn"><button class="${p}" onclick="submitLog('${type}',${edit?`'${edit.id}'`:'null'})">${edit?'Update':'Log'} ${getTitle(type)} 🎉</button></div></div>`;
+    c.querySelectorAll('.exercise-toggle').forEach(t => t.addEventListener('click', () => {
+        t.classList.toggle('active');
+        c.querySelector(`.exercise-inputs[data-k="${t.dataset.k}"]`).classList.toggle('disabled', !t.classList.contains('active'));
+    }));
+}
+
+window.closeLog = t => { const p = $(`logPage_${t}`); if (p) p.remove(); };
+
+window.submitLog = async (type, editId) => {
+    const date = $('logDate').value, time = $('logTime').value;
+    let w = { id: editId || genId(), profile: state.profile, type, date, time, timestamp: new Date(`${date}T${time}`).toISOString() };
+
+    if (type === 'sidon') { w.minutes = parseInt($('sidonMins').value) || 0; w.summary = `• ${w.minutes} mins`; }
+    else if (type === 'steps') { w.steps = parseInt($('stepCount').value) || 0; w.summary = `• ${w.steps.toLocaleString()} steps`; }
+    else if (type === 'weight') { w.bodyWeight = parseFloat($('bodyWeight').value) || 0; w.summary = `• ${w.bodyWeight} kg`; }
+    else {
+        const exs = {};
+        document.querySelectorAll('.exercise-item').forEach(item => {
+            const k = item.dataset.ex, tog = item.querySelector('.exercise-toggle'), on = tog.classList.contains('active');
+            if (!on) return;
+            exs[k] = { on: 1 };
+            item.querySelectorAll('.exercise-inputs input').forEach(inp => {
+                const f = inp.dataset.f, v = f === 'w' ? parseFloat(inp.value) : parseInt(inp.value);
+                if (!isNaN(v)) exs[k][f] = v;
+            });
+        });
+        w.exercises = exs;
+        w.summary = `• ${Object.keys(exs).length} exercises`;
+    }
+
+    if (editId) { const i = state.data.workouts.findIndex(x => x.id === editId); if (i !== -1) state.data.workouts[i] = w; }
+    else state.data.workouts.push(w);
+
+    const ok = await saveData();
+    if (ok) { showToast(editId ? 'Updated! ✏️' : 'Logged! 💪'); closeLog(type); renderList(); }
+    else showToast('Failed to save', true);
+};
+
+window.editW = id => { const w = state.data.workouts.find(x => x.id === id); if (w) openLog(w.type, w); };
+window.deleteW = id => { state.deleteId = id; $('deleteModal').classList.add('active'); };
+$('cancelDelete').addEventListener('click', () => { $('deleteModal').classList.remove('active'); state.deleteId = null; });
+$('confirmDelete').addEventListener('click', async () => {
+    if (state.deleteId) {
+        state.data.workouts = state.data.workouts.filter(x => x.id !== state.deleteId);
+        if (await saveData()) { showToast('Deleted'); renderList(); } else showToast('Failed', true);
+    }
+    $('deleteModal').classList.remove('active'); state.deleteId = null;
+});
+
+// Calendar
+function renderCal() {
+    const y = state.month.getFullYear(), m = state.month.getMonth();
+    $('calendarMonth').textContent = state.month.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    const first = new Date(y, m, 1).getDay(), days = new Date(y, m + 1, 0).getDate(), today = new Date();
+    let html = '';
+    for (let i = 0; i < first; i++) html += '<div class="calendar-day empty"><span class="date"></span></div>';
+    for (let d = 1; d <= days; d++) {
+        const ds = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const isToday = today.getFullYear() === y && today.getMonth() === m && today.getDate() === d;
+        const dw = state.data.workouts.filter(w => w.date === ds);
+        let ind = '';
+        if (state.calFilter === 'all') {
+            if (dw.some(w => w.profile === 'joel')) ind += '<div class="half-circle joel"></div>';
+            if (dw.some(w => w.profile === 'rachel')) ind += '<div class="half-circle rachel"></div>';
+        } else {
+            const f = dw.filter(w => w.type === state.calFilter);
+            if (f.some(w => w.profile === 'joel')) ind += '<div class="half-circle joel"></div>';
+            if (f.some(w => w.profile === 'rachel')) ind += '<div class="half-circle rachel"></div>';
+        }
+        html += `<div class="calendar-day ${isToday?'today':''}"><span class="date">${d}</span><div class="indicators">${ind}</div></div>`;
+    }
+    $('calendarDays').innerHTML = html;
+}
+$('prevMonth').addEventListener('click', () => { state.month.setMonth(state.month.getMonth() - 1); renderCal(); });
+$('nextMonth').addEventListener('click', () => { state.month.setMonth(state.month.getMonth() + 1); renderCal(); });
+$$('#calendarFilter button').forEach(b => b.addEventListener('click', () => {
+    $$('#calendarFilter button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active'); state.calFilter = b.dataset.filter; renderCal();
+}));
+
+// Chart
+function renderChart() {
+    const canvas = $('trackingChart'), ctx = canvas.getContext('2d');
+    const rect = canvas.parentElement.getBoundingClientRect();
+    canvas.width = rect.width * 2; canvas.height = rect.height * 2; ctx.scale(2, 2);
+    const W = rect.width, H = rect.height, pad = { t: 20, r: 20, b: 30, l: 50 };
+    ctx.clearRect(0, 0, W, H);
+
+    const now = new Date();
+    let start;
+    switch (state.chartRange) {
+        case 'week': start = new Date(now - 7*24*60*60*1000); break;
+        case 'month': start = new Date(now - 30*24*60*60*1000); break;
+        case 'year': start = new Date(now - 365*24*60*60*1000); break;
+        default: start = new Date(0);
+    }
+
+    const getData = prof => {
+        let ws = state.data.workouts.filter(w => w.profile === prof && new Date(w.timestamp) >= start);
+        if (state.chartTrack === 'bodyWeight') return ws.filter(w => w.type === 'weight' && w.bodyWeight).map(w => ({ x: new Date(w.timestamp), y: w.bodyWeight }));
+        if (state.chartTrack === 'steps') return ws.filter(w => w.type === 'steps' && w.steps).map(w => ({ x: new Date(w.timestamp), y: w.steps }));
+        if (state.chartTrack === 'sidon') return ws.filter(w => w.type === 'sidon' && w.minutes).map(w => ({ x: new Date(w.timestamp), y: w.minutes }));
+        return ws.filter(w => w.type === state.chartTrack && w.exercises).map(w => {
+            const exs = Object.values(w.exercises).filter(e => e.on);
+            let v = 0;
+            if (state.chartMetric === 'weight') v = exs.reduce((s,e) => s + (e.w || 0), 0) / exs.length || 0;
+            else if (state.chartMetric === 'reps') v = exs.reduce((s,e) => s + (e.r || 0), 0);
+            else v = exs.reduce((s,e) => s + (e.s || 0), 0);
+            return { x: new Date(w.timestamp), y: v };
+        });
+    };
+
+    const jd = getData('joel').sort((a,b) => a.x - b.x);
+    const rd = getData('rachel').sort((a,b) => a.x - b.x);
+    const all = [...jd, ...rd];
+
+    if (!all.length) { ctx.fillStyle = '#64748b'; ctx.font = '14px Nunito'; ctx.textAlign = 'center'; ctx.fillText('No data yet', W/2, H/2); return; }
+
+    const minY = Math.min(...all.map(d => d.y)) * 0.9, maxY = Math.max(...all.map(d => d.y)) * 1.1;
+    const cW = W - pad.l - pad.r, cH = H - pad.t - pad.b;
+    const sx = x => pad.l + (x - start) / (now - start) * cW;
+    const sy = y => pad.t + cH - (y - minY) / (maxY - minY) * cH;
+
+    ctx.strokeStyle = '#2d2d4a'; ctx.lineWidth = 1;
+    for (let i = 0; i <= 4; i++) {
+        const y = pad.t + (cH / 4) * i;
+        ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(W - pad.r, y); ctx.stroke();
+        ctx.fillStyle = '#64748b'; ctx.font = '11px Nunito'; ctx.textAlign = 'right';
+        ctx.fillText((maxY - (maxY - minY) * (i / 4)).toFixed(1), pad.l - 8, y + 4);
+    }
+
+    const drawLine = (data, color) => {
+        if (!data.length) return;
+        if (data.length === 1) { ctx.beginPath(); ctx.arc(sx(data[0].x), sy(data[0].y), 4, 0, Math.PI*2); ctx.fillStyle = color; ctx.fill(); return; }
+        ctx.strokeStyle = color; ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+        ctx.beginPath(); data.forEach((d,i) => { if (i === 0) ctx.moveTo(sx(d.x), sy(d.y)); else ctx.lineTo(sx(d.x), sy(d.y)); }); ctx.stroke();
+        data.forEach(d => { ctx.beginPath(); ctx.arc(sx(d.x), sy(d.y), 4, 0, Math.PI*2); ctx.fillStyle = color; ctx.fill(); });
+    };
+    drawLine(jd, '#7c3aed'); drawLine(rd, '#06b6d4');
+}
+
+$$('#timeFilter button').forEach(b => b.addEventListener('click', () => {
+    $$('#timeFilter button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active'); state.chartRange = b.dataset.range; renderChart();
+}));
+$$('#trackingSelector button').forEach(b => b.addEventListener('click', () => {
+    $$('#trackingSelector button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active'); state.chartTrack = b.dataset.track;
+    $('metricSelector').style.display = ['upper','lower','core'].includes(state.chartTrack) ? 'flex' : 'none';
+    renderChart();
+}));
+$$('#metricSelector button').forEach(b => b.addEventListener('click', () => {
+    $$('#metricSelector button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active'); state.chartMetric = b.dataset.metric; renderChart();
+}));
+
+// Rewards
+function updateRewards() {
+    const ws = state.data.workouts.filter(w => w.profile === state.profile && ['upper','lower','core','custom'].includes(w.type));
+    const cnt = ws.length, next = Math.ceil((cnt + 1) / 25) * 25, prog = (cnt % 25) / 25 * 100;
+    $('workoutCount').textContent = `${cnt} / ${next}`;
+    $('workoutProgress').style.width = `${prog}%`;
+    $('workoutProgress').className = `progress-fill ${state.profile}`;
+    const earned = Math.floor(cnt / 25);
+    $('workoutAwards').innerHTML = Array.from({length: Math.max(5, earned + 1)}, (_,i) => `<div class="award-badge ${i < earned ? state.profile : 'locked'}">🏅</div>`).join('');
+
+    const wts = state.data.workouts.filter(w => w.profile === state.profile && w.type === 'weight' && w.bodyWeight).map(w => w.bodyWeight).sort((a,b) => a - b);
+    let gain = wts.length >= 2 ? Math.max(0, wts[wts.length-1] - wts[0]) : 0;
+    const nextKg = Math.ceil(gain + 0.01), kgProg = (gain % 1) * 100;
+    $('bodyWeightCount').textContent = `${gain.toFixed(1)} kg gained`;
+    $('bodyWeightProgress').style.width = `${kgProg}%`;
+    $('bodyWeightProgress').className = `progress-fill ${state.profile}`;
+    const bEarned = Math.floor(gain);
+    $('bodyWeightAwards').innerHTML = Array.from({length: Math.max(5, bEarned + 1)}, (_,i) => `<div class="award-badge ${i < bEarned ? state.profile : 'locked'}">⚖️</div>`).join('');
+
+    $$('.reward-milestone')[0].textContent = `Next reward at ${next} workouts`;
+    $$('.reward-milestone')[1].textContent = `Next reward at ${nextKg} kg`;
+}
+
+// Settings
+$('settingsBtn').addEventListener('click', () => {
+    $('patInput').value = state.pat;
+    const base = state.data.base?.[state.profile] || DEFAULT_BASE[state.profile];
+    $('baseSidonMins').value = base.sidonMins || 10;
+    $('baseSteps').value = base.steps || 15000;
+    $('settingsModal').classList.add('active');
+});
+$$('.settings-tab').forEach(t => t.addEventListener('click', () => {
+    $$('.settings-tab').forEach(x => x.classList.remove('active'));
+    $$('.settings-panel').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    $(`panel${t.dataset.tab.charAt(0).toUpperCase() + t.dataset.tab.slice(1)}`).classList.add('active');
+}));
+$('cancelSettings').addEventListener('click', () => $('settingsModal').classList.remove('active'));
+$('saveSettings').addEventListener('click', async () => {
+    state.pat = $('patInput').value.trim();
+    localStorage.setItem('github_pat', state.pat);
+    if (!state.data.base) state.data.base = JSON.parse(JSON.stringify(DEFAULT_BASE));
+    if (!state.data.base[state.profile]) state.data.base[state.profile] = JSON.parse(JSON.stringify(DEFAULT_BASE[state.profile]));
+    state.data.base[state.profile].sidonMins = parseInt($('baseSidonMins').value) || 10;
+    state.data.base[state.profile].steps = parseInt($('baseSteps').value) || 15000;
+    $('settingsModal').classList.remove('active');
+    showToast('Settings saved!');
+    if (state.pat && !CONFIG.REPO_OWNER) await loadData();
+    else if (state.pat) await saveData();
+});
+$('settingsModal').addEventListener('click', e => { if (e.target === $('settingsModal')) $('settingsModal').classList.remove('active'); });
+$('deleteModal').addEventListener('click', e => { if (e.target === $('deleteModal')) { $('deleteModal').classList.remove('active'); state.deleteId = null; } });
+
+// Init
+function init() {
+    setDate();
+    if (localStorage.getItem('pin_verified') === 'true') {
+        $('pinScreen').classList.add('hidden');
+        const saved = localStorage.getItem('current_profile');
+        if (saved) { state.profile = saved; $('app').classList.add('active'); updateProfileUI(); loadData(); }
+        else $('profileScreen').classList.add('active');
+    }
+}
+init();
+</script>
 </body>
 </html>
