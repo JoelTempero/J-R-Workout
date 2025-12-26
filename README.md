@@ -4,13 +4,20 @@ A couples workout tracking app for Joel and Rachel!
 
 ## Features
 
-- 🔐 **PIN protected** (4-digit code)
+- 🔐 **PIN protected** (4-digit code: 3489)
 - 👥 **Dual profiles** - Joel (purple) & Rachel (cyan)
-- 📝 **Log workouts** - Walk, Run, Treadmill, Upper Body, Lower Body, Core
-- ⚖️ **Track weights** - Body weight, dumbbell, barbell progress
-- 📅 **Calendar view** - See workout days with ring progress indicators
-- 📊 **Charts** - Track weight progress over time
+- 📋 **Workout history** - View, edit, and delete past workouts
+- 🐕 **Sidon Walk** - Track walks with your dog
+- 👟 **Step Count** - Daily step tracking
+- 💪 **Upper Body** - Pushups, Tricep Dips, Lat Pulldowns, etc.
+- 🦵 **Lower Body** - Squats, Lunges, Deadlifts, etc.
+- 🎯 **Core** - Planks, V-Sits, Mountain Climbers, etc.
+- ⚡ **Custom Workout** - Mix and match any exercises
+- ⚖️ **Body Weight** - Track weight progress
+- 📅 **Calendar view** - Half-circle indicators for each workout type
+- 📊 **Charts** - Track progress over time (weight, reps, sets, steps, etc.)
 - 🏆 **Rewards** - Earn badges every 25 workouts and every kg gained
+- ⚙️ **Base Settings** - Customize default values for each exercise
 - 📱 **PWA** - Install on your phone's home screen
 
 ## Setup

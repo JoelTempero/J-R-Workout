@@ -1683,6 +1683,198 @@
                 ctx.fillText(val.toFixed(1), padding.left - 8, y + 4);
             }
 
+            function drawLine(data, color) {
+                if (data.length === 0) return;
+                if (data.length === 1) {
+                    ctx.beginPath();
+                    ctx.arc(scaleX(data[0].x), scaleY(data[0].y), 4, 0, Math.PI * 2);
+                    ctx.fillStyle = color;
+                    ctx.fill();
+                    return;
+                }
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2.5;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.beginPath();
+                data.forEach((d, i) => {
+                    const x = scaleX(d.x);
+                    const y = scaleY(d.y);
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                });
+                ctx.stroke();
+                data.forEach(d => {
+                    ctx.beginPath();
+                    ctx.arc(scaleX(d.x), scaleY(d.y), 4, 0, Math.PI * 2);
+                    ctx.fillStyle = color;
+                    ctx.fill();
+                });
+            }
+
+            drawLine(joelData, '#7c3aed');
+            drawLine(rachelData, '#06b6d4');
+        }
+
+        $$('#timeFilter button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                $$('#timeFilter button').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                state.chartTimeRange = btn.dataset.range;
+                renderChart();
+            });
+        });
+
+        $$('#trackingSelector button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                $$('#trackingSelector button').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                state.chartTrack = btn.dataset.track;
+                const showMetric = ['upper', 'lower', 'core'].includes(state.chartTrack);
+                $('metricSelector').style.display = showMetric ? 'flex' : 'none';
+                renderChart();
+            });
+        });
+
+        $$('#metricSelector button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                $$('#metricSelector button').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                state.chartMetric = btn.dataset.metric;
+                renderChart();
+            });
+        });
+
+        // ===== REWARDS =====
+        function updateRewards() {
+            const profile = state.currentProfile;
+            const workouts = state.data.workouts.filter(w => 
+                w.profile === profile && 
+                ['upper', 'lower', 'core', 'custom'].includes(w.type)
+            );
+            
+            const workoutCount = workouts.length;
+            const nextWorkoutMilestone = Math.ceil((workoutCount + 1) / 25) * 25;
+            const workoutProgress = (workoutCount % 25) / 25 * 100;
+            
+            $('workoutCount').textContent = `${workoutCount} / ${nextWorkoutMilestone}`;
+            $('workoutProgress').style.width = `${workoutProgress}%`;
+            $('workoutProgress').className = `progress-fill ${profile}`;
+            
+            const workoutAwardsEarned = Math.floor(workoutCount / 25);
+            let workoutAwardsHtml = '';
+            for (let i = 0; i < Math.max(5, workoutAwardsEarned + 1); i++) {
+                workoutAwardsHtml += `<div class="award-badge ${i < workoutAwardsEarned ? profile : 'locked'}">🏅</div>`;
+            }
+            $('workoutAwards').innerHTML = workoutAwardsHtml;
+
+            const weightLogs = state.data.workouts.filter(w => w.profile === profile && w.type === 'weight' && w.bodyWeight);
+            const weights = weightLogs.map(w => w.bodyWeight).sort((a, b) => a - b);
+            let totalGain = 0;
+            if (weights.length >= 2) {
+                totalGain = Math.max(0, weights[weights.length - 1] - weights[0]);
+            }
+            
+            const nextKgMilestone = Math.ceil(totalGain + 0.01);
+            const kgProgress = (totalGain % 1) * 100;
+            
+            $('bodyWeightCount').textContent = `${totalGain.toFixed(1)} kg gained`;
+            $('bodyWeightProgress').style.width = `${kgProgress}%`;
+            $('bodyWeightProgress').className = `progress-fill ${profile}`;
+            
+            const bodyAwardsEarned = Math.floor(totalGain);
+            let bodyAwardsHtml = '';
+            for (let i = 0; i < Math.max(5, bodyAwardsEarned + 1); i++) {
+                bodyAwardsHtml += `<div class="award-badge ${i < bodyAwardsEarned ? profile : 'locked'}">⚖️</div>`;
+            }
+            $('bodyWeightAwards').innerHTML = bodyAwardsHtml;
+            
+            $$('.reward-milestone')[0].textContent = `Next reward at ${nextWorkoutMilestone} workouts`;
+            $$('.reward-milestone')[1].textContent = `Next reward at ${nextKgMilestone} kg`;
+        }
+
+        // ===== SETTINGS =====
+        $('settingsBtn').addEventListener('click', () => {
+            $('patInput').value = state.pat;
+            const base = state.data.baseSettings[state.currentProfile] || DEFAULT_BASE_SETTINGS[state.currentProfile];
+            $('baseSidonMins').value = base.sidonMins || 10;
+            $('baseSteps').value = base.steps || 15000;
+            $('settingsModal').classList.add('active');
+        });
+
+        $$('.settings-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                $$('.settings-tab').forEach(t => t.classList.remove('active'));
+                $$('.settings-panel').forEach(p => p.classList.remove('active'));
+                tab.classList.add('active');
+                $(`panel${tab.dataset.tab.charAt(0).toUpperCase() + tab.dataset.tab.slice(1)}`).classList.add('active');
+            });
+        });
+
+        $('cancelSettings').addEventListener('click', () => {
+            $('settingsModal').classList.remove('active');
+        });
+
+        $('saveSettings').addEventListener('click', async () => {
+            state.pat = $('patInput').value.trim();
+            localStorage.setItem('github_pat', state.pat);
+            
+            if (!state.data.baseSettings[state.currentProfile]) {
+                state.data.baseSettings[state.currentProfile] = JSON.parse(JSON.stringify(DEFAULT_BASE_SETTINGS[state.currentProfile]));
+            }
+            state.data.baseSettings[state.currentProfile].sidonMins = parseInt($('baseSidonMins').value) || 10;
+            state.data.baseSettings[state.currentProfile].steps = parseInt($('baseSteps').value) || 15000;
+            
+            $('settingsModal').classList.remove('active');
+            showToast('Settings saved!');
+            
+            if (state.pat && !CONFIG.REPO_OWNER) {
+                await loadData();
+            } else if (state.pat) {
+                await saveData();
+            }
+        });
+
+        $('settingsModal').addEventListener('click', (e) => {
+            if (e.target === $('settingsModal')) $('settingsModal').classList.remove('active');
+        });
+
+        $('deleteModal').addEventListener('click', (e) => {
+            if (e.target === $('deleteModal')) {
+                $('deleteModal').classList.remove('active');
+                state.deletingWorkoutId = null;
+            }
+        });
+
+        // ===== INIT =====
+        function init() {
+            setCurrentDateTime();
+            $('metricSelector').style.display = 'none';
+            
+            if (localStorage.getItem('pin_verified') === 'true') {
+                $('pinScreen').classList.add('hidden');
+                const savedProfile = localStorage.getItem('current_profile');
+                if (savedProfile) {
+                    state.currentProfile = savedProfile;
+                    $('app').classList.add('active');
+                    updateProfileUI();
+                    loadData();
+                } else {
+                    $('profileScreen').classList.add('active');
+                }
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html> * (i / 4);
+                ctx.fillStyle = '#64748b';
+                ctx.font = '11px Nunito';
+                ctx.textAlign = 'right';
+                ctx.fillText(val.toFixed(1), padding.left - 8, y + 4);
+            }
+
             // Draw lines
             function drawLine(data, color) {
                 if (data.length < 2) {
