@@ -8,6 +8,12 @@
       "time": "21:41",
       "timestamp": "2025-12-25T08:41:00.000Z",
       "exercises": {
+        "weightedSquats": {
+          "on": 1,
+          "s": 3,
+          "r": 10,
+          "w": 7
+        },
         "jumpingLunges": {
           "on": 1,
           "s": 3,
@@ -37,7 +43,7 @@
           "r": 15
         }
       },
-      "summary": "â¢ 5 exercises"
+      "summary": "• 6 exercises"
     },
     {
       "id": "mjmnwakz19aadvgf66l",
