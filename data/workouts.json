@@ -17,7 +17,7 @@
       "time": "09:20",
       "timestamp": "2025-12-25T20:20:00.000Z",
       "minutes": 10,
-      "summary": "ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ 10 mins"
+      "summary": "ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ 10 mins"
     },
     {
       "id": "mjmmhpfqp0iecdn1lea",
@@ -62,7 +62,7 @@
           "r": 15
         }
       },
-      "summary": "ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ 6 exercises"
+      "summary": "ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ 6 exercises"
     },
     {
       "id": "mjneuvzifq6ul3tpz48",
@@ -109,218 +109,6 @@
       }
     }
   ],
-  "baseSettings": {
-    "rachel": {
-      "sidonMins": 10,
-      "steps": 15000,
-      "upper": {
-        "pushups": {
-          "sets": 3,
-          "reps": 5,
-          "weight": null,
-          "enabled": true
-        },
-        "tricepDips": {
-          "sets": 3,
-          "reps": 5,
-          "weight": null,
-          "enabled": true
-        },
-        "latPulldowns": {
-          "sets": 3,
-          "reps": 10,
-          "weight": 30,
-          "enabled": true
-        },
-        "tricepPulldowns": {
-          "sets": 3,
-          "reps": 10,
-          "weight": 10,
-          "enabled": true
-        },
-        "bicepCurls": {
-          "sets": 3,
-          "reps": 10,
-          "weight": 7,
-          "enabled": true
-        },
-        "lateralRaises": {
-          "sets": 3,
-          "reps": 10,
-          "weight": 3,
-          "enabled": true
-        }
-      },
-      "lower": {
-        "weightedSquats": {
-          "sets": 3,
-          "reps": 10,
-          "weight": 7,
-          "enabled": true
-        },
-        "jumpingLunges": {
-          "sets": 3,
-          "reps": 10,
-          "weight": null,
-          "enabled": true
-        },
-        "deadlifts": {
-          "sets": 3,
-          "reps": 10,
-          "weight": 14,
-          "enabled": true
-        },
-        "hipThrusts": {
-          "sets": 3,
-          "reps": 10,
-          "weight": 7,
-          "enabled": true
-        },
-        "weightedStepUps": {
-          "sets": 3,
-          "reps": 10,
-          "weight": 7,
-          "enabled": true
-        },
-        "calfRaises": {
-          "sets": 3,
-          "reps": 15,
-          "weight": null,
-          "enabled": true
-        }
-      },
-      "core": {
-        "rotatingPlank": {
-          "sets": 3,
-          "mins": 2,
-          "enabled": true
-        },
-        "vSitTwists": {
-          "sets": 3,
-          "reps": 10,
-          "weight": null,
-          "enabled": true
-        },
-        "mountainClimbers": {
-          "sets": 3,
-          "reps": 20,
-          "weight": null,
-          "enabled": true
-        },
-        "situps": {
-          "sets": 3,
-          "reps": 15,
-          "weight": null,
-          "enabled": true
-        }
-      }
-    },
-    "joel": {
-      "sidonMins": 10,
-      "steps": 9000,
-      "upper": {
-        "pushups": {
-          "sets": 3,
-          "reps": 5,
-          "weight": null,
-          "enabled": true
-        },
-        "tricepDips": {
-          "sets": 3,
-          "reps": 5,
-          "weight": null,
-          "enabled": true
-        },
-        "latPulldowns": {
-          "sets": 3,
-          "reps": 10,
-          "weight": 30,
-          "enabled": true
-        },
-        "tricepPulldowns": {
-          "sets": 3,
-          "reps": 10,
-          "weight": 10,
-          "enabled": true
-        },
-        "bicepCurls": {
-          "sets": 3,
-          "reps": 10,
-          "weight": 7,
-          "enabled": true
-        },
-        "lateralRaises": {
-          "sets": 3,
-          "reps": 10,
-          "weight": 3,
-          "enabled": true
-        }
-      },
-      "lower": {
-        "weightedSquats": {
-          "sets": 3,
-          "reps": 10,
-          "weight": 7,
-          "enabled": true
-        },
-        "jumpingLunges": {
-          "sets": 3,
-          "reps": 10,
-          "weight": null,
-          "enabled": true
-        },
-        "deadlifts": {
-          "sets": 3,
-          "reps": 10,
-          "weight": 14,
-          "enabled": true
-        },
-        "hipThrusts": {
-          "sets": 3,
-          "reps": 10,
-          "weight": 7,
-          "enabled": true
-        },
-        "weightedStepUps": {
-          "sets": 3,
-          "reps": 10,
-          "weight": 7,
-          "enabled": true
-        },
-        "calfRaises": {
-          "sets": 3,
-          "reps": 15,
-          "weight": null,
-          "enabled": true
-        }
-      },
-      "core": {
-        "rotatingPlank": {
-          "sets": 3,
-          "mins": 2,
-          "enabled": true
-        },
-        "vSitTwists": {
-          "sets": 3,
-          "reps": 10,
-          "weight": null,
-          "enabled": true
-        },
-        "mountainClimbers": {
-          "sets": 3,
-          "reps": 20,
-          "weight": null,
-          "enabled": true
-        },
-        "situps": {
-          "sets": 3,
-          "reps": 15,
-          "weight": null,
-          "enabled": true
-        }
-      }
-    }
-  },
   "base": {
     "rachel": {
       "sidonMins": 10,
@@ -529,6 +317,229 @@
           "r": 15,
           "w": null,
           "on": 1
+        }
+      }
+    }
+  },
+  "badges": {},
+  "raceGoals": {
+    "joel": [
+      {
+        "text": "Log 50 Workouts",
+        "achieved": false
+      }
+    ],
+    "rachel": []
+  },
+  "awardHistory": [],
+  "baseSettings": {
+    "rachel": {
+      "sidonMins": 10,
+      "steps": 15000,
+      "upper": {
+        "pushups": {
+          "sets": 3,
+          "reps": 5,
+          "weight": null,
+          "enabled": true
+        },
+        "tricepDips": {
+          "sets": 3,
+          "reps": 5,
+          "weight": null,
+          "enabled": true
+        },
+        "latPulldowns": {
+          "sets": 3,
+          "reps": 10,
+          "weight": 30,
+          "enabled": true
+        },
+        "tricepPulldowns": {
+          "sets": 3,
+          "reps": 10,
+          "weight": 10,
+          "enabled": true
+        },
+        "bicepCurls": {
+          "sets": 3,
+          "reps": 10,
+          "weight": 7,
+          "enabled": true
+        },
+        "lateralRaises": {
+          "sets": 3,
+          "reps": 10,
+          "weight": 3,
+          "enabled": true
+        }
+      },
+      "lower": {
+        "weightedSquats": {
+          "sets": 3,
+          "reps": 10,
+          "weight": 7,
+          "enabled": true
+        },
+        "jumpingLunges": {
+          "sets": 3,
+          "reps": 10,
+          "weight": null,
+          "enabled": true
+        },
+        "deadlifts": {
+          "sets": 3,
+          "reps": 10,
+          "weight": 14,
+          "enabled": true
+        },
+        "hipThrusts": {
+          "sets": 3,
+          "reps": 10,
+          "weight": 7,
+          "enabled": true
+        },
+        "weightedStepUps": {
+          "sets": 3,
+          "reps": 10,
+          "weight": 7,
+          "enabled": true
+        },
+        "calfRaises": {
+          "sets": 3,
+          "reps": 15,
+          "weight": null,
+          "enabled": true
+        }
+      },
+      "core": {
+        "rotatingPlank": {
+          "sets": 3,
+          "mins": 2,
+          "enabled": true
+        },
+        "vSitTwists": {
+          "sets": 3,
+          "reps": 10,
+          "weight": null,
+          "enabled": true
+        },
+        "mountainClimbers": {
+          "sets": 3,
+          "reps": 20,
+          "weight": null,
+          "enabled": true
+        },
+        "situps": {
+          "sets": 3,
+          "reps": 15,
+          "weight": null,
+          "enabled": true
+        }
+      }
+    },
+    "joel": {
+      "sidonMins": 10,
+      "steps": 9000,
+      "upper": {
+        "pushups": {
+          "sets": 3,
+          "reps": 5,
+          "weight": null,
+          "enabled": true
+        },
+        "tricepDips": {
+          "sets": 3,
+          "reps": 5,
+          "weight": null,
+          "enabled": true
+        },
+        "latPulldowns": {
+          "sets": 3,
+          "reps": 10,
+          "weight": 30,
+          "enabled": true
+        },
+        "tricepPulldowns": {
+          "sets": 3,
+          "reps": 10,
+          "weight": 10,
+          "enabled": true
+        },
+        "bicepCurls": {
+          "sets": 3,
+          "reps": 10,
+          "weight": 7,
+          "enabled": true
+        },
+        "lateralRaises": {
+          "sets": 3,
+          "reps": 10,
+          "weight": 3,
+          "enabled": true
+        }
+      },
+      "lower": {
+        "weightedSquats": {
+          "sets": 3,
+          "reps": 10,
+          "weight": 7,
+          "enabled": true
+        },
+        "jumpingLunges": {
+          "sets": 3,
+          "reps": 10,
+          "weight": null,
+          "enabled": true
+        },
+        "deadlifts": {
+          "sets": 3,
+          "reps": 10,
+          "weight": 14,
+          "enabled": true
+        },
+        "hipThrusts": {
+          "sets": 3,
+          "reps": 10,
+          "weight": 7,
+          "enabled": true
+        },
+        "weightedStepUps": {
+          "sets": 3,
+          "reps": 10,
+          "weight": 7,
+          "enabled": true
+        },
+        "calfRaises": {
+          "sets": 3,
+          "reps": 15,
+          "weight": null,
+          "enabled": true
+        }
+      },
+      "core": {
+        "rotatingPlank": {
+          "sets": 3,
+          "mins": 2,
+          "enabled": true
+        },
+        "vSitTwists": {
+          "sets": 3,
+          "reps": 10,
+          "weight": null,
+          "enabled": true
+        },
+        "mountainClimbers": {
+          "sets": 3,
+          "reps": 20,
+          "weight": null,
+          "enabled": true
+        },
+        "situps": {
+          "sets": 3,
+          "reps": 15,
+          "weight": null,
+          "enabled": true
         }
       }
     }
