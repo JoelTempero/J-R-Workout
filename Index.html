@@ -18,7 +18,7 @@
         body { font-family: 'Nunito', sans-serif; background: var(--bg-dark); color: var(--text-primary); min-height: 100vh; min-height: 100dvh; overflow-x: hidden; }
         input, textarea, select { -webkit-user-select: auto; user-select: auto; }
         .hidden { display: none !important; }
-        button { min-height: 44px; min-width: 44px; touch-action: manipulation; cursor: pointer; }
+        button { min-height: 48px; min-width: 48px; touch-action: manipulation; cursor: pointer; -webkit-tap-highlight-color: transparent; }
         .pin-screen { position: fixed; inset: 0; background: var(--bg-dark); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; padding: 2rem; }
         .pin-logo { font-family: 'Fredoka', sans-serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; background: linear-gradient(135deg, var(--joel-primary), var(--rachel-primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
         .pin-subtitle { color: var(--text-secondary); margin-bottom: 2rem; }
@@ -31,37 +31,44 @@
         .pin-key { width: 75px; height: 75px; border-radius: 50%; border: none; background: var(--bg-card); color: var(--text-primary); font-size: 1.5rem; font-weight: 600; font-family: 'Nunito', sans-serif; }
         .pin-key:active { transform: scale(0.95); background: var(--bg-input); }
         .pin-key.empty { visibility: hidden; }
-        .app { display: none; flex-direction: column; min-height: 100vh; min-height: 100dvh; padding-bottom: 90px; }
+        .app { display: none; flex-direction: column; min-height: 100vh; min-height: 100dvh; padding-bottom: 100px; }
         .app.active { display: flex; }
         .header { padding: 1rem 1.5rem; display: flex; align-items: center; background: var(--bg-card); border-bottom: 1px solid rgba(255,255,255,0.05); position: sticky; top: 0; z-index: 50; }
         .header-left { display: flex; align-items: center; gap: 0.75rem; }
         .header-icon { font-size: 1.5rem; }
         .header-title { font-family: 'Fredoka', sans-serif; font-size: 1.25rem; font-weight: 600; }
         .header-date { color: var(--text-secondary); font-size: 0.875rem; }
-        .page { display: none; flex: 1; padding: 1rem; overflow-y: auto; }
+        .page { display: none; flex: 1; padding: 1rem; overflow-y: auto; padding-bottom: 20px; }
         .page.active { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .card { background: var(--bg-card); border-radius: 16px; padding: 1.25rem; margin-bottom: 1rem; }
         .card-title { font-family: 'Fredoka', sans-serif; font-size: 1.1rem; margin-bottom: 1rem; }
-        .workout-log-item { background: var(--bg-input); border-radius: 12px; padding: 1rem; margin-bottom: 0.75rem; display: flex; align-items: flex-start; gap: 1rem; }
+        
+        /* Workouts List - grouped by date */
+        .date-group { margin-bottom: 1.5rem; }
+        .date-group-header { font-family: 'Fredoka', sans-serif; font-size: 1rem; color: var(--text-secondary); margin-bottom: 0.75rem; padding-left: 0.25rem; }
+        .workout-log-item { background: var(--bg-input); border-radius: 12px; padding: 1rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.75rem; }
         .workout-log-item.joel { border-left: 4px solid var(--joel-primary); }
         .workout-log-item.rachel { border-left: 4px solid var(--rachel-primary); }
-        .workout-log-icon { font-size: 1.75rem; width: 44px; text-align: center; }
+        .workout-log-icon { font-size: 1.5rem; width: 36px; text-align: center; flex-shrink: 0; }
         .workout-log-details { flex: 1; min-width: 0; }
-        .workout-log-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem; flex-wrap: wrap; }
-        .workout-log-title { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 1.25rem; }
-        .workout-log-profile { font-size: 0.65rem; padding: 0.2rem 0.5rem; border-radius: 10px; font-weight: 700; }
+        .workout-log-header { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+        .workout-log-title { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 1.1rem; }
+        .workout-log-profile { font-size: 0.65rem; padding: 0.15rem 0.4rem; border-radius: 8px; font-weight: 700; }
         .workout-log-profile.joel { background: var(--joel-primary); color: white; }
         .workout-log-profile.rachel { background: var(--rachel-primary); color: white; }
-        .workout-log-meta { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem; }
-        .workout-log-summary { font-size: 1rem; color: var(--text-secondary); line-height: 1.6; }
-        .workout-log-summary strong { color: var(--text-primary); font-weight: 700; }
-        .workout-log-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
-        .workout-log-actions button { width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--bg-card); color: var(--text-secondary); font-size: 1.1rem; display: flex; align-items: center; justify-content: center; }
+        .workout-log-meta { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem; }
+        .workout-log-summary { font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.25rem; }
+        .workout-log-summary strong { color: var(--text-primary); }
+        .workout-log-actions { display: flex; gap: 0.35rem; flex-shrink: 0; }
+        .workout-log-actions button { width: 40px; height: 40px; border-radius: 50%; border: none; background: var(--bg-card); color: var(--text-secondary); font-size: 1rem; display: flex; align-items: center; justify-content: center; min-height: 40px; min-width: 40px; }
         .workout-log-actions button:active { background: var(--bg-dark); }
+        .details-btn { background: var(--bg-card) !important; color: var(--text-secondary) !important; font-size: 0.7rem !important; padding: 0.3rem 0.6rem !important; border-radius: 6px !important; width: auto !important; min-width: auto !important; height: auto !important; min-height: 28px !important; font-family: 'Nunito', sans-serif; font-weight: 600; }
+        .details-btn:active { background: var(--bg-input) !important; }
         .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
         .empty-state-icon { font-size: 3rem; margin-bottom: 1rem; }
-        .fab { position: fixed; bottom: 105px; right: 1.5rem; width: 64px; height: 64px; border-radius: 50%; border: none; background: var(--success); color: white; font-size: 2.25rem; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4); z-index: 90; display: flex; align-items: center; justify-content: center; }
+        
+        .fab { position: fixed; bottom: 115px; right: 1.5rem; width: 64px; height: 64px; border-radius: 50%; border: none; background: var(--success); color: white; font-size: 2.25rem; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4); z-index: 90; display: flex; align-items: center; justify-content: center; }
         .fab:active { transform: scale(0.95); }
         .log-options-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: flex-end; z-index: 200; }
         .log-options-modal.active { display: flex; }
@@ -108,6 +115,8 @@
         .submit-btn button.joel { background: linear-gradient(135deg, var(--joel-primary), #9333ea); color: white; }
         .submit-btn button.rachel { background: linear-gradient(135deg, var(--rachel-primary), #0891b2); color: white; }
         .submit-btn button:active { transform: scale(0.98); }
+        
+        /* Calendar - fixed alignment */
         .calendar-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
         .calendar-nav button { background: var(--bg-input); border: none; color: var(--text-primary); width: 44px; height: 44px; border-radius: 50%; font-size: 1.25rem; display: flex; align-items: center; justify-content: center; }
         .calendar-nav button:active { background: var(--bg-card); }
@@ -117,11 +126,12 @@
         .calendar-filter button.active { border-color: var(--success); background: rgba(16, 185, 129, 0.1); color: var(--success); }
         .calendar-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; margin-bottom: 0.5rem; }
         .calendar-weekdays span { color: var(--text-muted); font-size: 0.75rem; font-weight: 600; padding: 0.5rem 0; }
-        .calendar-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.25rem; }
-        .calendar-day { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0.15rem; }
-        .calendar-day .date { font-size: 0.75rem; font-weight: 600; margin-bottom: 0.1rem; }
+        .calendar-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+        .calendar-day { height: 52px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 4px; }
+        .calendar-day .date { font-size: 0.75rem; font-weight: 600; height: 18px; line-height: 18px; }
         .calendar-day.empty .date { color: var(--text-muted); opacity: 0.3; }
         .calendar-day.today .date { color: var(--success); font-weight: 800; }
+        .calendar-day .indicator-wrap { height: 28px; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
         .calendar-day .indicator-circle { width: 28px; height: 28px; position: relative; }
         .calendar-day .half-left, .calendar-day .half-right { position: absolute; width: 14px; height: 28px; top: 0; }
         .calendar-day .half-left { left: 0; border-radius: 28px 0 0 28px; }
@@ -131,21 +141,31 @@
         .calendar-legend { display: flex; gap: 1rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); justify-content: center; }
         .legend-item { display: flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; color: var(--text-secondary); }
         .legend-half { width: 14px; height: 14px; border-radius: 7px; }
+        
+        /* Stats */
         .time-filter { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
-        .time-filter button { flex: 1; padding: 0.625rem; border: none; border-radius: 8px; background: var(--bg-input); color: var(--text-secondary); font-family: 'Nunito', sans-serif; font-weight: 600; font-size: 0.875rem; }
+        .time-filter button { flex: 1; padding: 0.625rem; border: none; border-radius: 8px; background: var(--bg-input); color: var(--text-secondary); font-family: 'Nunito', sans-serif; font-weight: 600; font-size: 0.8rem; }
         .time-filter button.active { background: var(--success); color: white; }
         .chart-container { height: 220px; margin: 1rem 0; }
         .chart-canvas { width: 100%; height: 100%; }
         .exercise-selector select { width: 100%; padding: 0.75rem 1rem; background: var(--bg-input); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: var(--text-primary); font-family: 'Nunito', sans-serif; font-size: 1rem; min-height: 50px; margin-bottom: 1rem; }
         .exercise-selector select:focus { outline: none; border-color: var(--success); }
+        .stats-profile-toggle { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+        .stats-profile-btn { flex: 1; padding: 0.6rem; border: 2px solid var(--text-muted); border-radius: 8px; background: transparent; color: var(--text-muted); font-family: 'Fredoka', sans-serif; font-size: 0.85rem; }
+        .stats-profile-btn.active.joel { border-color: var(--joel-primary); color: var(--joel-secondary); background: rgba(124, 58, 237, 0.15); }
+        .stats-profile-btn.active.rachel { border-color: var(--rachel-primary); color: var(--rachel-secondary); background: rgba(6, 182, 212, 0.15); }
+        .stats-profile-btn.active.both { border-color: var(--success); color: var(--success); background: rgba(16, 185, 129, 0.15); }
         .metric-toggles { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
         .metric-toggle { padding: 0.5rem 1rem; border: 2px solid var(--text-muted); border-radius: 20px; background: transparent; color: var(--text-secondary); font-family: 'Nunito', sans-serif; font-weight: 600; font-size: 0.8rem; }
         .metric-toggle.active { border-color: var(--success); background: rgba(16, 185, 129, 0.15); color: var(--success); }
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-card); border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; padding: 0.5rem 0; padding-bottom: max(0.5rem, env(safe-area-inset-bottom)); z-index: 100; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 0.2rem; padding: 0.5rem 0.5rem; border: none; background: none; color: var(--text-muted); font-family: 'Nunito', sans-serif; font-size: 0.65rem; font-weight: 600; min-width: 56px; }
-        .nav-item .icon { font-size: 1.3rem; }
+        
+        /* Bottom Nav - improved touch */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-card); border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; padding: 0.25rem 0; padding-bottom: max(0.25rem, env(safe-area-inset-bottom)); z-index: 100; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.15rem; padding: 0.6rem 0.4rem; border: none; background: none; color: var(--text-muted); font-family: 'Nunito', sans-serif; font-size: 0.6rem; font-weight: 600; flex: 1; min-height: 56px; position: relative; }
+        .nav-item .icon { font-size: 1.25rem; }
         .nav-item.active { color: var(--success); }
-        .toast { position: fixed; bottom: 110px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--success); color: white; padding: 1rem 1.5rem; border-radius: 12px; font-weight: 600; opacity: 0; transition: all 0.3s; z-index: 400; }
+        
+        .toast { position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--success); color: white; padding: 1rem 1.5rem; border-radius: 12px; font-weight: 600; opacity: 0; transition: all 0.3s; z-index: 400; }
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
         .toast.error { background: var(--danger); }
         .sync-status { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 500; }
@@ -154,7 +174,7 @@
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 500; padding: 1rem; }
         .modal-overlay.active { display: flex; }
         .modal { background: var(--bg-card); border-radius: 20px; padding: 1.5rem; width: 100%; max-width: 400px; max-height: 85vh; overflow-y: auto; }
-        .modal-title { font-family: 'Fredoka', sans-serif; font-size: 1.25rem; margin-bottom: 1.5rem; text-align: center; }
+        .modal-title { font-family: 'Fredoka', sans-serif; font-size: 1.25rem; margin-bottom: 1rem; text-align: center; }
         .modal-section { margin-bottom: 1.5rem; }
         .modal-section-title { font-weight: 700; font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.75rem; text-transform: uppercase; }
         .modal-input { width: 100%; background: var(--bg-input); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0.875rem 1rem; color: var(--text-primary); font-family: 'Nunito', sans-serif; font-size: 1rem; margin-bottom: 0.75rem; min-height: 50px; }
@@ -180,6 +200,13 @@
         .base-setting-row input { width: 55px; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 0.4rem; color: var(--text-primary); font-family: 'Nunito', sans-serif; font-size: 0.8rem; text-align: center; }
         .base-settings-group { margin-bottom: 1rem; }
         .base-settings-group-title { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.4rem; }
+        
+        /* Details Modal */
+        .details-modal-content { padding: 0.5rem 0; }
+        .details-exercise { padding: 0.75rem; background: var(--bg-input); border-radius: 8px; margin-bottom: 0.5rem; }
+        .details-exercise-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.25rem; }
+        .details-exercise-info { font-size: 0.85rem; color: var(--text-secondary); }
+        .details-exercise-info span { margin-right: 1rem; }
     </style>
 </head>
 <body>
@@ -197,7 +224,7 @@
     </div>
     <div class="app" id="app">
         <header class="header"><div class="header-left"><span class="header-icon">💪</span><div><div class="header-title">J&R Workout</div><div class="header-date" id="headerDate"></div></div></div></header>
-        <div class="page active" id="pageWorkouts"><div class="card"><div class="card-title">📋 Workouts</div><div id="workoutsList"><div class="empty-state"><div class="empty-state-icon">🏋️</div><p>No workouts logged yet</p></div></div></div></div>
+        <div class="page active" id="pageWorkouts"><div id="workoutsList"><div class="empty-state"><div class="empty-state-icon">🏋️</div><p>No workouts logged yet</p></div></div></div>
         <div class="page" id="pageCalendar"><div class="card">
             <div class="calendar-nav"><button id="prevMonth">‹</button><span class="calendar-month" id="calendarMonth"></span><button id="nextMonth">›</button></div>
             <div class="calendar-filter" id="calendarFilter"><button data-filter="all" class="active">All</button><button data-filter="sidon">🐕</button><button data-filter="steps">👟</button><button data-filter="upper">💪</button><button data-filter="lower">🦵</button><button data-filter="core">🎯</button><button data-filter="weight">⚖️</button></div>
@@ -208,6 +235,11 @@
         <div class="page" id="pageStats"><div class="card">
             <div class="card-title">📈 Progress</div>
             <div class="time-filter" id="timeFilter"><button data-range="week" class="active">Week</button><button data-range="month">Month</button><button data-range="year">Year</button><button data-range="all">All</button></div>
+            <div class="stats-profile-toggle">
+                <button class="stats-profile-btn joel active" data-profile="joel">💜 Joel</button>
+                <button class="stats-profile-btn rachel" data-profile="rachel">🩵 Rachel</button>
+                <button class="stats-profile-btn" data-profile="both">Both</button>
+            </div>
             <div class="exercise-selector"><select id="exerciseSelect">
                 <option value="bodyWeight">⚖️ Body Weight</option><option value="steps">👟 Step Count</option><option value="sidon">🐕 Sidon Walk</option>
                 <optgroup label="💪 Upper Body"><option value="pushups">Pushups</option><option value="tricepDips">Tricep Dips</option><option value="latPulldowns">Lat Pulldowns</option><option value="tricepPulldowns">Tricep Pulldowns</option><option value="bicepCurls">Bicep Curls</option><option value="lateralRaises">Lateral Raises</option></optgroup>
@@ -216,7 +248,6 @@
             </select></div>
             <div class="metric-toggles" id="metricToggles"><button class="metric-toggle active" data-metric="weight">Weight</button><button class="metric-toggle" data-metric="reps">Reps</button><button class="metric-toggle" data-metric="sets">Sets</button></div>
             <div class="chart-container"><canvas class="chart-canvas" id="statsChart"></canvas></div>
-            <div class="calendar-legend"><div class="legend-item"><div class="legend-half" style="background:var(--joel-primary)"></div><span>Joel</span></div><div class="legend-item"><div class="legend-half" style="background:var(--rachel-primary)"></div><span>Rachel</span></div></div>
         </div></div>
         <div class="page" id="pageRewards"><div class="card"><div class="card-title">🏆 Rewards</div><p style="color:var(--text-muted);text-align:center;padding:2rem;">Coming soon!</p></div></div>
         <button class="fab" id="fabBtn">+</button>
@@ -246,7 +277,7 @@
         <div class="settings-tabs"><button class="settings-tab active" data-tab="general">General</button><button class="settings-tab" data-tab="base">Base Settings</button></div>
         <div class="settings-panel active" id="panelGeneral"><div class="modal-section"><div class="modal-section-title">GitHub Token</div><input type="password" class="modal-input" id="patInput" placeholder="ghp_xxxx"><p style="font-size:0.7rem;color:var(--text-muted);">GitHub → Settings → Developer settings → Fine-grained tokens</p></div></div>
         <div class="settings-panel" id="panelBase">
-            <div class="settings-profile-toggle"><button class="settings-profile-btn joel active" data-profile="joel">💪 Joel</button><button class="settings-profile-btn rachel" data-profile="rachel">✨ Rachel</button></div>
+            <div class="settings-profile-toggle"><button class="settings-profile-btn joel active" data-profile="joel">💜 Joel</button><button class="settings-profile-btn rachel" data-profile="rachel">🩵 Rachel</button></div>
             <div id="baseSettingsContent"></div>
         </div>
         <div class="modal-buttons"><button class="modal-btn cancel" id="cancelSettings">Cancel</button><button class="modal-btn save" id="saveSettings">Save</button></div>
@@ -256,47 +287,171 @@
         <p class="confirm-text">Are you sure?</p>
         <div class="modal-buttons"><button class="modal-btn cancel" id="cancelDelete">Cancel</button><button class="modal-btn danger" id="confirmDelete">Delete</button></div>
     </div></div>
+    <div class="modal-overlay" id="detailsModal"><div class="modal">
+        <div class="modal-title" id="detailsModalTitle">Workout Details</div>
+        <div class="details-modal-content" id="detailsModalContent"></div>
+        <div class="modal-buttons"><button class="modal-btn save" id="closeDetails" style="flex:1;">Close</button></div>
+    </div></div>
 <script>
 const CONFIG={PIN:'9743',REPO_OWNER:'',REPO_NAME:'J-R-Workout',DATA_FILE:'data/workouts.json'};
 const DEFAULT_BASE={rachel:{sidonMins:10,steps:15000,upper:{pushups:{s:3,r:5,w:null,on:1},tricepDips:{s:3,r:5,w:null,on:1},latPulldowns:{s:3,r:10,w:30,on:1},tricepPulldowns:{s:3,r:10,w:10,on:1},bicepCurls:{s:3,r:10,w:7,on:1},lateralRaises:{s:3,r:10,w:3,on:1}},lower:{weightedSquats:{s:3,r:10,w:7,on:1},jumpingLunges:{s:3,r:10,w:null,on:1},deadlifts:{s:3,r:10,w:14,on:1},hipThrusts:{s:3,r:10,w:7,on:1},weightedStepUps:{s:3,r:10,w:7,on:1},calfRaises:{s:3,r:15,w:null,on:1}},core:{rotatingPlank:{s:3,m:2,on:1},vSitTwists:{s:3,r:10,w:null,on:1},mountainClimbers:{s:3,r:20,w:null,on:1},situps:{s:3,r:15,w:null,on:1}}},joel:{sidonMins:10,steps:9000,upper:{pushups:{s:3,r:5,w:null,on:1},tricepDips:{s:3,r:5,w:null,on:1},latPulldowns:{s:3,r:10,w:30,on:1},tricepPulldowns:{s:3,r:10,w:10,on:1},bicepCurls:{s:3,r:10,w:7,on:1},lateralRaises:{s:3,r:10,w:3,on:1}},lower:{weightedSquats:{s:3,r:10,w:7,on:1},jumpingLunges:{s:3,r:10,w:null,on:1},deadlifts:{s:3,r:10,w:14,on:1},hipThrusts:{s:3,r:10,w:7,on:1},weightedStepUps:{s:3,r:10,w:7,on:1},calfRaises:{s:3,r:15,w:null,on:1}},core:{rotatingPlank:{s:3,m:2,on:1},vSitTwists:{s:3,r:10,w:null,on:1},mountainClimbers:{s:3,r:20,w:null,on:1},situps:{s:3,r:15,w:null,on:1}}}};
 const EX_NAMES={pushups:'Pushups',tricepDips:'Tricep Dips',latPulldowns:'Lat Pulldowns',tricepPulldowns:'Tricep Pulldowns',bicepCurls:'Bicep Curls',lateralRaises:'Lateral Raises',weightedSquats:'Weighted Squats',jumpingLunges:'Jumping Lunges',deadlifts:'Deadlifts',hipThrusts:'Hip Thrusts',weightedStepUps:'Weighted Step Ups',calfRaises:'Calf Raises',rotatingPlank:'Rotating Plank',vSitTwists:'V-Sit Twists',mountainClimbers:'Mountain Climbers',situps:'Situps'};
-let state={pin:'',data:{workouts:[],base:JSON.parse(JSON.stringify(DEFAULT_BASE))},month:new Date(),calFilter:'all',chartRange:'week',chartExercise:'bodyWeight',chartMetrics:{weight:true,reps:false,sets:false},pat:localStorage.getItem('github_pat')||'',deleteId:null,logProfile:'joel',settingsProfile:'joel'};
+let state={pin:'',data:{workouts:[],base:JSON.parse(JSON.stringify(DEFAULT_BASE))},month:new Date(),calFilter:'all',chartRange:'week',chartExercise:'bodyWeight',chartMetrics:{weight:true,reps:false,sets:false},chartProfile:'joel',pat:localStorage.getItem('github_pat')||'',deleteId:null,logProfile:'joel',settingsProfile:'joel'};
 const $=id=>document.getElementById(id),$$=sel=>document.querySelectorAll(sel),genId=()=>Date.now().toString(36)+Math.random().toString(36).substr(2);
-const fmtDate=d=>new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+const fmtDateLong=d=>new Date(d).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+const fmtDateShort=d=>new Date(d).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
 const fmtTime=t=>{const[h,m]=t.split(':');const hr=parseInt(h);return`${hr%12||12}:${m} ${hr>=12?'PM':'AM'}`;};
 const getIcon=t=>({sidon:'🐕',steps:'👟',upper:'💪',lower:'🦵',core:'🎯',custom:'⚡',weight:'⚖️'})[t]||'🏋️';
 const getTitle=t=>({sidon:'Sidon Walk',steps:'Step Count',upper:'Upper Body',lower:'Lower Body',core:'Core',custom:'Custom',weight:'Weight Log'})[t]||'Workout';
+const getProfileIcon=p=>p==='joel'?'💜':'🩵';
 
 function updateDots(){$$('#pinDots .pin-dot').forEach((d,i)=>d.classList.toggle('filled',i<state.pin.length));}
 function pinInput(n){if(state.pin.length<4){state.pin+=n;updateDots();if(state.pin.length===4){setTimeout(()=>{if(state.pin===CONFIG.PIN){$('pinScreen').classList.add('hidden');$('app').classList.add('active');localStorage.setItem('pin_verified','true');loadData();}else{$$('#pinDots .pin-dot').forEach(d=>d.classList.add('error'));setTimeout(()=>{state.pin='';$$('#pinDots .pin-dot').forEach(d=>d.classList.remove('error','filled'));},500);}},200);}}}
 $$('.pin-key').forEach(k=>k.addEventListener('click',()=>{if(k.dataset.num!==undefined)pinInput(k.dataset.num);else if(k.dataset.action==='back'){state.pin=state.pin.slice(0,-1);updateDots();}}));
 function setDate(){$('headerDate').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});}
-$$('.nav-item[data-page]').forEach(n=>n.addEventListener('click',()=>{const p=n.dataset.page;$$('.page').forEach(x=>x.classList.remove('active'));$(p).classList.add('active');$$('.nav-item').forEach(x=>x.classList.remove('active'));n.classList.add('active');if(p==='pageCalendar')renderCal();if(p==='pageStats')renderChart();if(p==='pageWorkouts')renderList();}));
+
+$$('.nav-item[data-page]').forEach(n=>{
+    n.addEventListener('click',e=>{
+        e.preventDefault();e.stopPropagation();
+        const p=n.dataset.page;
+        $$('.page').forEach(x=>x.classList.remove('active'));
+        $(p).classList.add('active');
+        $$('.nav-item').forEach(x=>x.classList.remove('active'));
+        n.classList.add('active');
+        if(p==='pageCalendar')renderCal();
+        if(p==='pageStats')renderChart();
+        if(p==='pageWorkouts')renderList();
+    });
+    n.addEventListener('touchend',e=>{e.preventDefault();n.click();});
+});
 
 async function loadData(){if(!state.pat)return;$('syncStatus').classList.add('syncing');try{const u=await fetch('https://api.github.com/user',{headers:{'Authorization':`Bearer ${state.pat}`}});if(u.ok)CONFIG.REPO_OWNER=(await u.json()).login;const r=await fetch(`https://api.github.com/repos/${CONFIG.REPO_OWNER}/${CONFIG.REPO_NAME}/contents/${CONFIG.DATA_FILE}`,{headers:{'Authorization':`Bearer ${state.pat}`}});if(r.ok){const d=await r.json();state.data=JSON.parse(atob(d.content));}}catch(e){console.error(e);}$('syncStatus').classList.remove('syncing');renderList();}
 async function saveData(){if(!state.pat||!CONFIG.REPO_OWNER){showToast('Configure GitHub token',true);return false;}$('syncStatus').classList.add('syncing');try{const g=await fetch(`https://api.github.com/repos/${CONFIG.REPO_OWNER}/${CONFIG.REPO_NAME}/contents/${CONFIG.DATA_FILE}`,{headers:{'Authorization':`Bearer ${state.pat}`}});let sha=g.ok?(await g.json()).sha:null;const body={message:`Update ${new Date().toISOString()}`,content:btoa(unescape(encodeURIComponent(JSON.stringify(state.data,null,2))))};if(sha)body.sha=sha;const s=await fetch(`https://api.github.com/repos/${CONFIG.REPO_OWNER}/${CONFIG.REPO_NAME}/contents/${CONFIG.DATA_FILE}`,{method:'PUT',headers:{'Authorization':`Bearer ${state.pat}`,'Content-Type':'application/json'},body:JSON.stringify(body)});$('syncStatus').classList.remove('syncing');return s.ok;}catch(e){console.error(e);$('syncStatus').classList.remove('syncing');return false;}}
 function showToast(msg,err=false){const t=$('toast');t.textContent=msg;t.classList.toggle('error',err);t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
 
-function formatExerciseDetails(exercises){if(!exercises)return'';return Object.entries(exercises).filter(([k,v])=>v.on).map(([k,v])=>{let d=`<strong>${EX_NAMES[k]}</strong>: ${v.s} sets`;if(v.m!==undefined)d+=` × ${v.m} mins`;else if(v.r!==undefined)d+=` × ${v.r} reps`;if(v.w)d+=` @ ${v.w}kg`;return d;}).join('<br>');}
+function renderList(){
+    const list=$('workoutsList');
+    const w=(state.data.workouts||[]).sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
+    if(!w.length){list.innerHTML=`<div class="empty-state"><div class="empty-state-icon">🏋️</div><p>No workouts logged yet</p></div>`;return;}
+    
+    // Group by date
+    const groups={};
+    w.forEach(x=>{
+        if(!groups[x.date])groups[x.date]=[];
+        groups[x.date].push(x);
+    });
+    
+    let html='';
+    Object.keys(groups).sort((a,b)=>new Date(b)-new Date(a)).forEach(date=>{
+        html+=`<div class="date-group"><div class="date-group-header">${fmtDateShort(date)}</div>`;
+        groups[date].forEach(x=>{
+            const isSimple=['sidon','steps','weight'].includes(x.type);
+            let summary='';
+            if(x.type==='sidon')summary=`<strong>${x.minutes} mins</strong>`;
+            else if(x.type==='steps')summary=`<strong>${(x.steps||0).toLocaleString()} steps</strong>`;
+            else if(x.type==='weight')summary=`<strong>${x.bodyWeight} kg</strong>`;
+            
+            const exerciseCount=x.exercises?Object.keys(x.exercises).filter(k=>x.exercises[k].on).length:0;
+            
+            html+=`<div class="workout-log-item ${x.profile}">
+                <div class="workout-log-icon">${getIcon(x.type)}</div>
+                <div class="workout-log-details">
+                    <div class="workout-log-header">
+                        <span class="workout-log-title">${getTitle(x.type)}</span>
+                        <span class="workout-log-profile ${x.profile}">${getProfileIcon(x.profile)} ${x.profile==='joel'?'Joel':'Rachel'}</span>
+                    </div>
+                    <div class="workout-log-meta">${fmtTime(x.time)}</div>
+                    ${isSimple?`<div class="workout-log-summary">${summary}</div>`:''}
+                </div>
+                <div class="workout-log-actions">
+                    ${!isSimple?`<button class="details-btn" onclick="showDetails('${x.id}')">Details</button>`:''}
+                    <button onclick="editW('${x.id}')">✏️</button>
+                    <button onclick="deleteW('${x.id}')">🗑️</button>
+                </div>
+            </div>`;
+        });
+        html+=`</div>`;
+    });
+    list.innerHTML=html;
+}
 
-function renderList(){const list=$('workoutsList');const w=(state.data.workouts||[]).sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));if(!w.length){list.innerHTML=`<div class="empty-state"><div class="empty-state-icon">🏋️</div><p>No workouts logged yet</p></div>`;return;}
-list.innerHTML=w.map(x=>{let summary='';if(x.type==='sidon')summary=`<strong>${x.minutes} mins</strong> walk with Sidon`;else if(x.type==='steps')summary=`<strong>${(x.steps||0).toLocaleString()} steps</strong>`;else if(x.type==='weight')summary=`<strong>${x.bodyWeight} kg</strong>`;else summary=formatExerciseDetails(x.exercises);return`<div class="workout-log-item ${x.profile}"><div class="workout-log-icon">${getIcon(x.type)}</div><div class="workout-log-details"><div class="workout-log-header"><span class="workout-log-title">${getTitle(x.type)}</span><span class="workout-log-profile ${x.profile}">${x.profile==='joel'?'Joel':'Rachel'}</span></div><div class="workout-log-meta">${fmtDate(x.date)} at ${fmtTime(x.time)}</div><div class="workout-log-summary">${summary}</div></div><div class="workout-log-actions"><button onclick="editW('${x.id}')">✏️</button><button onclick="deleteW('${x.id}')">🗑️</button></div></div>`;}).join('');}
+window.showDetails=id=>{
+    const w=state.data.workouts.find(x=>x.id===id);
+    if(!w||!w.exercises)return;
+    $('detailsModalTitle').textContent=`${getIcon(w.type)} ${getTitle(w.type)}`;
+    let html='';
+    Object.entries(w.exercises).filter(([k,v])=>v.on).forEach(([k,v])=>{
+        let info=`<span>${v.s} sets</span>`;
+        if(v.m!==undefined)info+=`<span>${v.m} mins</span>`;
+        else if(v.r!==undefined)info+=`<span>${v.r} reps</span>`;
+        if(v.w)info+=`<span>${v.w} kg</span>`;
+        html+=`<div class="details-exercise"><div class="details-exercise-name">${EX_NAMES[k]}</div><div class="details-exercise-info">${info}</div></div>`;
+    });
+    $('detailsModalContent').innerHTML=html;
+    $('detailsModal').classList.add('active');
+};
+$('closeDetails').addEventListener('click',()=>$('detailsModal').classList.remove('active'));
+$('detailsModal').addEventListener('click',e=>{if(e.target===$('detailsModal'))$('detailsModal').classList.remove('active');});
 
 $('fabBtn').addEventListener('click',()=>$('logOptionsModal').classList.add('active'));
 $('closeLogOptions').addEventListener('click',()=>$('logOptionsModal').classList.remove('active'));
 $('logOptionsModal').addEventListener('click',e=>{if(e.target===$('logOptionsModal'))$('logOptionsModal').classList.remove('active');});
 $$('.log-option-btn').forEach(b=>b.addEventListener('click',()=>{$('logOptionsModal').classList.remove('active');openLog(b.dataset.log);}));
 
-function openLog(type,edit=null){const c=$('logPages');const now=new Date();const dateVal=edit?.date||now.toISOString().split('T')[0];const timeVal=edit?.time||now.toTimeString().slice(0,5);state.logProfile=edit?.profile||'joel';const base=state.data.base?.[state.logProfile]||DEFAULT_BASE[state.logProfile];
-let content=`<div class="card"><div class="card-title">👤 Who's logging?</div><div class="profile-toggle"><button class="profile-toggle-btn joel ${state.logProfile==='joel'?'active':''}" data-profile="joel">💪 Joel</button><button class="profile-toggle-btn rachel ${state.logProfile==='rachel'?'active':''}" data-profile="rachel">✨ Rachel</button></div></div><div class="card"><div class="card-title">📅 Date & Time</div><div class="datetime-row"><input type="date" class="datetime-input" id="logDate" value="${dateVal}"><input type="time" class="datetime-input" id="logTime" value="${timeVal}"></div></div>`;
-if(type==='sidon')content+=`<div class="card"><div class="card-title">🐕 Walk Duration</div><div class="simple-input-row"><span class="icon">⏱️</span><label>Minutes</label><input type="number" id="sidonMins" value="${edit?.minutes||base.sidonMins||10}"><span class="unit">mins</span></div></div>`;
-else if(type==='steps')content+=`<div class="card"><div class="card-title">👟 Steps</div><div class="simple-input-row"><span class="icon">👣</span><label>Step count</label><input type="number" id="stepCount" value="${edit?.steps||base.steps||15000}"><span class="unit">steps</span></div></div>`;
-else if(type==='weight')content+=`<div class="card"><div class="card-title">⚖️ Body Weight</div><div class="simple-input-row"><span class="icon">🧍</span><label>Weight</label><input type="number" id="bodyWeight" step="0.1" value="${edit?.bodyWeight||''}" placeholder="0.0"><span class="unit">kg</span></div></div>`;
-else if(['upper','lower','core'].includes(type)){const exs=base[type]||DEFAULT_BASE[state.logProfile][type];const editEx=edit?.exercises||{};content+=`<div class="card"><div class="card-title">${getIcon(type)} Exercises</div><div id="exerciseList">${renderExercises(exs,editEx,false)}</div></div>`;}
-else if(type==='custom'){const allEx={...(base.upper||DEFAULT_BASE[state.logProfile].upper),...(base.lower||DEFAULT_BASE[state.logProfile].lower),...(base.core||DEFAULT_BASE[state.logProfile].core)};const editEx=edit?.exercises||{};content+=`<div class="card"><div class="card-title">⚡ Custom</div><div id="exerciseList">${renderExercises(allEx,editEx,true)}</div></div>`;}
-c.innerHTML=`<div class="log-page active" id="logPage_${type}"><div class="log-page-header"><button class="log-page-back" onclick="closeLog('${type}')">←</button><div class="log-page-title">${edit?'Edit':'Log'} ${getTitle(type)}</div></div><div class="log-page-content">${content}</div><div class="submit-btn"><button class="${state.logProfile}" id="submitLogBtn" onclick="submitLog('${type}',${edit?`'${edit.id}'`:'null'})">${edit?'Update':'Log'} ${getTitle(type)} 🎉</button></div></div>`;
-c.querySelectorAll('.profile-toggle-btn').forEach(btn=>{btn.addEventListener('click',()=>{c.querySelectorAll('.profile-toggle-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');state.logProfile=btn.dataset.profile;$('submitLogBtn').className=state.logProfile;if(['upper','lower','core','custom'].includes(type)){const newBase=state.data.base?.[state.logProfile]||DEFAULT_BASE[state.logProfile];let exs;if(type==='custom')exs={...(newBase.upper||DEFAULT_BASE[state.logProfile].upper),...(newBase.lower||DEFAULT_BASE[state.logProfile].lower),...(newBase.core||DEFAULT_BASE[state.logProfile].core)};else exs=newBase[type]||DEFAULT_BASE[state.logProfile][type];$('exerciseList').innerHTML=renderExercises(exs,{},type==='custom');attachToggleListeners();}});});
-attachToggleListeners();}
+function openLog(type,edit=null){
+    const c=$('logPages');
+    const now=new Date();
+    const dateVal=edit?.date||now.toISOString().split('T')[0];
+    const timeVal=edit?.time||now.toTimeString().slice(0,5);
+    state.logProfile=edit?.profile||'joel';
+    
+    let content=`<div class="card"><div class="card-title">👤 Who's logging?</div><div class="profile-toggle"><button class="profile-toggle-btn joel ${state.logProfile==='joel'?'active':''}" data-profile="joel">💜 Joel</button><button class="profile-toggle-btn rachel ${state.logProfile==='rachel'?'active':''}" data-profile="rachel">🩵 Rachel</button></div></div><div class="card"><div class="card-title">📅 Date & Time</div><div class="datetime-row"><input type="date" class="datetime-input" id="logDate" value="${dateVal}"><input type="time" class="datetime-input" id="logTime" value="${timeVal}"></div></div>`;
+    
+    if(type==='sidon'){
+        const base=state.data.base?.[state.logProfile]||DEFAULT_BASE[state.logProfile];
+        content+=`<div class="card"><div class="card-title">🐕 Walk Duration</div><div class="simple-input-row"><span class="icon">⏱️</span><label>Minutes</label><input type="number" id="sidonMins" value="${edit?.minutes||base.sidonMins||10}"><span class="unit">mins</span></div></div>`;
+    }else if(type==='steps'){
+        const base=state.data.base?.[state.logProfile]||DEFAULT_BASE[state.logProfile];
+        content+=`<div class="card"><div class="card-title">👟 Steps</div><div class="simple-input-row"><span class="icon">👣</span><label>Step count</label><input type="number" id="stepCount" value="${edit?.steps||base.steps||15000}"><span class="unit">steps</span></div></div>`;
+    }else if(type==='weight'){
+        content+=`<div class="card"><div class="card-title">⚖️ Body Weight</div><div class="simple-input-row"><span class="icon">🧍</span><label>Weight</label><input type="number" id="bodyWeight" step="0.1" value="${edit?.bodyWeight||''}" placeholder="0.0"><span class="unit">kg</span></div></div>`;
+    }else if(['upper','lower','core'].includes(type)){
+        const base=state.data.base?.[state.logProfile]||DEFAULT_BASE[state.logProfile];
+        const exs=base[type]||DEFAULT_BASE[state.logProfile][type];
+        const editEx=edit?.exercises||{};
+        content+=`<div class="card"><div class="card-title">${getIcon(type)} Exercises</div><div id="exerciseList">${renderExercises(exs,editEx,false)}</div></div>`;
+    }else if(type==='custom'){
+        const base=state.data.base?.[state.logProfile]||DEFAULT_BASE[state.logProfile];
+        const allEx={...(base.upper||DEFAULT_BASE[state.logProfile].upper),...(base.lower||DEFAULT_BASE[state.logProfile].lower),...(base.core||DEFAULT_BASE[state.logProfile].core)};
+        const editEx=edit?.exercises||{};
+        content+=`<div class="card"><div class="card-title">⚡ Custom</div><div id="exerciseList">${renderExercises(allEx,editEx,true)}</div></div>`;
+    }
+    
+    c.innerHTML=`<div class="log-page active" id="logPage_${type}"><div class="log-page-header"><button class="log-page-back" onclick="closeLog('${type}')">←</button><div class="log-page-title">${edit?'Edit':'Log'} ${getTitle(type)}</div></div><div class="log-page-content">${content}</div><div class="submit-btn"><button class="${state.logProfile}" id="submitLogBtn" onclick="submitLog('${type}',${edit?`'${edit.id}'`:'null'})">${edit?'Update':'Log'} ${getTitle(type)} 🎉</button></div></div>`;
+    
+    c.querySelectorAll('.profile-toggle-btn').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+            c.querySelectorAll('.profile-toggle-btn').forEach(b=>b.classList.remove('active'));
+            btn.classList.add('active');
+            state.logProfile=btn.dataset.profile;
+            $('submitLogBtn').className=state.logProfile;
+            
+            // Update values based on new profile's base settings
+            const newBase=state.data.base?.[state.logProfile]||DEFAULT_BASE[state.logProfile];
+            if(type==='sidon'&&$('sidonMins'))$('sidonMins').value=newBase.sidonMins||10;
+            if(type==='steps'&&$('stepCount'))$('stepCount').value=newBase.steps||15000;
+            
+            if(['upper','lower','core','custom'].includes(type)){
+                let exs;
+                if(type==='custom')exs={...(newBase.upper||DEFAULT_BASE[state.logProfile].upper),...(newBase.lower||DEFAULT_BASE[state.logProfile].lower),...(newBase.core||DEFAULT_BASE[state.logProfile].core)};
+                else exs=newBase[type]||DEFAULT_BASE[state.logProfile][type];
+                $('exerciseList').innerHTML=renderExercises(exs,{},type==='custom');
+                attachToggleListeners();
+            }
+        });
+    });
+    attachToggleListeners();
+}
 
 function renderExercises(exs,editEx,startOff){return Object.entries(exs).map(([k,ex])=>{const ed=editEx[k]||{};const on=Object.keys(editEx).length>0?ed.on===1:(startOff?false:ex.on);return`<div class="exercise-item" data-ex="${k}"><div class="exercise-header"><span class="exercise-name">${EX_NAMES[k]}</span><button class="exercise-toggle ${on?'active':''}" data-k="${k}"></button></div><div class="exercise-inputs ${on?'':'disabled'}" data-k="${k}"><div class="input-group"><label>Sets</label><input type="number" data-f="s" value="${ed.s??ex.s}"></div>${ex.m!==undefined?`<div class="input-group"><label>Mins</label><input type="number" data-f="m" value="${ed.m??ex.m}"></div>`:`<div class="input-group"><label>Reps</label><input type="number" data-f="r" value="${ed.r??ex.r}"></div>`}${ex.w!=null?`<div class="input-group"><label>Kg</label><input type="number" data-f="w" step="0.5" value="${ed.w??ex.w}"></div>`:''}</div></div>`;}).join('');}
 function attachToggleListeners(){const c=$('logPages');c.querySelectorAll('.exercise-toggle').forEach(t=>{t.onclick=()=>{t.classList.toggle('active');c.querySelector(`.exercise-inputs[data-k="${t.dataset.k}"]`).classList.toggle('disabled',!t.classList.contains('active'));};});}
@@ -307,16 +462,36 @@ window.deleteW=id=>{state.deleteId=id;$('deleteModal').classList.add('active');}
 $('cancelDelete').addEventListener('click',()=>{$('deleteModal').classList.remove('active');state.deleteId=null;});
 $('confirmDelete').addEventListener('click',async()=>{if(state.deleteId){state.data.workouts=state.data.workouts.filter(x=>x.id!==state.deleteId);if(await saveData()){showToast('Deleted');renderList();}else showToast('Failed',true);}$('deleteModal').classList.remove('active');state.deleteId=null;});
 
-function renderCal(){const y=state.month.getFullYear(),m=state.month.getMonth();$('calendarMonth').textContent=state.month.toLocaleDateString('en-US',{month:'long',year:'numeric'});const first=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate(),today=new Date();let html='';for(let i=0;i<first;i++)html+='<div class="calendar-day empty"><span class="date"></span></div>';for(let d=1;d<=days;d++){const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const isToday=today.getFullYear()===y&&today.getMonth()===m&&today.getDate()===d;const dw=(state.data.workouts||[]).filter(w=>w.date===ds);let joelHas=false,rachelHas=false;if(state.calFilter==='all'){joelHas=dw.some(w=>w.profile==='joel');rachelHas=dw.some(w=>w.profile==='rachel');}else{const f=dw.filter(w=>w.type===state.calFilter);joelHas=f.some(w=>w.profile==='joel');rachelHas=f.some(w=>w.profile==='rachel');}let indicator='';if(joelHas||rachelHas)indicator=`<div class="indicator-circle">${joelHas?'<div class="half-left joel"></div>':'<div class="half-left"></div>'}${rachelHas?'<div class="half-right rachel"></div>':'<div class="half-right"></div>'}</div>`;html+=`<div class="calendar-day ${isToday?'today':''}"><span class="date">${d}</span>${indicator}</div>`;}$('calendarDays').innerHTML=html;}
+function renderCal(){const y=state.month.getFullYear(),m=state.month.getMonth();$('calendarMonth').textContent=state.month.toLocaleDateString('en-US',{month:'long',year:'numeric'});const first=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate(),today=new Date();let html='';for(let i=0;i<first;i++)html+='<div class="calendar-day empty"><span class="date"></span><div class="indicator-wrap"></div></div>';for(let d=1;d<=days;d++){const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const isToday=today.getFullYear()===y&&today.getMonth()===m&&today.getDate()===d;const dw=(state.data.workouts||[]).filter(w=>w.date===ds);let joelHas=false,rachelHas=false;if(state.calFilter==='all'){joelHas=dw.some(w=>w.profile==='joel');rachelHas=dw.some(w=>w.profile==='rachel');}else{const f=dw.filter(w=>w.type===state.calFilter);joelHas=f.some(w=>w.profile==='joel');rachelHas=f.some(w=>w.profile==='rachel');}let indicator='';if(joelHas||rachelHas)indicator=`<div class="indicator-circle">${joelHas?'<div class="half-left joel"></div>':'<div class="half-left"></div>'}${rachelHas?'<div class="half-right rachel"></div>':'<div class="half-right"></div>'}</div>`;html+=`<div class="calendar-day ${isToday?'today':''}"><span class="date">${d}</span><div class="indicator-wrap">${indicator}</div></div>`;}$('calendarDays').innerHTML=html;}
 $('prevMonth').addEventListener('click',()=>{state.month.setMonth(state.month.getMonth()-1);renderCal();});
 $('nextMonth').addEventListener('click',()=>{state.month.setMonth(state.month.getMonth()+1);renderCal();});
 $$('#calendarFilter button').forEach(b=>b.addEventListener('click',()=>{$$('#calendarFilter button').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.calFilter=b.dataset.filter;renderCal();}));
 
+// Stats
 $('exerciseSelect').addEventListener('change',()=>{state.chartExercise=$('exerciseSelect').value;updateMetricTogglesVisibility();renderChart();});
 $$('#timeFilter button').forEach(b=>b.addEventListener('click',()=>{$$('#timeFilter button').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.chartRange=b.dataset.range;renderChart();}));
 $$('.metric-toggle').forEach(b=>b.addEventListener('click',()=>{b.classList.toggle('active');state.chartMetrics[b.dataset.metric]=b.classList.contains('active');renderChart();}));
+$$('.stats-profile-btn').forEach(b=>b.addEventListener('click',()=>{$$('.stats-profile-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.chartProfile=b.dataset.profile;renderChart();}));
+
 function updateMetricTogglesVisibility(){const isSimple=['bodyWeight','steps','sidon'].includes(state.chartExercise);$('metricToggles').style.display=isSimple?'none':'flex';}
-function renderChart(){const canvas=$('statsChart'),ctx=canvas.getContext('2d');const rect=canvas.parentElement.getBoundingClientRect();canvas.width=rect.width*2;canvas.height=rect.height*2;ctx.scale(2,2);const W=rect.width,H=rect.height,pad={t:20,r:20,b:30,l:50};ctx.clearRect(0,0,W,H);const now=new Date();let start;switch(state.chartRange){case'week':start=new Date(now-7*24*60*60*1000);break;case'month':start=new Date(now-30*24*60*60*1000);break;case'year':start=new Date(now-365*24*60*60*1000);break;default:start=new Date(0);}const ex=state.chartExercise;const isSimple=['bodyWeight','steps','sidon'].includes(ex);function getData(profile,metric){let ws=(state.data.workouts||[]).filter(w=>w.profile===profile&&new Date(w.timestamp)>=start);if(ex==='bodyWeight')return ws.filter(w=>w.type==='weight'&&w.bodyWeight).map(w=>({x:new Date(w.timestamp),y:w.bodyWeight}));if(ex==='steps')return ws.filter(w=>w.type==='steps'&&w.steps).map(w=>({x:new Date(w.timestamp),y:w.steps}));if(ex==='sidon')return ws.filter(w=>w.type==='sidon'&&w.minutes).map(w=>({x:new Date(w.timestamp),y:w.minutes}));return ws.filter(w=>w.exercises&&w.exercises[ex]).map(w=>{const e=w.exercises[ex];let v=0;if(metric==='weight')v=e.w||0;else if(metric==='reps')v=e.r||e.m||0;else if(metric==='sets')v=e.s||0;return{x:new Date(w.timestamp),y:v};}).filter(d=>d.y>0);}const series=[];const colors={joel:{weight:'#f59e0b',reps:'#7c3aed',sets:'#10b981'},rachel:{weight:'#fbbf24',reps:'#06b6d4',sets:'#67e8f9'}};if(isSimple){series.push({data:getData('joel','weight').sort((a,b)=>a.x-b.x),color:'#7c3aed'});series.push({data:getData('rachel','weight').sort((a,b)=>a.x-b.x),color:'#06b6d4'});}else{['weight','reps','sets'].forEach(metric=>{if(state.chartMetrics[metric]){series.push({data:getData('joel',metric).sort((a,b)=>a.x-b.x),color:colors.joel[metric]});series.push({data:getData('rachel',metric).sort((a,b)=>a.x-b.x),color:colors.rachel[metric],dash:[5,5]});}});}const allData=series.flatMap(s=>s.data);if(!allData.length){ctx.fillStyle='#64748b';ctx.font='14px Nunito';ctx.textAlign='center';ctx.fillText('No data yet',W/2,H/2);return;}const minY=Math.min(...allData.map(d=>d.y))*0.9||0;const maxY=Math.max(...allData.map(d=>d.y))*1.1||1;const cW=W-pad.l-pad.r,cH=H-pad.t-pad.b;const sx=x=>pad.l+(x-start)/(now-start)*cW;const sy=y=>pad.t+cH-(y-minY)/(maxY-minY)*cH;ctx.strokeStyle='#2d2d4a';ctx.lineWidth=1;for(let i=0;i<=4;i++){const y=pad.t+(cH/4)*i;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke();ctx.fillStyle='#64748b';ctx.font='11px Nunito';ctx.textAlign='right';ctx.fillText((maxY-(maxY-minY)*(i/4)).toFixed(1),pad.l-8,y+4);}series.forEach(s=>{if(!s.data.length)return;ctx.strokeStyle=s.color;ctx.lineWidth=2.5;ctx.lineCap='round';ctx.lineJoin='round';if(s.dash)ctx.setLineDash(s.dash);else ctx.setLineDash([]);ctx.beginPath();s.data.forEach((d,i)=>{if(i===0)ctx.moveTo(sx(d.x),sy(d.y));else ctx.lineTo(sx(d.x),sy(d.y));});ctx.stroke();ctx.setLineDash([]);s.data.forEach(d=>{ctx.beginPath();ctx.arc(sx(d.x),sy(d.y),4,0,Math.PI*2);ctx.fillStyle=s.color;ctx.fill();});});}
+function renderChart(){const canvas=$('statsChart'),ctx=canvas.getContext('2d');const rect=canvas.parentElement.getBoundingClientRect();canvas.width=rect.width*2;canvas.height=rect.height*2;ctx.scale(2,2);const W=rect.width,H=rect.height,pad={t:20,r:20,b:30,l:50};ctx.clearRect(0,0,W,H);const now=new Date();let start;switch(state.chartRange){case'week':start=new Date(now-7*24*60*60*1000);break;case'month':start=new Date(now-30*24*60*60*1000);break;case'year':start=new Date(now-365*24*60*60*1000);break;default:start=new Date(0);}const ex=state.chartExercise;const isSimple=['bodyWeight','steps','sidon'].includes(ex);
+function getData(profile,metric){let ws=(state.data.workouts||[]).filter(w=>w.profile===profile&&new Date(w.timestamp)>=start);if(ex==='bodyWeight')return ws.filter(w=>w.type==='weight'&&w.bodyWeight).map(w=>({x:new Date(w.timestamp),y:w.bodyWeight}));if(ex==='steps')return ws.filter(w=>w.type==='steps'&&w.steps).map(w=>({x:new Date(w.timestamp),y:w.steps}));if(ex==='sidon')return ws.filter(w=>w.type==='sidon'&&w.minutes).map(w=>({x:new Date(w.timestamp),y:w.minutes}));return ws.filter(w=>w.exercises&&w.exercises[ex]).map(w=>{const e=w.exercises[ex];let v=0;if(metric==='weight')v=e.w||0;else if(metric==='reps')v=e.r||e.m||0;else if(metric==='sets')v=e.s||0;return{x:new Date(w.timestamp),y:v};}).filter(d=>d.y>0);}
+const series=[];
+const showJoel=state.chartProfile==='joel'||state.chartProfile==='both';
+const showRachel=state.chartProfile==='rachel'||state.chartProfile==='both';
+if(isSimple){
+    if(showJoel)series.push({data:getData('joel','weight').sort((a,b)=>a.x-b.x),color:'#7c3aed',label:'Joel'});
+    if(showRachel)series.push({data:getData('rachel','weight').sort((a,b)=>a.x-b.x),color:'#06b6d4',label:'Rachel'});
+}else{
+    ['weight','reps','sets'].forEach(metric=>{
+        if(state.chartMetrics[metric]){
+            const colors={weight:'#f59e0b',reps:'#10b981',sets:'#ec4899'};
+            if(showJoel)series.push({data:getData('joel',metric).sort((a,b)=>a.x-b.x),color:colors[metric],label:`Joel ${metric}`});
+            if(showRachel)series.push({data:getData('rachel',metric).sort((a,b)=>a.x-b.x),color:colors[metric],label:`Rachel ${metric}`,dash:[5,5]});
+        }
+    });
+}
+const allData=series.flatMap(s=>s.data);if(!allData.length){ctx.fillStyle='#64748b';ctx.font='14px Nunito';ctx.textAlign='center';ctx.fillText('No data yet',W/2,H/2);return;}const minY=Math.min(...allData.map(d=>d.y))*0.9||0;const maxY=Math.max(...allData.map(d=>d.y))*1.1||1;const cW=W-pad.l-pad.r,cH=H-pad.t-pad.b;const sx=x=>pad.l+(x-start)/(now-start)*cW;const sy=y=>pad.t+cH-(y-minY)/(maxY-minY)*cH;ctx.strokeStyle='#2d2d4a';ctx.lineWidth=1;for(let i=0;i<=4;i++){const y=pad.t+(cH/4)*i;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke();ctx.fillStyle='#64748b';ctx.font='11px Nunito';ctx.textAlign='right';ctx.fillText((maxY-(maxY-minY)*(i/4)).toFixed(1),pad.l-8,y+4);}series.forEach(s=>{if(!s.data.length)return;ctx.strokeStyle=s.color;ctx.lineWidth=2.5;ctx.lineCap='round';ctx.lineJoin='round';if(s.dash)ctx.setLineDash(s.dash);else ctx.setLineDash([]);ctx.beginPath();s.data.forEach((d,i)=>{if(i===0)ctx.moveTo(sx(d.x),sy(d.y));else ctx.lineTo(sx(d.x),sy(d.y));});ctx.stroke();ctx.setLineDash([]);s.data.forEach(d=>{ctx.beginPath();ctx.arc(sx(d.x),sy(d.y),4,0,Math.PI*2);ctx.fillStyle=s.color;ctx.fill();});});}
 updateMetricTogglesVisibility();
 
 $('settingsBtn').addEventListener('click',()=>{$('patInput').value=state.pat;state.settingsProfile='joel';renderBaseSettings();$$('.settings-profile-btn').forEach(b=>{b.classList.remove('active');if(b.dataset.profile==='joel')b.classList.add('active');});$('settingsModal').classList.add('active');});
