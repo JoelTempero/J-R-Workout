@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="100%" style="stop-color:#16213e"/>
+    </linearGradient>
+    <linearGradient id="purple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7c3aed"/>
+      <stop offset="100%" style="stop-color:#a78bfa"/>
+    </linearGradient>
+    <linearGradient id="cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#06b6d4"/>
+      <stop offset="100%" style="stop-color:#67e8f9"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="100" fill="url(#bg)"/>
+  <text x="256" y="200" font-family="Arial" font-size="100" font-weight="bold" fill="url(#purple)" text-anchor="middle">J</text>
+  <text x="256" y="200" font-family="Arial" font-size="60" font-weight="bold" fill="white" text-anchor="middle" dx="60">&amp;</text>
+  <text x="256" y="200" font-family="Arial" font-size="100" font-weight="bold" fill="url(#cyan)" text-anchor="middle" dx="120">R</text>
+  <text x="256" y="340" font-family="Arial" font-size="120" text-anchor="middle">💪</text>
+</svg>
