@@ -1,5 +1,15 @@
 {
-  "workouts": [],
+  "workouts": [
+    {
+      "profile": "joel",
+      "date": "2025-12-26",
+      "time": "19:42",
+      "types": [
+        "walk"
+      ],
+      "timestamp": "2025-12-26T06:42:00.000Z"
+    }
+  ],
   "weights": {
     "joel": [],
     "rachel": []
