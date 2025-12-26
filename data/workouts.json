@@ -43,17 +43,56 @@
           "w": 3
         }
       },
-      "summary": "Ã¢ÂÂ¢ 6 exercises"
+      "summary": "â¢ 6 exercises"
     },
     {
-      "id": "mjmmo5i4w5nhsbz8ys",
-      "profile": "rachel",
-      "type": "sidon",
+      "id": "mjmmhpfqp0iecdn1lea",
+      "profile": "joel",
+      "type": "lower",
+      "date": "2025-12-25",
+      "time": "21:41",
+      "timestamp": "2025-12-25T08:41:00.000Z",
+      "exercises": {
+        "jumpingLunges": {
+          "on": 1,
+          "s": 3,
+          "r": 10
+        },
+        "deadlifts": {
+          "on": 1,
+          "s": 3,
+          "r": 10,
+          "w": 20
+        },
+        "hipThrusts": {
+          "on": 1,
+          "s": 3,
+          "r": 10,
+          "w": 7
+        },
+        "weightedStepUps": {
+          "on": 1,
+          "s": 3,
+          "r": 10,
+          "w": 7
+        },
+        "calfRaises": {
+          "on": 1,
+          "s": 3,
+          "r": 15
+        }
+      },
+      "summary": "â¢ 5 exercises"
+    },
+    {
+      "id": "mjmnwakz19aadvgf66l",
+      "profile": "joel",
+      "type": "weight",
       "date": "2025-12-26",
-      "time": "21:46",
-      "timestamp": "2025-12-26T08:46:00.000Z",
-      "minutes": 10,
-      "summary": "• 10 mins"
+      "time": "22:21",
+      "timestamp": "2025-12-26T09:21:00.000Z",
+      "bodyWeight": 68,
+      "summary": "• 68 kg"
     }
   ],
   "baseSettings": {
