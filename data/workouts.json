@@ -1,6 +1,15 @@
 {
   "workouts": [
     {
+      "id": "mjne5sbil7ouv58ehc",
+      "profile": "rachel",
+      "type": "steps",
+      "date": "2025-12-27",
+      "time": "10:36",
+      "timestamp": "2025-12-26T21:36:00.000Z",
+      "steps": 15000
+    },
+    {
       "id": "mjne5556ni8egqktca",
       "profile": "joel",
       "type": "steps",
@@ -8,15 +17,6 @@
       "time": "10:35",
       "timestamp": "2025-12-26T21:35:00.000Z",
       "steps": 9000
-    },
-    {
-      "id": "mjne2httjkj72ehgu8j",
-      "profile": "rachel",
-      "type": "steps",
-      "date": "2025-12-26",
-      "time": "11:33",
-      "timestamp": "2025-12-25T22:33:00.000Z",
-      "steps": 10000
     },
     {
       "id": "mjne23a3wxxvvigjs3",
@@ -35,7 +35,7 @@
       "time": "09:20",
       "timestamp": "2025-12-25T20:20:00.000Z",
       "minutes": 10,
-      "summary": "ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ¢ 10 mins"
+      "summary": "ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ 10 mins"
     },
     {
       "id": "mjmmhpfqp0iecdn1lea",
@@ -80,16 +80,7 @@
           "r": 15
         }
       },
-      "summary": "ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ 6 exercises"
-    },
-    {
-      "id": "mjne5sbil7ouv58ehc",
-      "profile": "rachel",
-      "type": "steps",
-      "date": "2025-12-27",
-      "time": "10:36",
-      "timestamp": "2025-12-26T21:36:00.000Z",
-      "steps": 15000
+      "summary": "ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ 6 exercises"
     }
   ],
   "baseSettings": {
