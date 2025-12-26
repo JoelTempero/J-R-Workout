@@ -508,3 +508,155 @@ init();
 </script>
 </body>
 </html>
+true)}</div></div>`;}
+    c.innerHTML=`<div class="log-page active" id="logPage_${type}"><div class="log-page-header"><button class="log-page-back" onclick="closeLog('${type}')">←</button><div class="log-page-title">${edit?'Edit':'Log'} ${getTitle(type)}</div></div><div class="log-page-content">${content}</div><div class="submit-btn"><button class="${state.logProfile}" id="submitLogBtn" onclick="submitLog('${type}',${edit?`'${edit.id}'`:'null'})">${edit?'Update':'Log'} ${getTitle(type)} 🎉</button></div></div>`;
+    c.querySelectorAll('.profile-toggle-btn').forEach(btn=>{btn.addEventListener('click',()=>{c.querySelectorAll('.profile-toggle-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');state.logProfile=btn.dataset.profile;$('submitLogBtn').className=state.logProfile;const newBase=state.data.base?.[state.logProfile]||DEFAULT_BASE[state.logProfile];if(type==='sidon'&&$('sidonMins'))$('sidonMins').value=newBase.sidonMins||10;if(type==='steps'&&$('stepCount'))$('stepCount').value=newBase.steps||15000;if(['upper','lower','core','custom'].includes(type)){let exs;if(type==='custom')exs={...(newBase.upper||DEFAULT_BASE[state.logProfile].upper),...(newBase.lower||DEFAULT_BASE[state.logProfile].lower),...(newBase.core||DEFAULT_BASE[state.logProfile].core)};else exs=newBase[type]||DEFAULT_BASE[state.logProfile][type];$('exerciseList').innerHTML=renderExercises(exs,{},type==='custom');attachToggleListeners();}});});
+    c.querySelectorAll('.run-type-btn').forEach(btn=>{btn.addEventListener('click',()=>{c.querySelectorAll('.run-type-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');state.runType=btn.dataset.type;});});
+    attachToggleListeners();
+}
+
+function renderExercises(exs,editEx,startOff){return Object.entries(exs).map(([k,ex])=>{const ed=editEx[k]||{};const on=Object.keys(editEx).length>0?ed.on===1:(startOff?false:ex.on);return`<div class="exercise-item" data-ex="${k}"><div class="exercise-header"><span class="exercise-name">${EX_NAMES[k]}</span><button class="exercise-toggle ${on?'active':''}" data-k="${k}"></button></div><div class="exercise-inputs ${on?'':'disabled'}" data-k="${k}"><div class="input-group"><label>Sets</label><input type="number" data-f="s" value="${ed.s??ex.s}"></div>${ex.m!==undefined?`<div class="input-group"><label>Mins</label><input type="number" data-f="m" value="${ed.m??ex.m}"></div>`:`<div class="input-group"><label>Reps</label><input type="number" data-f="r" value="${ed.r??ex.r}"></div>`}${ex.w!=null?`<div class="input-group"><label>Kg</label><input type="number" data-f="w" step="0.5" value="${ed.w??ex.w}"></div>`:''}</div></div>`;}).join('');}
+function attachToggleListeners(){const c=$('logPages');c.querySelectorAll('.exercise-toggle').forEach(t=>{t.onclick=()=>{t.classList.toggle('active');c.querySelector(`.exercise-inputs[data-k="${t.dataset.k}"]`).classList.toggle('disabled',!t.classList.contains('active'));};});}
+window.closeLog=t=>{const p=$(`logPage_${t}`);if(p)p.remove();};
+window.submitLog=async(type,editId)=>{const date=$('logDate').value,time=$('logTime').value;let w={id:editId||genId(),profile:state.logProfile,type,date,time,timestamp:new Date(`${date}T${time}`).toISOString()};
+if(type==='sidon')w.minutes=parseInt($('sidonMins').value)||0;
+else if(type==='steps')w.steps=parseInt($('stepCount').value)||0;
+else if(type==='weight')w.bodyWeight=parseFloat($('bodyWeight').value)||0;
+else if(type==='run'){w.distance=parseFloat($('runDistance').value)||0;w.runTime=parseInt($('runTime').value)||0;w.runType=state.runType;}
+else{const exs={};document.querySelectorAll('.exercise-item').forEach(item=>{const k=item.dataset.ex,tog=item.querySelector('.exercise-toggle'),on=tog.classList.contains('active');if(!on)return;exs[k]={on:1};item.querySelectorAll('.exercise-inputs input').forEach(inp=>{const f=inp.dataset.f,v=f==='w'?parseFloat(inp.value):parseInt(inp.value);if(!isNaN(v))exs[k][f]=v;});});w.exercises=exs;}
+if(!state.data.workouts)state.data.workouts=[];if(editId){const i=state.data.workouts.findIndex(x=>x.id===editId);if(i!==-1)state.data.workouts[i]=w;}else state.data.workouts.push(w);
+checkBadges();
+const ok=await saveData();if(ok){showToast(editId?'Updated!':'Logged! 💪');closeLog(type);renderList();updateCompetitionBanner();}else showToast('Failed to save',true);};
+window.editW=id=>{const w=state.data.workouts.find(x=>x.id===id);if(w)openLog(w.type,w);};
+window.deleteW=id=>{state.deleteId=id;$('deleteModal').classList.add('active');};
+$('cancelDelete').addEventListener('click',()=>{$('deleteModal').classList.remove('active');state.deleteId=null;});
+$('confirmDelete').addEventListener('click',async()=>{if(state.deleteId){state.data.workouts=state.data.workouts.filter(x=>x.id!==state.deleteId);if(await saveData()){showToast('Deleted');renderList();updateCompetitionBanner();}else showToast('Failed',true);}$('deleteModal').classList.remove('active');state.deleteId=null;});
+
+function checkBadges(){if(!state.data.badges)state.data.badges={};['joel','rachel'].forEach(p=>{BADGES.forEach(b=>{if(!state.data.badges[b.id]){try{if(b.check(state.data,p)){state.data.badges[b.id]=p;showToast(`🏅 ${p==='joel'?'Joel':'Rachel'} earned: ${b.name}!`);}}catch(e){}}});});}
+
+// Calendar
+function renderCal(){const y=state.month.getFullYear(),m=state.month.getMonth();$('calendarMonth').textContent=state.month.toLocaleDateString('en-US',{month:'long',year:'numeric'});const first=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate(),today=new Date();let html='';for(let i=0;i<first;i++)html+='<div class="calendar-day empty"><span class="date"></span><div class="indicator-wrap"></div></div>';for(let d=1;d<=days;d++){const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const isToday=today.getFullYear()===y&&today.getMonth()===m&&today.getDate()===d;const dw=(state.data.workouts||[]).filter(w=>w.date===ds);let joelHas=false,rachelHas=false;if(state.calFilter==='all'){joelHas=dw.some(w=>w.profile==='joel');rachelHas=dw.some(w=>w.profile==='rachel');}else{const f=dw.filter(w=>w.type===state.calFilter);joelHas=f.some(w=>w.profile==='joel');rachelHas=f.some(w=>w.profile==='rachel');}let indicator='';if(joelHas||rachelHas)indicator=`<div class="indicator-circle">${joelHas?'<div class="half-left joel"></div>':'<div class="half-left"></div>'}${rachelHas?'<div class="half-right rachel"></div>':'<div class="half-right"></div>'}</div>`;html+=`<div class="calendar-day ${isToday?'today':''}"><span class="date">${d}</span><div class="indicator-wrap">${indicator}</div></div>`;}$('calendarDays').innerHTML=html;}
+$('prevMonth').addEventListener('click',()=>{state.month.setMonth(state.month.getMonth()-1);renderCal();});
+$('nextMonth').addEventListener('click',()=>{state.month.setMonth(state.month.getMonth()+1);renderCal();});
+$$('#calendarFilter button').forEach(b=>b.addEventListener('click',()=>{$$('#calendarFilter button').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.calFilter=b.dataset.filter;renderCal();}));
+
+// Stats
+$('exerciseSelect').addEventListener('change',()=>{state.chartExercise=$('exerciseSelect').value;updateMetricTogglesVisibility();renderChart();});
+$$('#timeFilter button').forEach(b=>b.addEventListener('click',()=>{$$('#timeFilter button').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.chartRange=b.dataset.range;renderChart();}));
+$$('.metric-toggle').forEach(b=>b.addEventListener('click',()=>{b.classList.toggle('active');state.chartMetrics[b.dataset.metric]=b.classList.contains('active');updateMetricToggleColors();renderChart();}));
+$$('.stats-profile-btn').forEach(b=>b.addEventListener('click',()=>{$$('.stats-profile-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.chartProfile=b.dataset.profile;updateMetricToggleColors();renderChart();}));
+
+function updateMetricToggleColors(){const p=state.chartProfile;$$('.metric-toggle').forEach(b=>{b.className='metric-toggle';if(state.chartMetrics[b.dataset.metric])b.classList.add('active',`${b.dataset.metric}-${p}`);});}
+function updateMetricTogglesVisibility(){const isSimple=['bodyWeight','steps','sidon','run'].includes(state.chartExercise);$('metricToggles').style.display=isSimple?'none':'flex';}
+
+function renderChart(){
+    const canvas=$('statsChart'),ctx=canvas.getContext('2d');
+    const rect=canvas.parentElement.getBoundingClientRect();
+    canvas.width=rect.width*2;canvas.height=rect.height*2;ctx.scale(2,2);
+    const W=rect.width,H=rect.height,pad={t:20,r:15,b:35,l:45};
+    ctx.clearRect(0,0,W,H);
+    const now=new Date();let start,dateLabels=[];
+    switch(state.chartRange){
+        case'week':start=new Date(now-6*24*60*60*1000);for(let i=0;i<7;i++){const d=new Date(start.getTime()+i*24*60*60*1000);dateLabels.push({date:d,label:d.toLocaleDateString('en-US',{weekday:'short'})});}break;
+        case'month':start=new Date(now-29*24*60*60*1000);[0,7,14,21,29].forEach(i=>{const d=new Date(start.getTime()+i*24*60*60*1000);dateLabels.push({date:d,label:d.toLocaleDateString('en-US',{month:'short',day:'numeric'})});});break;
+        case'year':start=new Date(now-364*24*60*60*1000);for(let i=0;i<12;i++){const d=new Date(start.getTime()+i*30*24*60*60*1000);dateLabels.push({date:d,label:d.toLocaleDateString('en-US',{month:'short'})});}break;
+        default:start=new Date(0);dateLabels=[{date:start,label:'Start'},{date:now,label:'Now'}];
+    }
+    const ex=state.chartExercise;const isSimple=['bodyWeight','steps','sidon','run'].includes(ex);
+    const COLORS={rachel:{weight:'#ef4444',reps:'#3b82f6',sets:'#eab308'},joel:{weight:'#22c55e',reps:'#f97316',sets:'#a855f7'}};
+    function getData(profile,metric){let ws=(state.data.workouts||[]).filter(w=>w.profile===profile&&new Date(w.timestamp)>=start);if(ex==='bodyWeight')return ws.filter(w=>w.type==='weight'&&w.bodyWeight).map(w=>({x:new Date(w.timestamp),y:w.bodyWeight}));if(ex==='steps')return ws.filter(w=>w.type==='steps'&&w.steps).map(w=>({x:new Date(w.timestamp),y:w.steps}));if(ex==='sidon')return ws.filter(w=>w.type==='sidon'&&w.minutes).map(w=>({x:new Date(w.timestamp),y:w.minutes}));if(ex==='run')return ws.filter(w=>w.type==='run'&&w.distance).map(w=>({x:new Date(w.timestamp),y:w.distance}));return ws.filter(w=>w.exercises&&w.exercises[ex]).map(w=>{const e=w.exercises[ex];let v=0;if(metric==='weight')v=e.w||0;else if(metric==='reps')v=e.r||e.m||0;else if(metric==='sets')v=e.s||0;return{x:new Date(w.timestamp),y:v};}).filter(d=>d.y>0);}
+    const series=[];const showJoel=state.chartProfile==='joel'||state.chartProfile==='both';const showRachel=state.chartProfile==='rachel'||state.chartProfile==='both';
+    if(isSimple){if(showJoel)series.push({data:getData('joel','weight').sort((a,b)=>a.x-b.x),color:'#7c3aed',label:'Joel'});if(showRachel)series.push({data:getData('rachel','weight').sort((a,b)=>a.x-b.x),color:'#06b6d4',label:'Rachel',dash:state.chartProfile==='both'?[5,5]:null});}
+    else{['weight','reps','sets'].forEach(metric=>{if(state.chartMetrics[metric]){if(showJoel)series.push({data:getData('joel',metric).sort((a,b)=>a.x-b.x),color:COLORS.joel[metric],label:`Joel ${metric}`});if(showRachel)series.push({data:getData('rachel',metric).sort((a,b)=>a.x-b.x),color:COLORS.rachel[metric],label:`Rachel ${metric}`,dash:state.chartProfile==='both'?[5,5]:null});}});}
+    const allData=series.flatMap(s=>s.data);
+    if(!allData.length){ctx.fillStyle='#64748b';ctx.font='14px Nunito';ctx.textAlign='center';ctx.fillText('No data yet',W/2,H/2);return;}
+    let minY=Math.min(...allData.map(d=>d.y)),maxY=Math.max(...allData.map(d=>d.y));
+    const range=maxY-minY||1;minY=Math.floor((minY-range*0.1)*2)/2;maxY=Math.ceil((maxY+range*0.1)*2)/2;if(minY<0)minY=0;
+    const cW=W-pad.l-pad.r,cH=H-pad.t-pad.b;
+    const sx=x=>pad.l+(x-start)/(now-start)*cW;
+    const sy=y=>pad.t+cH-(y-minY)/(maxY-minY)*cH;
+    ctx.strokeStyle='#2d2d4a';ctx.lineWidth=1;
+    const steps=5;for(let i=0;i<=steps;i++){const y=pad.t+(cH/steps)*i;const val=maxY-(maxY-minY)*(i/steps);ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke();ctx.fillStyle='#64748b';ctx.font='10px Nunito';ctx.textAlign='right';ctx.fillText(val%1===0?val.toString():val.toFixed(1),pad.l-5,y+3);}
+    ctx.fillStyle='#64748b';ctx.font='9px Nunito';ctx.textAlign='center';
+    dateLabels.forEach(dl=>{const x=sx(dl.date);if(x>=pad.l&&x<=W-pad.r)ctx.fillText(dl.label,x,H-pad.b+15);});
+    series.forEach(s=>{if(!s.data.length)return;ctx.strokeStyle=s.color;ctx.lineWidth=2.5;ctx.lineCap='round';ctx.lineJoin='round';if(s.dash)ctx.setLineDash(s.dash);else ctx.setLineDash([]);ctx.beginPath();s.data.forEach((d,i)=>{const x=Math.max(pad.l,Math.min(W-pad.r,sx(d.x)));const y=Math.max(pad.t,Math.min(H-pad.b,sy(d.y)));if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);});ctx.stroke();ctx.setLineDash([]);s.data.forEach(d=>{const x=Math.max(pad.l,Math.min(W-pad.r,sx(d.x)));const y=Math.max(pad.t,Math.min(H-pad.b,sy(d.y)));ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fillStyle=s.color;ctx.fill();});});
+}
+updateMetricTogglesVisibility();updateMetricToggleColors();
+
+// Rewards
+function renderRewards(){
+    const now=new Date();$('rewardsMonth').textContent=now.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+    const monthStart=getMonthStart(now);
+    $('joelPoints').textContent=calcPoints(state.data,'joel',monthStart,now);
+    $('rachelPoints').textContent=calcPoints(state.data,'rachel',monthStart,now);
+    renderWeeklyAwards();renderMonthlyAwards();renderBadges();
+}
+
+function renderWeeklyAwards(){
+    const now=new Date();const weekStart=getWeekStart(now);const ws=w=>state.data.workouts.filter(x=>new Date(x.date)>=weekStart&&new Date(x.date)<=now&&x.profile===w);
+    const awards=[
+        {icon:'💪',name:'Gym Rat',desc:'Most strength workouts',joel:ws('joel').filter(x=>['upper','lower','core','custom'].includes(x.type)).length,rachel:ws('rachel').filter(x=>['upper','lower','core','custom'].includes(x.type)).length},
+        {icon:'🏃',name:'Runner',desc:'Most runs',joel:ws('joel').filter(x=>x.type==='run').length,rachel:ws('rachel').filter(x=>x.type==='run').length},
+        {icon:'📏',name:'Distance King',desc:'Most km run',joel:ws('joel').filter(x=>x.type==='run').reduce((s,x)=>s+(x.distance||0),0),rachel:ws('rachel').filter(x=>x.type==='run').reduce((s,x)=>s+(x.distance||0),0)},
+        {icon:'🔥',name:'Consistency Crown',desc:'Current streak',joel:getMaxStreak(state.data,'joel'),rachel:getMaxStreak(state.data,'rachel')},
+        {icon:'🎯',name:'All-Rounder',desc:'Upper+Lower+Core done',joel:ws('joel').some(x=>x.type==='upper')&&ws('joel').some(x=>x.type==='lower')&&ws('joel').some(x=>x.type==='core')?1:0,rachel:ws('rachel').some(x=>x.type==='upper')&&ws('rachel').some(x=>x.type==='lower')&&ws('rachel').some(x=>x.type==='core')?1:0}
+    ];
+    $('panelWeekly').innerHTML=awards.map(a=>{let leader='tie',leaderClass='tie';if(a.joel>a.rachel){leader='Joel';leaderClass='joel';}else if(a.rachel>a.joel){leader='Rachel';leaderClass='rachel';}return`<div class="award-card"><div class="award-card-header"><span class="award-card-icon">${a.icon}</span><span class="award-card-title">${a.name}</span><span class="award-card-leader ${leaderClass}">${leader}</span></div><div class="award-card-progress"><span>Joel: ${typeof a.joel==='number'&&a.joel%1!==0?a.joel.toFixed(1):a.joel}</span><span>Rachel: ${typeof a.rachel==='number'&&a.rachel%1!==0?a.rachel.toFixed(1):a.rachel}</span></div></div>`;}).join('');
+}
+
+function renderMonthlyAwards(){
+    const now=new Date();const monthStart=getMonthStart(now);const ws=p=>state.data.workouts.filter(x=>new Date(x.date)>=monthStart&&x.profile===p);
+    const joelPts=calcPoints(state.data,'joel',monthStart,now);const rachelPts=calcPoints(state.data,'rachel',monthStart,now);
+    const awards=[
+        {icon:'👑',name:'Monthly MVP',desc:'Highest total points',joel:joelPts,rachel:rachelPts},
+        {icon:'🔥',name:'Iron Will',desc:'Longest streak',joel:getMaxStreak(state.data,'joel'),rachel:getMaxStreak(state.data,'rachel')},
+        {icon:'✅',name:'Perfect Attendance',desc:'Most active days',joel:[...new Set(ws('joel').filter(x=>['upper','lower','core','custom','run'].includes(x.type)).map(x=>x.date))].length,rachel:[...new Set(ws('rachel').filter(x=>['upper','lower','core','custom','run'].includes(x.type)).map(x=>x.date))].length},
+        {icon:'🏋️',name:'Volume Monarch',desc:'Most total sets',joel:ws('joel').filter(x=>x.exercises).reduce((s,x)=>s+Object.values(x.exercises).reduce((ss,e)=>ss+(e.s||0),0),0),rachel:ws('rachel').filter(x=>x.exercises).reduce((s,x)=>s+Object.values(x.exercises).reduce((ss,e)=>ss+(e.s||0),0),0)}
+    ];
+    $('panelMonthly').innerHTML=awards.map(a=>{let leader='tie',leaderClass='tie';if(a.joel>a.rachel){leader='Joel';leaderClass='joel';}else if(a.rachel>a.joel){leader='Rachel';leaderClass='rachel';}return`<div class="award-card"><div class="award-card-header"><span class="award-card-icon">${a.icon}</span><span class="award-card-title">${a.name}</span><span class="award-card-leader ${leaderClass}">${leader}</span></div><div class="award-card-progress"><span>Joel: ${a.joel}</span><span>Rachel: ${a.rachel}</span></div></div>`;}).join('');
+}
+
+function renderBadges(){
+    if(!state.data.badges)state.data.badges={};
+    $('panelBadges').innerHTML=`<div class="badge-grid">${BADGES.map(b=>{const owner=state.data.badges[b.id];const locked=!owner;return`<div class="badge-item ${locked?'locked':owner}" onclick="showBadge(${b.id})"><div class="badge-icon">${b.icon}</div><div class="badge-name">${b.name}</div>${owner?`<div class="badge-owner ${owner}">${owner==='joel'?'Joel':'Rachel'}</div>`:''}</div>`;}).join('')}</div>`;
+}
+
+window.showBadge=id=>{const b=BADGES.find(x=>x.id===id);if(!b)return;const owner=state.data.badges?.[b.id];$('badgeModalTitle').textContent=`${b.icon} ${b.name}`;$('badgeModalContent').innerHTML=`<p style="margin-bottom:1rem;color:var(--text-secondary);">${b.desc}</p>${owner?`<p style="color:${owner==='joel'?'var(--joel-secondary)':'var(--rachel-secondary)'};font-weight:700;">Claimed by ${owner==='joel'?'Joel':'Rachel'}!</p>`:'<p style="color:var(--text-muted);">Not yet claimed</p>'}`;$('badgeModal').classList.add('active');};
+$('closeBadge').addEventListener('click',()=>$('badgeModal').classList.remove('active'));
+$('badgeModal').addEventListener('click',e=>{if(e.target===$('badgeModal'))$('badgeModal').classList.remove('active');});
+
+$$('.rewards-tab').forEach(t=>t.addEventListener('click',()=>{$$('.rewards-tab').forEach(x=>x.classList.remove('active'));$$('.rewards-panel').forEach(x=>x.classList.remove('active'));t.classList.add('active');$(`panel${t.dataset.tab.charAt(0).toUpperCase()+t.dataset.tab.slice(1)}`).classList.add('active');}));
+
+// Settings
+$('settingsBtn').addEventListener('click',()=>{$('patInput').value=state.pat;state.settingsProfile='joel';state.goalsProfile='joel';renderBaseSettings();renderRaceGoals();$$('.settings-profile-btn').forEach(b=>{b.classList.remove('active');if(b.dataset.profile==='joel')b.classList.add('active');});$('settingsModal').classList.add('active');});
+$$('.settings-tab').forEach(t=>t.addEventListener('click',()=>{$$('.settings-tab').forEach(x=>x.classList.remove('active'));$$('.settings-panel').forEach(x=>x.classList.remove('active'));t.classList.add('active');$(`settingsPanel${t.dataset.tab.charAt(0).toUpperCase()+t.dataset.tab.slice(1)}`).classList.add('active');}));
+$$('#settingsPanelBase .settings-profile-btn').forEach(b=>b.addEventListener('click',()=>{$$('#settingsPanelBase .settings-profile-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.settingsProfile=b.dataset.profile;renderBaseSettings();}));
+$$('#settingsPanelGoals .settings-profile-btn').forEach(b=>b.addEventListener('click',()=>{$$('#settingsPanelGoals .settings-profile-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.goalsProfile=b.dataset.profile;renderRaceGoals();}));
+
+function renderBaseSettings(){const p=state.settingsProfile;const base=state.data.base?.[p]||DEFAULT_BASE[p];let html=`<div class="base-settings-group"><div class="base-settings-group-title">General</div><div class="base-setting-row"><label>🐕 Sidon (mins)</label><input type="number" data-key="sidonMins" value="${base.sidonMins||10}"></div><div class="base-setting-row"><label>👟 Steps</label><input type="number" data-key="steps" value="${base.steps||15000}"></div></div><div class="base-settings-group"><div class="base-settings-group-title">💪 Upper</div>${renderBaseExercises(base.upper||DEFAULT_BASE[p].upper,'upper')}</div><div class="base-settings-group"><div class="base-settings-group-title">🦵 Lower</div>${renderBaseExercises(base.lower||DEFAULT_BASE[p].lower,'lower')}</div><div class="base-settings-group"><div class="base-settings-group-title">🎯 Core</div>${renderBaseExercises(base.core||DEFAULT_BASE[p].core,'core')}</div>`;$('baseSettingsContent').innerHTML=html;}
+function renderBaseExercises(exs,group){return Object.entries(exs).map(([k,ex])=>{let inputs=`<input type="number" data-group="${group}" data-ex="${k}" data-f="s" value="${ex.s}" placeholder="S">`;if(ex.m!==undefined)inputs+=`<input type="number" data-group="${group}" data-ex="${k}" data-f="m" value="${ex.m}" placeholder="M">`;else inputs+=`<input type="number" data-group="${group}" data-ex="${k}" data-f="r" value="${ex.r}" placeholder="R">`;if(ex.w!==null&&ex.w!==undefined)inputs+=`<input type="number" data-group="${group}" data-ex="${k}" data-f="w" value="${ex.w}" placeholder="Kg">`;return`<div class="base-setting-row"><label style="font-size:0.65rem;">${EX_NAMES[k]}</label><div style="display:flex;gap:0.15rem;">${inputs}</div></div>`;}).join('');}
+
+function renderRaceGoals(){const p=state.goalsProfile;const goals=state.data.raceGoals?.[p]||[];$('raceGoalsContent').innerHTML=goals.map((g,i)=>`<div class="race-goal-row"><input type="text" value="${g.text||''}" data-idx="${i}" placeholder="e.g. Log 50 workouts"><button onclick="removeGoal(${i})">×</button></div>`).join('')||'<p style="font-size:0.75rem;color:var(--text-muted);padding:0.5rem;">No goals set yet</p>';}
+$('addGoalBtn').addEventListener('click',()=>{const p=state.goalsProfile;if(!state.data.raceGoals)state.data.raceGoals={joel:[],rachel:[]};if(!state.data.raceGoals[p])state.data.raceGoals[p]=[];state.data.raceGoals[p].push({text:'',achieved:false});renderRaceGoals();});
+window.removeGoal=i=>{const p=state.goalsProfile;state.data.raceGoals[p].splice(i,1);renderRaceGoals();};
+
+$('cancelSettings').addEventListener('click',()=>$('settingsModal').classList.remove('active'));
+$('saveSettings').addEventListener('click',async()=>{
+    state.pat=$('patInput').value.trim();localStorage.setItem('github_pat',state.pat);
+    const p=state.settingsProfile;if(!state.data.base)state.data.base=JSON.parse(JSON.stringify(DEFAULT_BASE));if(!state.data.base[p])state.data.base[p]=JSON.parse(JSON.stringify(DEFAULT_BASE[p]));
+    const sidonInput=$('baseSettingsContent').querySelector('[data-key="sidonMins"]');const stepsInput=$('baseSettingsContent').querySelector('[data-key="steps"]');
+    if(sidonInput)state.data.base[p].sidonMins=parseInt(sidonInput.value)||10;if(stepsInput)state.data.base[p].steps=parseInt(stepsInput.value)||15000;
+    ['upper','lower','core'].forEach(group=>{if(!state.data.base[p][group])state.data.base[p][group]=JSON.parse(JSON.stringify(DEFAULT_BASE[p][group]));$('baseSettingsContent').querySelectorAll(`[data-group="${group}"]`).forEach(inp=>{const ex=inp.dataset.ex,f=inp.dataset.f;if(!state.data.base[p][group][ex])return;const val=f==='w'?parseFloat(inp.value):parseInt(inp.value);if(!isNaN(val))state.data.base[p][group][ex][f]=val;});});
+    const gp=state.goalsProfile;if(!state.data.raceGoals)state.data.raceGoals={joel:[],rachel:[]};
+    $('raceGoalsContent').querySelectorAll('input').forEach(inp=>{const idx=parseInt(inp.dataset.idx);if(state.data.raceGoals[gp][idx])state.data.raceGoals[gp][idx].text=inp.value;});
+    $('settingsModal').classList.remove('active');showToast('Settings saved!');
+    if(state.pat&&!CONFIG.REPO_OWNER)await loadData();else if(state.pat)await saveData();
+});
+$('settingsModal').addEventListener('click',e=>{if(e.target===$('settingsModal'))$('settingsModal').classList.remove('active');});
+$('deleteModal').addEventListener('click',e=>{if(e.target===$('deleteModal')){$('deleteModal').classList.remove('active');state.deleteId=null;}});
+
+function init(){setDate();if(localStorage.getItem('pin_verified')==='true'){$('pinScreen').classList.add('hidden');$('app').classList.add('active');loadData();}}
+init();
+</script>
+</body>
+</html>
