@@ -26,7 +26,7 @@
       "time": "09:20",
       "timestamp": "2025-12-25T20:20:00.000Z",
       "minutes": 10,
-      "summary": "Ã¢ÂÂ¢ 10 mins"
+      "summary": "ÃÂ¢ÃÂÃÂ¢ 10 mins"
     },
     {
       "id": "mjmmhpfqp0iecdn1lea",
@@ -71,7 +71,16 @@
           "r": 15
         }
       },
-      "summary": "ÃÂ¢ÃÂÃÂ¢ 6 exercises"
+      "summary": "ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ¢ 6 exercises"
+    },
+    {
+      "id": "mjne5556ni8egqktca",
+      "profile": "joel",
+      "type": "steps",
+      "date": "2025-12-27",
+      "time": "10:35",
+      "timestamp": "2025-12-26T21:35:00.000Z",
+      "steps": 9000
     }
   ],
   "baseSettings": {
