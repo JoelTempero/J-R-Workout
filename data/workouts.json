@@ -10,24 +10,6 @@
       "steps": 9000
     },
     {
-      "id": "mjne2httjkj72ehgu8j",
-      "profile": "rachel",
-      "type": "steps",
-      "date": "2025-12-26",
-      "time": "11:33",
-      "timestamp": "2025-12-25T22:33:00.000Z",
-      "steps": 10000
-    },
-    {
-      "id": "mjne23a3wxxvvigjs3",
-      "profile": "joel",
-      "type": "steps",
-      "date": "2025-12-26",
-      "time": "10:33",
-      "timestamp": "2025-12-25T21:33:00.000Z",
-      "steps": 9000
-    },
-    {
       "id": "mjndmidkl95nt22qrel",
       "profile": "joel",
       "type": "sidon",
@@ -35,7 +17,7 @@
       "time": "09:20",
       "timestamp": "2025-12-25T20:20:00.000Z",
       "minutes": 10,
-      "summary": "ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ¢ 10 mins"
+      "summary": "ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ 10 mins"
     },
     {
       "id": "mjmmhpfqp0iecdn1lea",
@@ -80,16 +62,51 @@
           "r": 15
         }
       },
-      "summary": "ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ 6 exercises"
+      "summary": "ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ 6 exercises"
     },
     {
-      "id": "mjne5sbil7ouv58ehc",
+      "id": "mjneuvzifq6ul3tpz48",
       "profile": "rachel",
-      "type": "steps",
-      "date": "2025-12-27",
-      "time": "10:36",
-      "timestamp": "2025-12-26T21:36:00.000Z",
-      "steps": 15000
+      "type": "lower",
+      "date": "2025-12-26",
+      "time": "10:55",
+      "timestamp": "2025-12-25T21:55:00.000Z",
+      "exercises": {
+        "weightedSquats": {
+          "on": 1,
+          "s": 3,
+          "r": 10,
+          "w": 7
+        },
+        "jumpingLunges": {
+          "on": 1,
+          "s": 3,
+          "r": 10
+        },
+        "deadlifts": {
+          "on": 1,
+          "s": 3,
+          "r": 10,
+          "w": 14
+        },
+        "hipThrusts": {
+          "on": 1,
+          "s": 3,
+          "r": 10,
+          "w": 7
+        },
+        "weightedStepUps": {
+          "on": 1,
+          "s": 3,
+          "r": 10,
+          "w": 7
+        },
+        "calfRaises": {
+          "on": 1,
+          "s": 3,
+          "r": 15
+        }
+      }
     }
   ],
   "baseSettings": {
