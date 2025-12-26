@@ -43,7 +43,7 @@
           "r": 15
         }
       },
-      "summary": "• 6 exercises"
+      "summary": "â¢ 6 exercises"
     },
     {
       "id": "mjmnwakz19aadvgf66l",
@@ -53,7 +53,17 @@
       "time": "22:21",
       "timestamp": "2025-12-26T09:21:00.000Z",
       "bodyWeight": 68,
-      "summary": "• 68 kg"
+      "summary": "â¢ 68 kg"
+    },
+    {
+      "id": "mjndmidkl95nt22qrel",
+      "profile": "joel",
+      "type": "sidon",
+      "date": "2025-12-26",
+      "time": "09:20",
+      "timestamp": "2025-12-25T20:20:00.000Z",
+      "minutes": 10,
+      "summary": "• 10 mins"
     }
   ],
   "baseSettings": {
