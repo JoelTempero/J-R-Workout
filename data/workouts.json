@@ -8,10 +8,27 @@
         "walk"
       ],
       "timestamp": "2025-12-26T06:42:00.000Z"
+    },
+    {
+      "profile": "rachel",
+      "date": "2025-12-26",
+      "time": "20:43",
+      "types": [
+        "walk",
+        "run",
+        "upper"
+      ],
+      "timestamp": "2025-12-26T07:43:00.000Z"
     }
   ],
   "weights": {
     "joel": [],
-    "rachel": []
+    "rachel": [
+      {
+        "date": "2025-12-26",
+        "timestamp": "2025-12-26T07:43:00.000Z",
+        "body": 1
+      }
+    ]
   }
 }
