@@ -155,8 +155,10 @@
         .metric-toggle{padding:0.4rem 0.8rem;border:2px solid var(--text-muted);border-radius:16px;background:transparent;color:var(--text-muted);font-weight:600;font-size:0.75rem}
         .metric-toggle.active{border-color:var(--success);color:var(--success);background:rgba(16,185,129,0.15)}
         .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg-card);border-top:1px solid rgba(255,255,255,0.05);display:grid;grid-template-columns:repeat(5,1fr);padding:0.25rem 0;padding-bottom:max(0.25rem,env(safe-area-inset-bottom));z-index:100}
-        .nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.15rem;padding:0.5rem 0.25rem;background:none;color:var(--text-muted);font-size:0.6rem;font-weight:600;min-height:56px}
-        .nav-item .icon{font-size:1.2rem}
+        .nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.15rem;padding:0.75rem 0.5rem;background:none;color:var(--text-muted);font-size:0.65rem;font-weight:600;min-height:60px;min-width:60px;border-radius:12px;transition:all 0.15s ease;-webkit-tap-highlight-color:transparent;touch-action:manipulation;cursor:pointer}
+        .nav-item:active,.nav-item.tapped{background:rgba(255,255,255,0.15);transform:scale(0.92)}
+        .nav-item .icon{font-size:1.4rem;transition:transform 0.15s}
+        .nav-item:active .icon,.nav-item.tapped .icon{transform:scale(1.15)}
         .nav-item.active{color:var(--success)}
         
         .rewards-nav{display:flex;align-items:center;justify-content:center;gap:0.5rem}
@@ -434,7 +436,13 @@ function updateDots(){$$('#pinDots .pin-dot').forEach((d,i)=>d.classList.toggle(
 function pinInput(n){if(state.pin.length<4){state.pin+=n;updateDots();if(state.pin.length===4){setTimeout(()=>{if(state.pin===CONFIG.PIN){$('pinScreen').classList.add('hidden');$('app').classList.add('active');localStorage.setItem('pin_verified','true');loadData();}else{$$('#pinDots .pin-dot').forEach(d=>d.classList.add('error'));setTimeout(()=>{state.pin='';$$('#pinDots .pin-dot').forEach(d=>d.classList.remove('error','filled'));},500);}},200);}}}
 $$('.pin-key').forEach(k=>{const handler=()=>{if(k.dataset.num!==undefined)pinInput(k.dataset.num);else if(k.dataset.action==='back'){state.pin=state.pin.slice(0,-1);updateDots();}};k.addEventListener('click',handler);k.addEventListener('touchend',e=>{e.preventDefault();handler();},{passive:false});});
 function setDate(){$('headerDate').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});}
-document.querySelectorAll('.nav-item[data-page]').forEach(n=>{const handler=e=>{e.preventDefault();e.stopPropagation();const p=n.dataset.page;$$('.page').forEach(x=>x.classList.remove('active'));$(p).classList.add('active');$$('.nav-item').forEach(x=>x.classList.remove('active'));n.classList.add('active');if(p==='pageCalendar')renderCal();if(p==='pageStats')renderChart();if(p==='pageWorkouts'){renderList();updateCompetitionBanner();}if(p==='pageRewards')renderRewards();};n.addEventListener('click',handler);n.addEventListener('touchstart',e=>{e.preventDefault();handler(e);},{passive:false});});
+document.querySelectorAll('.nav-item[data-page]').forEach(n=>{
+const doNav=()=>{const p=n.dataset.page;$$('.page').forEach(x=>x.classList.remove('active'));$(p).classList.add('active');$$('.nav-item').forEach(x=>x.classList.remove('active','tapped'));n.classList.add('active');if(p==='pageCalendar')renderCal();if(p==='pageStats')renderChart();if(p==='pageWorkouts'){renderList();updateCompetitionBanner();}if(p==='pageRewards')renderRewards();};
+n.addEventListener('touchstart',e=>{n.classList.add('tapped');},{passive:true});
+n.addEventListener('touchend',e=>{e.preventDefault();n.classList.remove('tapped');doNav();},{passive:false});
+n.addEventListener('touchcancel',()=>{n.classList.remove('tapped');});
+n.addEventListener('click',e=>{if(!e.sourceCapabilities||!e.sourceCapabilities.firesTouchEvents)doNav();});
+});
 async function loadData(){if(!state.pat)return;$('syncStatus').classList.add('syncing');try{const u=await fetch('https://api.github.com/user',{headers:{'Authorization':'Bearer '+state.pat}});if(u.ok)CONFIG.REPO_OWNER=(await u.json()).login;const r=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+CONFIG.DATA_FILE,{headers:{'Authorization':'Bearer '+state.pat}});if(r.ok){const d=await r.json();state.data={...state.data,...JSON.parse(atob(d.content))};}}catch(e){console.error(e);}$('syncStatus').classList.remove('syncing');checkBadges();renderList();updateCompetitionBanner();}
 async function saveData(){if(!state.pat||!CONFIG.REPO_OWNER){showToast('Configure GitHub token',true);return false;}$('syncStatus').classList.add('syncing');try{const g=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+CONFIG.DATA_FILE,{headers:{'Authorization':'Bearer '+state.pat}});let sha=g.ok?(await g.json()).sha:null;const body={message:'Update '+new Date().toISOString(),content:btoa(unescape(encodeURIComponent(JSON.stringify(state.data,null,2))))};if(sha)body.sha=sha;const s=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+CONFIG.DATA_FILE,{method:'PUT',headers:{'Authorization':'Bearer '+state.pat,'Content-Type':'application/json'},body:JSON.stringify(body)});$('syncStatus').classList.remove('syncing');return s.ok;}catch(e){console.error(e);$('syncStatus').classList.remove('syncing');return false;}}
 function showToast(msg,err){const t=$('toast');t.textContent=msg;t.classList.toggle('error',err);t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
@@ -496,9 +504,23 @@ window.submitLog=async(type,editId)=>{const date=$('logDate').value,time=$('logT
 
 
 $('cancelDelete').addEventListener('click',()=>{$('deleteModal').classList.remove('active');state.deleteId=null;});
-$('confirmDelete').addEventListener('click',async()=>{if(state.deleteId){state.data.workouts=state.data.workouts.filter(x=>x.id!==state.deleteId);if(await saveData()){showToast('Deleted');renderList();updateCompetitionBanner();}else showToast('Failed',true);}$('deleteModal').classList.remove('active');state.deleteId=null;});
+$('confirmDelete').addEventListener('click',async()=>{if(state.deleteId){state.data.workouts=state.data.workouts.filter(x=>x.id!==state.deleteId);checkBadges();if(await saveData()){showToast('Deleted');renderList();updateCompetitionBanner();}else showToast('Failed',true);}$('deleteModal').classList.remove('active');state.deleteId=null;});
 function updateCompetitionBanner(){const now=new Date();const start=getMonthStart(now);const joelPts=calcPoints(state.data,'joel',start,now);const rachelPts=calcPoints(state.data,'rachel',start,now);let leader,stats;if(joelPts>rachelPts){leader='💜 Joel is leading!';stats='<span style="background:rgba(255,255,255,0.2);padding:0.25rem 0.5rem;border-radius:6px;font-weight:700;">💜 '+joelPts+'</span> <span style="opacity:0.7;margin:0 0.25rem;">vs</span> <span style="opacity:0.8;">🩵 '+rachelPts+'</span>';}else if(rachelPts>joelPts){leader='🩵 Rachel is leading!';stats='<span style="background:rgba(255,255,255,0.2);padding:0.25rem 0.5rem;border-radius:6px;font-weight:700;">🩵 '+rachelPts+'</span> <span style="opacity:0.7;margin:0 0.25rem;">vs</span> <span style="opacity:0.8;">💜 '+joelPts+'</span>';}else{leader="It's a tie!";stats='<span style="background:rgba(255,255,255,0.2);padding:0.25rem 0.5rem;border-radius:6px;">'+joelPts+' pts each</span>';}$('competitionLeader').textContent=leader;$('competitionStats').innerHTML=stats;}
-function checkBadges(){if(!state.data.badges)state.data.badges={};['joel','rachel'].forEach(p=>{BADGES.forEach(b=>{const badge=state.data.badges[b.id]||{};if(!badge.first||(!badge.second&&badge.first!==p)){try{if(b.check(state.data,p)){if(!badge.first){state.data.badges[b.id]={first:p};}else if(badge.first!==p&&!badge.second){state.data.badges[b.id].second=p;}}}catch(e){}}});});}
+function checkBadges(){
+const newBadges={};
+BADGES.forEach(b=>{
+const joelHas=b.check(state.data,'joel');
+const rachelHas=b.check(state.data,'rachel');
+if(joelHas||rachelHas){
+const oldBadge=state.data.badges?.[b.id];
+if(joelHas&&rachelHas){
+if(oldBadge&&oldBadge.first){newBadges[b.id]={first:oldBadge.first,second:oldBadge.first==='joel'?'rachel':'joel'};}
+else{newBadges[b.id]={first:'joel',second:'rachel'};}
+}else if(joelHas){newBadges[b.id]={first:'joel'};}
+else if(rachelHas){newBadges[b.id]={first:'rachel'};}
+}});
+state.data.badges=newBadges;
+}
 function renderCal(){const y=state.month.getFullYear(),m=state.month.getMonth();$('calendarMonth').textContent=state.month.toLocaleDateString('en-US',{month:'long',year:'numeric'});const first=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate(),today=new Date();let html='';for(let i=0;i<first;i++)html+='<div class="calendar-day empty"><span class="date"></span><div class="indicator-wrap"></div></div>';for(let d=1;d<=days;d++){const ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');const isToday=today.getFullYear()===y&&today.getMonth()===m&&today.getDate()===d;const dw=(state.data.workouts||[]).filter(w=>w.date===ds);let joelHas=false,rachelHas=false;if(state.calFilter==='all'){joelHas=dw.some(w=>w.profile==='joel');rachelHas=dw.some(w=>w.profile==='rachel');}else{const f=dw.filter(w=>w.type===state.calFilter);joelHas=f.some(w=>w.profile==='joel');rachelHas=f.some(w=>w.profile==='rachel');}let indicator='';if(joelHas||rachelHas)indicator='<div class="indicator-circle">'+(joelHas?'<div class="half-left joel"></div>':'<div class="half-left"></div>')+(rachelHas?'<div class="half-right rachel"></div>':'<div class="half-right"></div>')+'</div>';html+='<div class="calendar-day '+(isToday?'today':'')+'"><span class="date">'+d+'</span><div class="indicator-wrap">'+indicator+'</div></div>';}$('calendarDays').innerHTML=html;}
 $('prevMonth').addEventListener('click',()=>{state.month.setMonth(state.month.getMonth()-1);renderCal();});
 $('nextMonth').addEventListener('click',()=>{state.month.setMonth(state.month.getMonth()+1);renderCal();});
@@ -598,15 +620,8 @@ $('nextYear').addEventListener('click',()=>{state.awardsYear++;renderAnnualAward
 $('nextAwardMonth').addEventListener('click',()=>{state.awardsMonth.setMonth(state.awardsMonth.getMonth()+1);renderMonthlyAwards();});
 
 $$('.rewards-tab').forEach(t=>t.addEventListener('click',()=>{
-$('rewardsPrevMonth').addEventListener('click',()=>{state.rewardsMonth.setMonth(state.rewardsMonth.getMonth()-1);renderRewards();});
-$('rewardsNextMonth').addEventListener('click',()=>{state.rewardsMonth.setMonth(state.rewardsMonth.getMonth()+1);renderRewards();});
-$('prevWeek').addEventListener('click',()=>{state.awardsWeek.setDate(state.awardsWeek.getDate()-7);renderWeeklyAwards();});
-$('nextWeek').addEventListener('click',()=>{state.awardsWeek.setDate(state.awardsWeek.getDate()+7);renderWeeklyAwards();});
-$('prevAwardMonth').addEventListener('click',()=>{state.awardsMonth.setMonth(state.awardsMonth.getMonth()-1);renderMonthlyAwards();});
 
-$('prevYear').addEventListener('click',()=>{state.awardsYear--;renderAnnualAwards();});
-$('nextYear').addEventListener('click',()=>{state.awardsYear++;renderAnnualAwards();});
-$('nextAwardMonth').addEventListener('click',()=>{state.awardsMonth.setMonth(state.awardsMonth.getMonth()+1);renderMonthlyAwards();});
+
 
 $$('.rewards-tab').forEach(x=>x.classList.remove('active'));$$('.rewards-panel').forEach(x=>x.classList.remove('active'));t.classList.add('active');$('panel'+t.dataset.tab.charAt(0).toUpperCase()+t.dataset.tab.slice(1)).classList.add('active');}));
 $('settingsBtn').addEventListener('click',()=>{$('patInput').value=state.pat;state.settingsProfile='joel';renderBaseSettings();$$('#settingsPanelBase .settings-profile-btn').forEach(b=>{b.classList.remove('active');if(b.dataset.profile==='joel')b.classList.add('active');});$('settingsModal').classList.add('active');});
