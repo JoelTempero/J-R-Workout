@@ -175,7 +175,12 @@
         .rewards-panel{display:none}
         .rewards-panel.active{display:block}
         
-        .award-card{background:var(--bg-input);border-radius:12px;padding:1rem;margin-bottom:0.75rem}
+        .awards-nav{display:flex;align-items:center;justify-content:center;gap:1rem;margin-bottom:1rem}
+        .awards-nav button{width:36px;height:36px;border-radius:50%;background:var(--bg-card);border:2px solid var(--text-muted);color:var(--text-primary);font-size:1.25rem}
+        .awards-nav button:active{background:var(--bg-input)}
+        .awards-nav span{font-weight:600;min-width:140px;text-align:center;color:var(--text-secondary)}
+        .award-card{background:var(--bg-input);border-radius:12px;padding:1rem;margin-bottom:0.75rem;cursor:pointer;transition:transform 0.15s}
+        .award-card:active{transform:scale(0.98)}
         .award-card-header{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.5rem}
         .award-card-icon{font-size:1.5rem}
         .award-card-title{font-weight:700;flex:1}
@@ -428,7 +433,7 @@ function pinInput(n){if(state.pin.length<4){state.pin+=n;updateDots();if(state.p
 $$('.pin-key').forEach(k=>{const handler=()=>{if(k.dataset.num!==undefined)pinInput(k.dataset.num);else if(k.dataset.action==='back'){state.pin=state.pin.slice(0,-1);updateDots();}};k.addEventListener('click',handler);k.addEventListener('touchend',e=>{e.preventDefault();handler();},{passive:false});});
 function setDate(){$('headerDate').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});}
 document.querySelectorAll('.nav-item[data-page]').forEach(n=>{const handler=e=>{e.preventDefault();e.stopPropagation();const p=n.dataset.page;$$('.page').forEach(x=>x.classList.remove('active'));$(p).classList.add('active');$$('.nav-item').forEach(x=>x.classList.remove('active'));n.classList.add('active');if(p==='pageCalendar')renderCal();if(p==='pageStats')renderChart();if(p==='pageWorkouts'){renderList();updateCompetitionBanner();}if(p==='pageRewards')renderRewards();};n.addEventListener('click',handler);n.addEventListener('touchstart',e=>{e.preventDefault();handler(e);},{passive:false});});
-async function loadData(){if(!state.pat)return;$('syncStatus').classList.add('syncing');try{const u=await fetch('https://api.github.com/user',{headers:{'Authorization':'Bearer '+state.pat}});if(u.ok)CONFIG.REPO_OWNER=(await u.json()).login;const r=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+CONFIG.DATA_FILE,{headers:{'Authorization':'Bearer '+state.pat}});if(r.ok){const d=await r.json();state.data={...state.data,...JSON.parse(atob(d.content))};}}catch(e){console.error(e);}$('syncStatus').classList.remove('syncing');renderList();updateCompetitionBanner();}
+async function loadData(){if(!state.pat)return;$('syncStatus').classList.add('syncing');try{const u=await fetch('https://api.github.com/user',{headers:{'Authorization':'Bearer '+state.pat}});if(u.ok)CONFIG.REPO_OWNER=(await u.json()).login;const r=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+CONFIG.DATA_FILE,{headers:{'Authorization':'Bearer '+state.pat}});if(r.ok){const d=await r.json();state.data={...state.data,...JSON.parse(atob(d.content))};}}catch(e){console.error(e);}$('syncStatus').classList.remove('syncing');checkBadges();renderList();updateCompetitionBanner();}
 async function saveData(){if(!state.pat||!CONFIG.REPO_OWNER){showToast('Configure GitHub token',true);return false;}$('syncStatus').classList.add('syncing');try{const g=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+CONFIG.DATA_FILE,{headers:{'Authorization':'Bearer '+state.pat}});let sha=g.ok?(await g.json()).sha:null;const body={message:'Update '+new Date().toISOString(),content:btoa(unescape(encodeURIComponent(JSON.stringify(state.data,null,2))))};if(sha)body.sha=sha;const s=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+CONFIG.DATA_FILE,{method:'PUT',headers:{'Authorization':'Bearer '+state.pat,'Content-Type':'application/json'},body:JSON.stringify(body)});$('syncStatus').classList.remove('syncing');return s.ok;}catch(e){console.error(e);$('syncStatus').classList.remove('syncing');return false;}}
 function showToast(msg,err){const t=$('toast');t.textContent=msg;t.classList.toggle('error',err);t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
 
@@ -456,11 +461,13 @@ function renderList(){
 }
 window.showDetails=id=>{const w=state.data.workouts.find(x=>x.id===id);if(!w||!w.exercises)return;$('detailsModalTitle').textContent=getIcon(w.type)+' '+getTitle(w.type);let html='';Object.entries(w.exercises).filter(([k,v])=>v.on===1||v.on===true).forEach(([k,v])=>{let info='<span>'+(v.s||0)+' sets</span>';if(v.m!==undefined)info+='<span>'+(v.m||0)+' mins</span>';else if(v.r!==undefined)info+='<span>'+(v.r||0)+' reps</span>';if(v.w)info+='<span>'+v.w+' kg</span>';html+='<div class="details-exercise"><div class="details-exercise-name">'+(EX_NAMES[k]||k)+'</div><div class="details-exercise-info">'+info+'</div></div>';});if(!html)html='<p style="color:var(--text-muted);">No exercises recorded</p>';$('detailsModalContent').innerHTML=html;$('detailsModal').classList.add('active');};
 $('closeDetails').addEventListener('click',()=>$('detailsModal').classList.remove('active'));
-$('detailsModal').addEventListener('click',e=>{if(e.target===$('detailsModal'))$('detailsModal').classList.remove('active');});
+$('detailsModal').addEventListener('click',e=>{if(e.target.id==='detailsModal')$('detailsModal').classList.remove('active');});
+$('detailsModal').addEventListener('touchend',e=>{if(e.target.id==='detailsModal'){e.preventDefault();$('detailsModal').classList.remove('active');}},{passive:false});
 $('fabBtn').addEventListener('click',()=>$('logModal').classList.add('active'));
 $('fabBtn').addEventListener('touchend',e=>{e.preventDefault();$('logModal').classList.add('active');});
 $('closeLogModal').addEventListener('click',()=>$('logModal').classList.remove('active'));
-$('logModal').addEventListener('click',e=>{if(e.target===$('logModal'))$('logModal').classList.remove('active');});
+$('logModal').addEventListener('click',e=>{if(e.target.id==='logModal')$('logModal').classList.remove('active');});
+$('logModal').addEventListener('touchend',e=>{if(e.target.id==='logModal'){e.preventDefault();$('logModal').classList.remove('active');}},{passive:false});
 $$('.log-option-btn').forEach(b=>b.addEventListener('click',()=>{$('logModal').classList.remove('active');openLog(b.dataset.log);}));
 function openLog(type,edit=null){
     const c=$('logPages');const now=new Date();
@@ -526,9 +533,11 @@ window.showAward=(name,icon,desc,joel,rachel,type)=>{
     $('awardModal').classList.add('active');
 };
 $('closeAward').addEventListener('click',()=>$('awardModal').classList.remove('active'));
-$('awardModal').addEventListener('click',e=>{if(e.target===$('awardModal'))$('awardModal').classList.remove('active');});
+$('awardModal').addEventListener('click',e=>{if(e.target.id==='awardModal')$('awardModal').classList.remove('active');});
+$('awardModal').addEventListener('touchend',e=>{if(e.target.id==='awardModal'){e.preventDefault();$('awardModal').classList.remove('active');}},{passive:false});
 $('closeBadge').addEventListener('click',()=>$('badgeModal').classList.remove('active'));
-$('badgeModal').addEventListener('click',e=>{if(e.target===$('badgeModal'))$('badgeModal').classList.remove('active');});
+$('badgeModal').addEventListener('click',e=>{if(e.target.id==='badgeModal')$('badgeModal').classList.remove('active');});
+$('badgeModal').addEventListener('touchend',e=>{if(e.target.id==='badgeModal'){e.preventDefault();$('badgeModal').classList.remove('active');}},{passive:false});
 
 $('rewardsPrevMonth').addEventListener('click',()=>{state.rewardsMonth.setMonth(state.rewardsMonth.getMonth()-1);renderRewards();});
 $('rewardsNextMonth').addEventListener('click',()=>{state.rewardsMonth.setMonth(state.rewardsMonth.getMonth()+1);renderRewards();});
@@ -556,7 +565,8 @@ $('cancelSettings').addEventListener('click',()=>$('settingsModal').classList.re
 $('saveSettings').addEventListener('click',async()=>{state.pat=$('patInput').value.trim();localStorage.setItem('github_pat',state.pat);const p=state.settingsProfile;if(!state.data.base)state.data.base=JSON.parse(JSON.stringify(DEFAULT_BASE));if(!state.data.base[p])state.data.base[p]=JSON.parse(JSON.stringify(DEFAULT_BASE[p]));const sidonInput=$('baseSettingsContent').querySelector('[data-key="sidonMins"]');const stepsInput=$('baseSettingsContent').querySelector('[data-key="steps"]');if(sidonInput)state.data.base[p].sidonMins=parseInt(sidonInput.value)||10;if(stepsInput)state.data.base[p].steps=parseInt(stepsInput.value)||15000;['upper','lower','core'].forEach(group=>{if(!state.data.base[p][group])state.data.base[p][group]=JSON.parse(JSON.stringify(DEFAULT_BASE[p][group]));$('baseSettingsContent').querySelectorAll('[data-group="'+group+'"]').forEach(inp=>{const ex=inp.dataset.ex,f=inp.dataset.f;if(!state.data.base[p][group][ex])return;const val=f==='w'?parseFloat(inp.value):parseInt(inp.value);if(!isNaN(val))state.data.base[p][group][ex][f]=val;});});$('settingsModal').classList.remove('active');showToast('Settings saved!');if(state.pat&&!CONFIG.REPO_OWNER)await loadData();else if(state.pat)await saveData();});
 $('settingsModal').addEventListener('click',e=>{if(e.target.id==='settingsModal')$('settingsModal').classList.remove('active');});
 $('settingsModal').addEventListener('touchend',e=>{if(e.target.id==='settingsModal'){e.preventDefault();$('settingsModal').classList.remove('active');}},{passive:false});
-$('deleteModal').addEventListener('click',e=>{if(e.target===$('deleteModal')){$('deleteModal').classList.remove('active');state.deleteId=null;}});
+$('deleteModal').addEventListener('click',e=>{if(e.target.id==='deleteModal'){$('deleteModal').classList.remove('active');state.deleteId=null;}});
+$('deleteModal').addEventListener('touchend',e=>{if(e.target.id==='deleteModal'){e.preventDefault();$('deleteModal').classList.remove('active');state.deleteId=null;}},{passive:false});
 function init(){setDate();if(localStorage.getItem('pin_verified')==='true'){$('pinScreen').classList.add('hidden');$('app').classList.add('active');loadData();}}
 init();
 </script>
