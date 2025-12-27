@@ -1,50 +1,5 @@
 {
-  "workouts": [
-    {
-      "id": "mjoprvznlaqs2kcxk2",
-      "profile": "joel",
-      "type": "upper",
-      "date": "2025-12-27",
-      "time": "08:49",
-      "timestamp": "2025-12-26T19:49:00.000Z",
-      "exercises": {
-        "pushups": {
-          "on": 1,
-          "s": 3,
-          "r": 6
-        },
-        "tricepDips": {
-          "on": 1,
-          "s": 3,
-          "r": 6
-        },
-        "latPulldowns": {
-          "on": 1,
-          "s": 3,
-          "r": 11,
-          "w": 30
-        },
-        "tricepPulldowns": {
-          "on": 1,
-          "s": 3,
-          "r": 10,
-          "w": 10
-        },
-        "bicepCurls": {
-          "on": 1,
-          "s": 3,
-          "r": 10,
-          "w": 7
-        },
-        "lateralRaises": {
-          "on": 1,
-          "s": 3,
-          "r": 10,
-          "w": 3
-        }
-      }
-    }
-  ],
+  "workouts": [],
   "base": {
     "rachel": {
       "sidonMins": 10,
@@ -257,23 +212,7 @@
       }
     }
   },
-  "badges": {
-    "1": {
-      "first": "joel"
-    },
-    "4": {
-      "first": "joel"
-    },
-    "15": {
-      "first": "joel"
-    },
-    "38": {
-      "first": "joel"
-    },
-    "39": {
-      "first": "joel"
-    }
-  },
+  "badges": {},
   "raceGoals": {
     "joel": [
       {
