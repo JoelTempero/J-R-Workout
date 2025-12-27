@@ -241,7 +241,14 @@
         .base-setting-row label{font-size:0.75rem;flex:1}
         .base-setting-row input{width:50px;background:var(--bg-card);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:0.35rem;color:var(--text-primary);font-size:0.75rem;text-align:center}
         .base-settings-group{margin-bottom:0.75rem}
-        .base-settings-group-title{font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;margin-bottom:0.35rem}
+        
+        .base-ex-header{display:grid;grid-template-columns:1fr 50px 50px 50px;gap:0.25rem;font-size:0.65rem;color:var(--text-muted);font-weight:700;padding:0.25rem 0;border-bottom:1px solid var(--bg-input);margin-bottom:0.25rem}
+        .base-ex-header span{text-align:center}
+        .base-setting-row{display:grid;grid-template-columns:1fr 50px 50px 50px;gap:0.25rem;align-items:center;margin-bottom:0.35rem}
+        .base-setting-row label{font-size:0.65rem;color:var(--text-secondary)}
+        .base-setting-row input{width:100%;padding:0.35rem;border-radius:6px;background:var(--bg-input);border:1px solid var(--text-muted);color:var(--text-primary);font-size:0.75rem;text-align:center}
+        .base-setting-row .na{text-align:center;color:var(--text-muted);font-size:0.75rem}
+.base-settings-group-title{font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;margin-bottom:0.35rem}
         .race-goal-row{display:flex;align-items:center;gap:0.5rem;padding:0.5rem;background:var(--bg-input);border-radius:8px;margin-bottom:0.35rem}
         .race-goal-row input{flex:1;background:var(--bg-card);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:0.4rem;color:var(--text-primary);font-size:0.8rem}
         .race-goal-row button{padding:0.4rem 0.6rem;min-width:32px;min-height:32px;font-size:0.8rem;border-radius:6px;background:var(--danger);color:white}
@@ -288,7 +295,7 @@
         </div></div>
         <div class="page" id="pageRewards">
             <div class="rewards-header"><div class="rewards-nav"><button id="rewardsPrevMonth">‹</button><div class="rewards-month" id="rewardsMonth"></div><button id="rewardsNextMonth">›</button></div><div class="rewards-points"><div class="rewards-points-person"><div class="rewards-points-name">Joel</div><div class="rewards-points-value" id="joelPoints">0</div><div class="rewards-points-label">points</div></div><div class="rewards-points-person"><div class="rewards-points-name">Rachel</div><div class="rewards-points-value" id="rachelPoints">0</div><div class="rewards-points-label">points</div></div></div></div>
-            <div class="rewards-tabs"><button class="rewards-tab active" data-tab="weekly">Weekly</button><button class="rewards-tab" data-tab="monthly">Monthly</button><button class="rewards-tab" data-tab="badges">Badges</button></div>
+            <div class="rewards-tabs"><button class="rewards-tab active" data-tab="weekly">Weekly</button><button class="rewards-tab" data-tab="monthly">Monthly</button><button class="rewards-tab" data-tab="annual">Annual</button><button class="rewards-tab" data-tab="badges">Badges</button></div>
             <div class="rewards-panel active" id="panelWeekly">
                 <div class="awards-nav"><button id="prevWeek">‹</button><span id="weekLabel"></span><button id="nextWeek">›</button></div>
                 <div id="weeklyAwardsList"></div>
@@ -296,6 +303,10 @@
             <div class="rewards-panel" id="panelMonthly">
                 <div class="awards-nav"><button id="prevAwardMonth">‹</button><span id="monthLabel"></span><button id="nextAwardMonth">›</button></div>
                 <div id="monthlyAwardsList"></div>
+            </div>
+            <div class="rewards-panel" id="panelAnnual">
+                <div class="awards-nav"><button id="prevYear">‹</button><span id="yearLabel"></span><button id="nextYear">›</button></div>
+                <div id="annualAwardsList"></div>
             </div>
             <div class="rewards-panel" id="panelBadges"></div>
         </div>
@@ -348,83 +359,65 @@ const CONFIG={PIN:'9743',REPO_OWNER:'',REPO_NAME:'J-R-Workout',DATA_FILE:'data/w
 const DEFAULT_BASE={rachel:{sidonMins:10,steps:15000,upper:{pushups:{s:3,r:5,w:null,on:1},tricepDips:{s:3,r:5,w:null,on:1},latPulldowns:{s:3,r:10,w:30,on:1},tricepPulldowns:{s:3,r:10,w:10,on:1},bicepCurls:{s:3,r:10,w:7,on:1},lateralRaises:{s:3,r:10,w:3,on:1}},lower:{weightedSquats:{s:3,r:10,w:7,on:1},jumpingLunges:{s:3,r:10,w:null,on:1},deadlifts:{s:3,r:10,w:14,on:1},hipThrusts:{s:3,r:10,w:7,on:1},weightedStepUps:{s:3,r:10,w:7,on:1},calfRaises:{s:3,r:15,w:null,on:1}},core:{rotatingPlank:{s:3,m:2,on:1},vSitTwists:{s:3,r:10,w:null,on:1},mountainClimbers:{s:3,r:20,w:null,on:1},situps:{s:3,r:15,w:null,on:1}}},joel:{sidonMins:10,steps:9000,upper:{pushups:{s:3,r:5,w:null,on:1},tricepDips:{s:3,r:5,w:null,on:1},latPulldowns:{s:3,r:10,w:30,on:1},tricepPulldowns:{s:3,r:10,w:10,on:1},bicepCurls:{s:3,r:10,w:7,on:1},lateralRaises:{s:3,r:10,w:3,on:1}},lower:{weightedSquats:{s:3,r:10,w:7,on:1},jumpingLunges:{s:3,r:10,w:null,on:1},deadlifts:{s:3,r:10,w:14,on:1},hipThrusts:{s:3,r:10,w:7,on:1},weightedStepUps:{s:3,r:10,w:7,on:1},calfRaises:{s:3,r:15,w:null,on:1}},core:{rotatingPlank:{s:3,m:2,on:1},vSitTwists:{s:3,r:10,w:null,on:1},mountainClimbers:{s:3,r:20,w:null,on:1},situps:{s:3,r:15,w:null,on:1}}}};
 const EX_NAMES={pushups:'Pushups',tricepDips:'Tricep Dips',latPulldowns:'Lat Pulldowns',tricepPulldowns:'Tricep Pulldowns',bicepCurls:'Bicep Curls',lateralRaises:'Lateral Raises',weightedSquats:'Weighted Squats',jumpingLunges:'Jumping Lunges',deadlifts:'Deadlifts',hipThrusts:'Hip Thrusts',weightedStepUps:'Weighted Step Ups',calfRaises:'Calf Raises',rotatingPlank:'Rotating Plank',vSitTwists:'V-Sit Twists',mountainClimbers:'Mountain Climbers',situps:'Situps'};
 const BADGES=[
-{id:1,icon:'🎯',name:'First Blood',desc:'Log first workout',check:d=>d.workouts.length>=1},
-{id:2,icon:'🌅',name:'Early Bird',desc:'Log before 7am',check:d=>d.workouts.some(w=>parseInt(w.time?.split(':')[0])<7)},
-{id:3,icon:'🦉',name:'Night Owl',desc:'Log after 9pm',check:d=>d.workouts.some(w=>parseInt(w.time?.split(':')[0])>=21)},
-{id:4,icon:'💪',name:'Upper Starter',desc:'First Upper Body',check:d=>d.workouts.some(w=>w.type==='upper')},
-{id:5,icon:'🦵',name:'Leg Day',desc:'First Lower Body',check:d=>d.workouts.some(w=>w.type==='lower')},
-{id:6,icon:'🎯',name:'Core Starter',desc:'First Core workout',check:d=>d.workouts.some(w=>w.type==='core')},
-{id:7,icon:'🏃',name:'First Run',desc:'Log first run',check:d=>d.workouts.some(w=>w.type==='run')},
-{id:8,icon:'⚖️',name:'Weigh In',desc:'Log weight first time',check:d=>d.workouts.some(w=>w.type==='weight')},
-{id:9,icon:'🔥',name:'Double Up',desc:'2 workouts in one day',check:d=>{const days={};d.workouts.filter(w=>['upper','lower','core','custom','run'].includes(w.type)).forEach(w=>{days[w.date]=(days[w.date]||0)+1;});return Object.values(days).some(c=>c>=2);}},
-{id:10,icon:'⚡',name:'Hat Trick',desc:'3 workouts in one day',check:d=>{const days={};d.workouts.filter(w=>['upper','lower','core','custom','run'].includes(w.type)).forEach(w=>{days[w.date]=(days[w.date]||0)+1;});return Object.values(days).some(c=>c>=3);}},
+{id:1,icon:'🎯',name:'First Blood',desc:'Log first workout',check:(d,p)=>d.workouts.some(w=>w.profile===p&&['upper','lower','core','custom','run'].includes(w.type))},
+{id:2,icon:'🌅',name:'Early Bird',desc:'Log before 7am',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.time&&parseInt(w.time.split(':')[0])<7)},
+{id:3,icon:'🦉',name:'Night Owl',desc:'Log after 9pm',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.time&&parseInt(w.time.split(':')[0])>=21)},
+{id:4,icon:'💪',name:'Upper Starter',desc:'First Upper Body',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.type==='upper')},
+{id:5,icon:'🦵',name:'Leg Day',desc:'First Lower Body',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.type==='lower')},
+{id:6,icon:'🎯',name:'Core Starter',desc:'First Core workout',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.type==='core')},
+{id:7,icon:'🏃',name:'First Run',desc:'Log first run',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.type==='run')},
+{id:8,icon:'⚖️',name:'Weigh In',desc:'Log weight first time',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.type==='weight')},
+{id:9,icon:'🔥',name:'Double Up',desc:'2 workouts in one day',check:(d,p)=>{const dates=d.workouts.filter(w=>w.profile===p&&['upper','lower','core','custom','run'].includes(w.type)).map(w=>w.date);return dates.some(dt=>dates.filter(x=>x===dt).length>=2);}},
+{id:10,icon:'⚡',name:'Hat Trick',desc:'3 workouts in one day',check:(d,p)=>{const dates=d.workouts.filter(w=>w.profile===p&&['upper','lower','core','custom','run'].includes(w.type)).map(w=>w.date);return dates.some(dt=>dates.filter(x=>x===dt).length>=3);}},
 {id:11,icon:'🎨',name:'Mix It Up',desc:'Upper+Lower+Core in week',check:(d,p)=>{const start=getWeekStart(new Date());const ws=d.workouts.filter(w=>w.profile===p&&new Date(w.date)>=start);return ws.some(w=>w.type==='upper')&&ws.some(w=>w.type==='lower')&&ws.some(w=>w.type==='core');}},
-{id:12,icon:'🏠',name:'Home Runner',desc:'Treadmill run',check:d=>d.workouts.some(w=>w.type==='run'&&w.runType==='treadmill')},
-{id:13,icon:'🌳',name:'Outdoor Runner',desc:'Outside run',check:d=>d.workouts.some(w=>w.type==='run'&&w.runType==='outside')},
-{id:14,icon:'📅',name:'Weekday Warrior',desc:'Workout Mon-Fri',check:d=>d.workouts.some(w=>{const day=new Date(w.date).getDay();return day>=1&&day<=5&&['upper','lower','core','custom','run'].includes(w.type);})},
-{id:15,icon:'🛋️',name:'Weekend Worker',desc:'Workout on weekend',check:d=>d.workouts.some(w=>{const day=new Date(w.date).getDay();return(day===0||day===6)&&['upper','lower','core','custom','run'].includes(w.type);})},
+{id:12,icon:'🏠',name:'Home Runner',desc:'Treadmill run',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.type==='run'&&w.runType==='treadmill')},
+{id:13,icon:'🌳',name:'Outdoor Runner',desc:'Outside run',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.type==='run'&&w.runType==='outside')},
+{id:14,icon:'📅',name:'Weekday Warrior',desc:'Workout Mon-Fri',check:(d,p)=>d.workouts.some(w=>w.profile===p&&['upper','lower','core','custom','run'].includes(w.type)&&[1,2,3,4,5].includes(new Date(w.date).getDay()))},
+{id:15,icon:'🛋️',name:'Weekend Worker',desc:'Workout on weekend',check:(d,p)=>d.workouts.some(w=>w.profile===p&&['upper','lower','core','custom','run'].includes(w.type)&&[0,6].includes(new Date(w.date).getDay()))},
 {id:16,icon:'3️⃣',name:'Three-peat',desc:'3-day streak',check:(d,p)=>getMaxStreak(d,p)>=3},
-{id:17,icon:'7️⃣',name:'Week Warrior',desc:'7-day streak',check:(d,p)=>getMaxStreak(d,p)>=7},
-{id:18,icon:'🔟',name:'Ten Tonne',desc:'10-day streak',check:(d,p)=>getMaxStreak(d,p)>=10},
-{id:19,icon:'🔥',name:'Two Week Terror',desc:'14-day streak',check:(d,p)=>getMaxStreak(d,p)>=14},
-{id:20,icon:'🌙',name:'Three Week Dream',desc:'21-day streak',check:(d,p)=>getMaxStreak(d,p)>=21},
-{id:21,icon:'💯',name:'Monthly Master',desc:'30-day streak',check:(d,p)=>getMaxStreak(d,p)>=30},
-{id:22,icon:'⭐',name:'Dedicated',desc:'5 days in a row',check:(d,p)=>getMaxStreak(d,p)>=5},
-{id:23,icon:'🗓️',name:'Full Week',desc:'7 days straight',check:(d,p)=>getMaxStreak(d,p)>=7},
-{id:24,icon:'📆',name:'Perfect Month',desc:'30 days straight',check:(d,p)=>getMaxStreak(d,p)>=30},
-{id:25,icon:'🏋️',name:'Ten Down',desc:'10 strength workouts',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&['upper','lower','core','custom'].includes(w.type)).length>=10},
-{id:26,icon:'🏋️‍♀️',name:'Quarter Century',desc:'25 strength workouts',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&['upper','lower','core','custom'].includes(w.type)).length>=25},
-{id:27,icon:'💪',name:'Half Century',desc:'50 strength workouts',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&['upper','lower','core','custom'].includes(w.type)).length>=50},
-{id:28,icon:'🦾',name:'Century Club',desc:'100 strength workouts',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&['upper','lower','core','custom'].includes(w.type)).length>=100},
-{id:29,icon:'🏃',name:'Casual Jogger',desc:'10 runs',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.type==='run').length>=10},
-{id:30,icon:'🏃‍♀️',name:'Regular Runner',desc:'25 runs',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.type==='run').length>=25},
-{id:31,icon:'🏃‍♂️',name:'Run Fanatic',desc:'50 runs',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.type==='run').length>=50},
-{id:32,icon:'🎯',name:'Core Commitment',desc:'20 core workouts',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.type==='core').length>=20},
-{id:33,icon:'🦵',name:'Leg Legend',desc:'20 lower workouts',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.type==='lower').length>=20},
-{id:34,icon:'💪',name:'Upper Echelon',desc:'20 upper workouts',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.type==='upper').length>=20},
-{id:35,icon:'⚖️',name:'Weigh Regular',desc:'Log weight 20x',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.type==='weight').length>=20},
-{id:36,icon:'👟',name:'5K Club',desc:'Run 5km',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.type==='run'&&w.distance>=5)},
-{id:37,icon:'🏅',name:'10K Club',desc:'Run 10km',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.type==='run'&&w.distance>=10)},
-{id:38,icon:'🏆',name:'Half Marathon',desc:'Run 21.1km',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.type==='run'&&w.distance>=21.1)},
-{id:39,icon:'👑',name:'Marathoner',desc:'Run 42.2km',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.type==='run'&&w.distance>=42.2)},
-{id:40,icon:'🌍',name:'50K Total',desc:'50km total running',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.type==='run').reduce((s,w)=>s+(w.distance||0),0)>=50},
-{id:41,icon:'🗺️',name:'100K Total',desc:'100km total running',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.type==='run').reduce((s,w)=>s+(w.distance||0),0)>=100},
-{id:42,icon:'✈️',name:'250K Total',desc:'250km total running',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.type==='run').reduce((s,w)=>s+(w.distance||0),0)>=250},
-{id:43,icon:'🚀',name:'500K Total',desc:'500km total running',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.type==='run').reduce((s,w)=>s+(w.distance||0),0)>=500},
-{id:44,icon:'⏱️',name:'Speed Demon',desc:'5km under 25min',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.type==='run'&&w.distance>=5&&w.runTime<=25)},
-{id:45,icon:'⚡',name:'Lightning Lap',desc:'1km under 5min pace',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.type==='run'&&w.distance>=1&&(w.runTime/w.distance)<=5)},
-{id:46,icon:'🪨',name:'Getting Heavy',desc:'Lift 20kg',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.exercises&&Object.values(w.exercises).some(e=>e.w>=20))},
-{id:47,icon:'🏔️',name:'Heavyweight',desc:'Lift 30kg',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.exercises&&Object.values(w.exercises).some(e=>e.w>=30))},
-{id:48,icon:'🗻',name:'Monster Lift',desc:'Lift 40kg',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.exercises&&Object.values(w.exercises).some(e=>e.w>=40))},
-{id:49,icon:'💎',name:'Diamond Lifter',desc:'Lift 50kg',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.exercises&&Object.values(w.exercises).some(e=>e.w>=50))},
-{id:50,icon:'📊',name:'Volume Veteran',desc:'500 total sets',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.exercises).reduce((s,w)=>s+Object.values(w.exercises).reduce((ss,e)=>ss+(e.s||0),0),0)>=500},
-{id:51,icon:'📈',name:'Set Sensation',desc:'1000 total sets',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.exercises).reduce((s,w)=>s+Object.values(w.exercises).reduce((ss,e)=>ss+(e.s||0),0),0)>=1000},
-{id:52,icon:'🔢',name:'Rep Rookie',desc:'1000 total reps',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.exercises).reduce((s,w)=>s+Object.values(w.exercises).reduce((ss,e)=>ss+((e.s||0)*(e.r||0)),0),0)>=1000},
-{id:53,icon:'🔣',name:'Rep Master',desc:'5000 total reps',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.exercises).reduce((s,w)=>s+Object.values(w.exercises).reduce((ss,e)=>ss+((e.s||0)*(e.r||0)),0),0)>=5000},
-{id:54,icon:'➕',name:'Progressive',desc:'Increase weight 3x',check:()=>false},
-{id:55,icon:'📐',name:'Balanced',desc:'Equal Upper/Lower',check:(d,p)=>{const start=getMonthStart(new Date());const ws=d.workouts.filter(w=>w.profile===p&&new Date(w.date)>=start);const u=ws.filter(w=>w.type==='upper').length;const l=ws.filter(w=>w.type==='lower').length;return u>=4&&l>=4&&u===l;}},
-{id:56,icon:'📈',name:'First Gain',desc:'Gain 0.5kg',check:(d,p)=>getWeightGain(d,p)>=0.5},
-{id:57,icon:'⬆️',name:'One Kilo Up',desc:'Gain 1kg',check:(d,p)=>getWeightGain(d,p)>=1},
-{id:58,icon:'🎯',name:'Two Up',desc:'Gain 2kg',check:(d,p)=>getWeightGain(d,p)>=2},
-{id:59,icon:'💪',name:'Five Alive',desc:'Gain 5kg',check:(d,p)=>getWeightGain(d,p)>=5},
-{id:60,icon:'🏆',name:'Ten Total',desc:'Gain 10kg',check:(d,p)=>getWeightGain(d,p)>=10},
-{id:61,icon:'🎯',name:'Goal Getter',desc:'Reach a race goal',check:(d,p)=>(d.raceGoals?.[p]||[]).some(g=>g.achieved)},
-{id:62,icon:'⚖️',name:'Consistent',desc:'Log weight 50x',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.type==='weight').length>=50},
-{id:63,icon:'📊',name:'Data Nerd',desc:'Log weight 100x',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.type==='weight').length>=100},
-{id:64,icon:'🥇',name:'First Win',desc:'Win weekly award',check:(d,p)=>(d.awardHistory||[]).some(a=>a.winner===p)},
-{id:65,icon:'🥈',name:'Comeback Kid',desc:'Win after losing 2',check:()=>false},
-{id:66,icon:'👑',name:'Monthly Champ',desc:'Win Monthly MVP',check:(d,p)=>(d.awardHistory||[]).some(a=>a.type==='monthly'&&a.winner===p)},
-{id:67,icon:'🔄',name:'Back to Back',desc:'Win same award 2x',check:()=>false},
-{id:68,icon:'🎖️',name:'Triple Threat',desc:'Win 3 different awards',check:()=>false},
-{id:69,icon:'🏅',name:'Award Collector',desc:'Win 10 weekly awards',check:(d,p)=>(d.awardHistory||[]).filter(a=>a.type==='weekly'&&a.winner===p).length>=10},
-{id:70,icon:'💎',name:'Award Hoarder',desc:'Win 25 weekly awards',check:(d,p)=>(d.awardHistory||[]).filter(a=>a.type==='weekly'&&a.winner===p).length>=25},
-{id:71,icon:'🗓️',name:'Six Month Streak',desc:'180-day streak',check:(d,p)=>getMaxStreak(d,p)>=180},
-{id:72,icon:'📅',name:'Year Strong',desc:'365-day streak',check:(d,p)=>getMaxStreak(d,p)>=365},
-{id:73,icon:'🏛️',name:'500 Club',desc:'500 workouts',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&['upper','lower','core','custom','run'].includes(w.type)).length>=500},
-{id:74,icon:'🏰',name:'Thousand Strong',desc:'1000 workouts',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&['upper','lower','core','custom','run'].includes(w.type)).length>=1000},
-{id:75,icon:'🌍',name:'World Runner',desc:'1000km running',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.type==='run').reduce((s,w)=>s+(w.distance||0),0)>=1000}
+{id:17,icon:'🏋️',name:'Ten Down',desc:'10 strength workouts',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&['upper','lower','core','custom'].includes(w.type)).length>=10},
+{id:18,icon:'🏋️‍♀️',name:'Quarter Century',desc:'25 strength workouts',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&['upper','lower','core','custom'].includes(w.type)).length>=25},
+{id:19,icon:'💪',name:'Half Century',desc:'50 strength workouts',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&['upper','lower','core','custom'].includes(w.type)).length>=50},
+{id:20,icon:'🦾',name:'Century Club',desc:'100 strength workouts',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&['upper','lower','core','custom'].includes(w.type)).length>=100},
+{id:21,icon:'🏃',name:'Casual Jogger',desc:'10 runs',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.type==='run').length>=10},
+{id:22,icon:'🏃‍♀️',name:'Regular Runner',desc:'25 runs',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.type==='run').length>=25},
+{id:23,icon:'🏃‍♂️',name:'Run Fanatic',desc:'50 runs',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.type==='run').length>=50},
+{id:24,icon:'🎯',name:'Core Commitment',desc:'20 core workouts',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.type==='core').length>=20},
+{id:25,icon:'🦵',name:'Leg Legend',desc:'20 lower workouts',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.type==='lower').length>=20},
+{id:26,icon:'💪',name:'Upper Echelon',desc:'20 upper workouts',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.type==='upper').length>=20},
+{id:27,icon:'⚖️',name:'Weigh Regular',desc:'Log weight 20x',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.type==='weight').length>=20},
+{id:28,icon:'👟',name:'5K Club',desc:'Run 5km',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.type==='run'&&w.distance>=5)},
+{id:29,icon:'🏅',name:'10K Club',desc:'Run 10km',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.type==='run'&&w.distance>=10)},
+{id:30,icon:'🏆',name:'Half Marathon',desc:'Run 21.1km',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.type==='run'&&w.distance>=21.1)},
+{id:31,icon:'👑',name:'Marathoner',desc:'Run 42.2km',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.type==='run'&&w.distance>=42.2)},
+{id:32,icon:'🌍',name:'50K Total',desc:'50km total running',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.type==='run').reduce((s,w)=>s+(w.distance||0),0)>=50},
+{id:33,icon:'🗺️',name:'100K Total',desc:'100km total running',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.type==='run').reduce((s,w)=>s+(w.distance||0),0)>=100},
+{id:34,icon:'✈️',name:'250K Total',desc:'250km total running',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.type==='run').reduce((s,w)=>s+(w.distance||0),0)>=250},
+{id:35,icon:'🚀',name:'500K Total',desc:'500km total running',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.type==='run').reduce((s,w)=>s+(w.distance||0),0)>=500},
+{id:36,icon:'🌍',name:'World Runner',desc:'1000km running',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.type==='run').reduce((s,w)=>s+(w.distance||0),0)>=1000},
+{id:37,icon:'⏱️',name:'Speed Demon',desc:'3km under 20min',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.type==='run'&&w.distance>=3&&w.runTime<=20)},
+{id:38,icon:'🪨',name:'Getting Heavy',desc:'Lift 20kg',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.exercises&&Object.values(w.exercises).some(e=>e.w>=20))},
+{id:39,icon:'🏔️',name:'Heavyweight',desc:'Lift 30kg',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.exercises&&Object.values(w.exercises).some(e=>e.w>=30))},
+{id:40,icon:'🗻',name:'Monster Lift',desc:'Lift 40kg',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.exercises&&Object.values(w.exercises).some(e=>e.w>=40))},
+{id:41,icon:'💎',name:'Diamond Lifter',desc:'Lift 50kg',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.exercises&&Object.values(w.exercises).some(e=>e.w>=50))},
+{id:42,icon:'📊',name:'Volume Veteran',desc:'500 total sets',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.exercises).reduce((s,w)=>s+Object.values(w.exercises).reduce((ss,e)=>ss+(e.s||0),0),0)>=500},
+{id:43,icon:'📈',name:'Set Sensation',desc:'1000 total sets',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.exercises).reduce((s,w)=>s+Object.values(w.exercises).reduce((ss,e)=>ss+(e.s||0),0),0)>=1000},
+{id:44,icon:'🔢',name:'Rep Rookie',desc:'1000 total reps',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.exercises).reduce((s,w)=>s+Object.values(w.exercises).reduce((ss,e)=>ss+((e.s||0)*(e.r||0)),0),0)>=1000},
+{id:45,icon:'🔣',name:'Rep Master',desc:'5000 total reps',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&w.exercises).reduce((s,w)=>s+Object.values(w.exercises).reduce((ss,e)=>ss+((e.s||0)*(e.r||0)),0),0)>=5000},
+{id:46,icon:'📈',name:'First Gain',desc:'Gain 0.5kg',check:(d,p)=>getWeightGain(d,p)>=0.5},
+{id:47,icon:'⬆️',name:'One Kilo Up',desc:'Gain 1kg',check:(d,p)=>getWeightGain(d,p)>=1},
+{id:48,icon:'🎯',name:'Two Up',desc:'Gain 2kg',check:(d,p)=>getWeightGain(d,p)>=2},
+{id:49,icon:'💪',name:'Five Alive',desc:'Gain 5kg',check:(d,p)=>getWeightGain(d,p)>=5},
+{id:50,icon:'🏆',name:'Ten Total',desc:'Gain 10kg',check:(d,p)=>getWeightGain(d,p)>=10},
+{id:51,icon:'🥇',name:'First Win',desc:'Win weekly award',check:(d,p)=>(d.awardHistory||[]).some(a=>a.winner===p)},
+{id:52,icon:'👑',name:'Monthly Champ',desc:'Win Monthly MVP',check:(d,p)=>(d.awardHistory||[]).some(a=>a.type==='monthly'&&a.winner===p)},
+{id:53,icon:'🏅',name:'Award Collector',desc:'Win 10 weekly awards',check:(d,p)=>(d.awardHistory||[]).filter(a=>a.type==='weekly'&&a.winner===p).length>=10},
+{id:54,icon:'💎',name:'Award Hoarder',desc:'Win 25 weekly awards',check:(d,p)=>(d.awardHistory||[]).filter(a=>a.type==='weekly'&&a.winner===p).length>=25},
+{id:55,icon:'🏛️',name:'500 Club',desc:'500 workouts',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&['upper','lower','core','custom','run'].includes(w.type)).length>=500},
+{id:56,icon:'🏰',name:'Thousand Strong',desc:'1000 workouts',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&['upper','lower','core','custom','run'].includes(w.type)).length>=1000}
 ];
-let state={pin:'',data:{workouts:[],base:JSON.parse(JSON.stringify(DEFAULT_BASE)),badges:{},raceGoals:{joel:[],rachel:[]},awardHistory:[]},month:new Date(),rewardsMonth:new Date(),awardsWeek:new Date(),awardsMonth:new Date(),calFilter:'all',chartRange:'week',chartExercise:'bodyWeight',chartMetrics:{weight:true,reps:false,sets:false},chartProfile:'joel',pat:localStorage.getItem('github_pat')||'',deleteId:null,logProfile:'joel',settingsProfile:'joel',runType:'outside'};
+
+let state={pin:'',data:{workouts:[],base:JSON.parse(JSON.stringify(DEFAULT_BASE)),badges:{},raceGoals:{joel:[],rachel:[]},awardHistory:[]},month:new Date(),rewardsMonth:new Date(),awardsWeek:new Date(),awardsMonth:new Date(),awardsYear:new Date().getFullYear(),calFilter:'all',chartRange:'week',chartExercise:'bodyWeight',chartMetrics:{weight:true,reps:false,sets:false},chartProfile:'joel',pat:localStorage.getItem('github_pat')||'',deleteId:null,logProfile:'joel',settingsProfile:'joel',runType:'outside'};
 const $=id=>document.getElementById(id),$$=sel=>document.querySelectorAll(sel),genId=()=>Date.now().toString(36)+Math.random().toString(36).substr(2);
 const fmtDateShort=d=>new Date(d).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
 const fmtTime=t=>{if(!t)return'';const[h,m]=t.split(':');const hr=parseInt(h);return (hr%12||12)+':'+m+(hr>=12?' PM':' AM');};
@@ -433,6 +426,8 @@ const getTitle=t=>({sidon:'Sidon Walk',steps:'Step Count',run:'Run',upper:'Upper
 function getWeekStart(d){const date=new Date(d);const day=date.getDay();const diff=date.getDate()-day+(day===0?-6:1);return new Date(date.setDate(diff));}
 function getMonthStart(d){return new Date(d.getFullYear(),d.getMonth(),1);}
 function getMaxStreak(data,profile){const validTypes=['upper','lower','core','custom','run'];const dates=[...new Set(data.workouts.filter(w=>w.profile===profile&&validTypes.includes(w.type)).map(w=>w.date))].sort();if(!dates.length)return 0;let max=1,curr=1;for(let i=1;i<dates.length;i++){const diff=(new Date(dates[i])-new Date(dates[i-1]))/(1000*60*60*24);if(diff===1)curr++;else curr=1;max=Math.max(max,curr);}return max;}
+
+function getMonthStreak(data,profile,monthStart,monthEnd){const validTypes=['upper','lower','core','custom','run'];const dates=[...new Set(data.workouts.filter(w=>w.profile===profile&&validTypes.includes(w.type)&&new Date(w.date)>=monthStart&&new Date(w.date)<=monthEnd).map(w=>w.date))].sort();if(!dates.length)return 0;let max=1,curr=1;for(let i=1;i<dates.length;i++){const diff=(new Date(dates[i])-new Date(dates[i-1]))/(1000*60*60*24);if(diff===1)curr++;else curr=1;max=Math.max(max,curr);}return max;}
 function getWeightGain(data,profile){const ws=data.workouts.filter(w=>w.profile===profile&&w.type==='weight'&&w.bodyWeight).sort((a,b)=>new Date(a.date)-new Date(b.date));if(ws.length<2)return 0;return ws[ws.length-1].bodyWeight-ws[0].bodyWeight;}
 function calcPoints(data,profile,startDate,endDate){const validTypes=['upper','lower','core','custom','run'];const ws=data.workouts.filter(w=>w.profile===profile&&validTypes.includes(w.type)&&new Date(w.date)>=startDate&&new Date(w.date)<=endDate);let pts=0;ws.forEach(w=>{pts+=15;if(w.type==='run'){pts+=(w.distance||0)*2;pts+=Math.floor((w.runTime||0)/10);}if(w.exercises){Object.values(w.exercises).forEach(e=>{if(e.on){pts+=(e.s||0)*2;pts+=Math.floor((e.r||0)/5);pts+=Math.floor((e.w||0)/5);}});}});return pts;}
 function updateDots(){$$('#pinDots .pin-dot').forEach((d,i)=>d.classList.toggle('filled',i<state.pin.length));}
@@ -525,9 +520,55 @@ ctx.strokeStyle='#2d2d4a';ctx.lineWidth=1;const steps=5;for(let i=0;i<=steps;i++
 ctx.fillStyle='#64748b';ctx.font='9px system-ui';ctx.textAlign='center';dateLabels.forEach(dl=>{const x=sx(dl.date);if(x>=pad.l&&x<=W-pad.r)ctx.fillText(dl.label,x,H-pad.b+15);});
 series.forEach(s=>{if(!s.data.length)return;ctx.strokeStyle=s.color;ctx.lineWidth=2.5;ctx.lineCap='round';ctx.lineJoin='round';if(s.dash)ctx.setLineDash(s.dash);else ctx.setLineDash([]);ctx.beginPath();s.data.forEach((d,i)=>{const x=Math.max(pad.l,Math.min(W-pad.r,sx(d.x)));const y=Math.max(pad.t,Math.min(H-pad.b,sy(d.y)));if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);});ctx.stroke();ctx.setLineDash([]);s.data.forEach(d=>{const x=Math.max(pad.l,Math.min(W-pad.r,sx(d.x)));const y=Math.max(pad.t,Math.min(H-pad.b,sy(d.y)));ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fillStyle=s.color;ctx.fill();});});}
 updateMetricTogglesVisibility();
-function renderRewards(){const now=state.rewardsMonth;$('rewardsMonth').textContent=now.toLocaleDateString('en-US',{month:'long',year:'numeric'});const monthStart=getMonthStart(now);$('joelPoints').textContent=calcPoints(state.data,'joel',monthStart,now);$('rachelPoints').textContent=calcPoints(state.data,'rachel',monthStart,now);renderWeeklyAwards();renderMonthlyAwards();renderBadges();}
-function renderWeeklyAwards(){const weekStart=getWeekStart(state.awardsWeek);const weekEnd=new Date(weekStart);weekEnd.setDate(weekEnd.getDate()+6);$('weekLabel').textContent=weekStart.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' - '+weekEnd.toLocaleDateString('en-US',{month:'short',day:'numeric'});const ws=p=>state.data.workouts.filter(x=>{const d=new Date(x.date);return d>=weekStart&&d<=weekEnd&&x.profile===p;});const awards=[{icon:'💪',name:'Gym Rat',desc:'Most strength workouts',joel:ws('joel').filter(x=>['upper','lower','core','custom'].includes(x.type)).length,rachel:ws('rachel').filter(x=>['upper','lower','core','custom'].includes(x.type)).length},{icon:'🏃',name:'Runner',desc:'Most runs',joel:ws('joel').filter(x=>x.type==='run').length,rachel:ws('rachel').filter(x=>x.type==='run').length},{icon:'📏',name:'Distance King',desc:'Most km run',joel:ws('joel').filter(x=>x.type==='run').reduce((s,x)=>s+(x.distance||0),0),rachel:ws('rachel').filter(x=>x.type==='run').reduce((s,x)=>s+(x.distance||0),0)},{icon:'🔥',name:'Consistency Crown',desc:'Current streak',joel:getMaxStreak(state.data,'joel'),rachel:getMaxStreak(state.data,'rachel')},{icon:'🎯',name:'All-Rounder',desc:'Upper+Lower+Core done',joel:ws('joel').some(x=>x.type==='upper')&&ws('joel').some(x=>x.type==='lower')&&ws('joel').some(x=>x.type==='core')?1:0,rachel:ws('rachel').some(x=>x.type==='upper')&&ws('rachel').some(x=>x.type==='lower')&&ws('rachel').some(x=>x.type==='core')?1:0}];$('weeklyAwardsList').innerHTML=awards.map(a=>{let leader='tie',lc='tie';if(a.joel>a.rachel){leader='Joel';lc='joel';}else if(a.rachel>a.joel){leader='Rachel';lc='rachel';}return'<div class="award-card" onclick="showAward(\''+a.name+'\',\''+a.icon+'\',\''+a.desc+'\','+a.joel+','+a.rachel+',\'weekly\')"><div class="award-card-header"><span class="award-card-icon">'+a.icon+'</span><span class="award-card-title">'+a.name+'</span><span class="award-card-leader '+lc+'">'+leader+'</span></div><div class="award-card-progress"><span>Joel: '+a.joel+'</span><span>Rachel: '+a.rachel+'</span></div></div>';}).join('');}
-function renderMonthlyAwards(){const monthStart=getMonthStart(state.awardsMonth);const monthEnd=new Date(monthStart.getFullYear(),monthStart.getMonth()+1,0);$('monthLabel').textContent=monthStart.toLocaleDateString('en-US',{month:'long',year:'numeric'});const ws=p=>state.data.workouts.filter(x=>{const d=new Date(x.date);return d>=monthStart&&d<=monthEnd&&x.profile===p;});const joelPts=calcPoints(state.data,'joel',monthStart,monthEnd);const rachelPts=calcPoints(state.data,'rachel',monthStart,monthEnd);const awards=[{icon:'👑',name:'Monthly MVP',desc:'Most points earned',joel:joelPts,rachel:rachelPts},{icon:'🔥',name:'Iron Will',desc:'Longest workout streak',joel:getMaxStreak(state.data,'joel'),rachel:getMaxStreak(state.data,'rachel')},{icon:'✅',name:'Perfect Attendance',desc:'Days with workouts',joel:[...new Set(ws('joel').filter(x=>['upper','lower','core','custom','run'].includes(x.type)).map(x=>x.date))].length,rachel:[...new Set(ws('rachel').filter(x=>['upper','lower','core','custom','run'].includes(x.type)).map(x=>x.date))].length},{icon:'🏋️',name:'Volume Monarch',desc:'Total sets completed',joel:ws('joel').filter(x=>x.exercises).reduce((s,x)=>s+Object.values(x.exercises).reduce((ss,e)=>ss+(e.s||0),0),0),rachel:ws('rachel').filter(x=>x.exercises).reduce((s,x)=>s+Object.values(x.exercises).reduce((ss,e)=>ss+(e.s||0),0),0)}];$('monthlyAwardsList').innerHTML=awards.map(a=>{let leader='tie',lc='tie';if(a.joel>a.rachel){leader='Joel';lc='joel';}else if(a.rachel>a.joel){leader='Rachel';lc='rachel';}return'<div class="award-card" onclick="showAward(\''+a.name+'\',\''+a.icon+'\',\''+a.desc+'\','+a.joel+','+a.rachel+',\'monthly\')"><div class="award-card-header"><span class="award-card-icon">'+a.icon+'</span><span class="award-card-title">'+a.name+'</span><span class="award-card-leader '+lc+'">'+leader+'</span></div><div class="award-card-progress"><span>Joel: '+a.joel+'</span><span>Rachel: '+a.rachel+'</span></div></div>';}).join('');}
+function renderRewards(){const now=state.rewardsMonth;$('rewardsMonth').textContent=now.toLocaleDateString('en-US',{month:'long',year:'numeric'});const monthStart=getMonthStart(now);$('joelPoints').textContent=calcPoints(state.data,'joel',monthStart,now);$('rachelPoints').textContent=calcPoints(state.data,'rachel',monthStart,now);renderWeeklyAwards();renderMonthlyAwards();renderAnnualAwards();renderBadges();}
+function renderWeeklyAwards(){const weekStart=getWeekStart(state.awardsWeek);const weekEnd=new Date(weekStart);weekEnd.setDate(weekEnd.getDate()+6);$('weekLabel').textContent=weekStart.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' - '+weekEnd.toLocaleDateString('en-US',{month:'short',day:'numeric'});const ws=p=>state.data.workouts.filter(x=>{const d=new Date(x.date);return d>=weekStart&&d<=weekEnd&&x.profile===p;});const pts=p=>calcPoints(state.data,p,weekStart,weekEnd);const morningWs=p=>ws(p).filter(x=>x.time&&parseInt(x.time.split(':')[0])<9).length;const eveningWs=p=>ws(p).filter(x=>x.time&&parseInt(x.time.split(':')[0])>=18).length;const activeMins=p=>ws(p).filter(x=>x.type==='sidon').reduce((s,x)=>s+(x.minutes||0),0)+ws(p).filter(x=>x.type==='run').reduce((s,x)=>s+(x.runTime||0),0);const awards=[
+{icon:'👑',name:'Weekly Winner',desc:'Most points scored this week',joel:pts('joel'),rachel:pts('rachel')},
+{icon:'💪',name:'Gym Rat',desc:'Most strength workouts',joel:ws('joel').filter(x=>['upper','lower','core','custom'].includes(x.type)).length,rachel:ws('rachel').filter(x=>['upper','lower','core','custom'].includes(x.type)).length},
+{icon:'🏃',name:'Runner',desc:'Most runs',joel:ws('joel').filter(x=>x.type==='run').length,rachel:ws('rachel').filter(x=>x.type==='run').length},
+{icon:'📏',name:'Distance King',desc:'Most km run',joel:ws('joel').filter(x=>x.type==='run').reduce((s,x)=>s+(x.distance||0),0),rachel:ws('rachel').filter(x=>x.type==='run').reduce((s,x)=>s+(x.distance||0),0)},
+{icon:'🔥',name:'Consistency Crown',desc:'4 workouts in the week',joel:ws('joel').filter(x=>['upper','lower','core','custom','run'].includes(x.type)).length>=4?1:0,rachel:ws('rachel').filter(x=>['upper','lower','core','custom','run'].includes(x.type)).length>=4?1:0},
+{icon:'🎯',name:'All-Rounder',desc:'Upper+Lower+Core done',joel:ws('joel').some(x=>x.type==='upper')&&ws('joel').some(x=>x.type==='lower')&&ws('joel').some(x=>x.type==='core')?1:0,rachel:ws('rachel').some(x=>x.type==='upper')&&ws('rachel').some(x=>x.type==='lower')&&ws('rachel').some(x=>x.type==='core')?1:0},
+{icon:'👟',name:'Step in Time',desc:'Most steps',joel:ws('joel').filter(x=>x.type==='steps').reduce((s,x)=>s+(x.steps||0),0),rachel:ws('rachel').filter(x=>x.type==='steps').reduce((s,x)=>s+(x.steps||0),0)},
+{icon:'🏋️',name:'Setup for Success',desc:'Most total sets',joel:ws('joel').filter(x=>x.exercises).reduce((s,x)=>s+Object.values(x.exercises).reduce((ss,e)=>ss+(e.s||0),0),0),rachel:ws('rachel').filter(x=>x.exercises).reduce((s,x)=>s+Object.values(x.exercises).reduce((ss,e)=>ss+(e.s||0),0),0)},
+{icon:'⏰',name:'Early Riser',desc:'Most morning workouts',joel:morningWs('joel'),rachel:morningWs('rachel')},
+{icon:'🌙',name:'Night Grinder',desc:'Most evening workouts',joel:eveningWs('joel'),rachel:eveningWs('rachel')},
+{icon:'⚡',name:'Busiest Bee',desc:'Most workout days',joel:[...new Set(ws('joel').filter(x=>['upper','lower','core','custom','run'].includes(x.type)).map(x=>x.date))].length,rachel:[...new Set(ws('rachel').filter(x=>['upper','lower','core','custom','run'].includes(x.type)).map(x=>x.date))].length},
+{icon:'🔥',name:'Calorie Crusher',desc:'Most active minutes',joel:activeMins('joel'),rachel:activeMins('rachel')}
+];$('weeklyAwardsList').innerHTML=awards.map(a=>{let leader='tie',lc='tie';if(a.joel>a.rachel){leader='Joel';lc='joel';}else if(a.rachel>a.joel){leader='Rachel';lc='rachel';}return'<div class="award-card" onclick="showAward(\''+a.name+'\',\''+a.icon+'\',\''+a.desc+'\','+a.joel+','+a.rachel+',\'weekly\')"><div class="award-card-header"><span class="award-card-icon">'+a.icon+'</span><span class="award-card-title">'+a.name+'</span><span class="award-card-leader '+lc+'">'+leader+'</span></div><div class="award-card-progress"><span>Joel: '+a.joel+'</span><span>Rachel: '+a.rachel+'</span></div></div>';}).join('');}
+function renderMonthlyAwards(){const monthStart=getMonthStart(state.awardsMonth);const monthEnd=new Date(monthStart.getFullYear(),monthStart.getMonth()+1,0);$('monthLabel').textContent=monthStart.toLocaleDateString('en-US',{month:'long',year:'numeric'});const ws=p=>state.data.workouts.filter(x=>{const d=new Date(x.date);return d>=monthStart&&d<=monthEnd&&x.profile===p;});const pts=p=>calcPoints(state.data,p,monthStart,monthEnd);const totalSets=p=>ws(p).filter(x=>x.exercises).reduce((s,x)=>s+Object.values(x.exercises).reduce((ss,e)=>ss+(e.s||0),0),0);const workoutTypes=p=>[...new Set(ws(p).map(x=>x.type))].length;const bestType=p=>{const counts={};ws(p).forEach(x=>{counts[x.type]=(counts[x.type]||0)+1;});return Math.max(0,...Object.values(counts));};const awards=[
+{icon:'👑',name:'Monthly MVP',desc:'Most points earned',joel:pts('joel'),rachel:pts('rachel')},
+{icon:'✅',name:'Perfect Attendance',desc:'Longest streak this month',joel:getMonthStreak(state.data,'joel',monthStart,monthEnd),rachel:getMonthStreak(state.data,'rachel',monthStart,monthEnd)},
+{icon:'🔥',name:'Iron Will',desc:'Days with workouts',joel:[...new Set(ws('joel').filter(x=>['upper','lower','core','custom','run'].includes(x.type)).map(x=>x.date))].length,rachel:[...new Set(ws('rachel').filter(x=>['upper','lower','core','custom','run'].includes(x.type)).map(x=>x.date))].length},
+{icon:'🏋️',name:'Volume Monarch',desc:'Total sets completed',joel:totalSets('joel'),rachel:totalSets('rachel')},
+{icon:'👟',name:'Step Master',desc:'Most total steps',joel:ws('joel').filter(x=>x.type==='steps').reduce((s,x)=>s+(x.steps||0),0),rachel:ws('rachel').filter(x=>x.type==='steps').reduce((s,x)=>s+(x.steps||0),0)},
+{icon:'🏃',name:'Marathon Month',desc:'Most km run',joel:ws('joel').filter(x=>x.type==='run').reduce((s,x)=>s+(x.distance||0),0),rachel:ws('rachel').filter(x=>x.type==='run').reduce((s,x)=>s+(x.distance||0),0)},
+{icon:'🌟',name:'Variety Star',desc:'Most workout types',joel:workoutTypes('joel'),rachel:workoutTypes('rachel')},
+{icon:'💪',name:'Strength Supreme',desc:'Most strength workouts',joel:ws('joel').filter(x=>['upper','lower','core','custom'].includes(x.type)).length,rachel:ws('rachel').filter(x=>['upper','lower','core','custom'].includes(x.type)).length},
+{icon:'🎯',name:'Focused Fighter',desc:'Best single-type commitment',joel:bestType('joel'),rachel:bestType('rachel')},
+{icon:'🏆',name:'Weekly Dominator',desc:'Most weekly awards won',joel:0,rachel:0},
+{icon:'📈',name:'Gains Train',desc:'Biggest weight increase',joel:0,rachel:0},
+{icon:'📈',name:'Rep-co',desc:'Biggest rep increase',joel:0,rachel:0}
+];$('monthlyAwardsList').innerHTML=awards.map(a=>{let leader='tie',lc='tie';if(a.joel>a.rachel){leader='Joel';lc='joel';}else if(a.rachel>a.joel){leader='Rachel';lc='rachel';}return'<div class="award-card" onclick="showAward(\''+a.name+'\',\''+a.icon+'\',\''+a.desc+'\','+a.joel+','+a.rachel+',\'monthly\')"><div class="award-card-header"><span class="award-card-icon">'+a.icon+'</span><span class="award-card-title">'+a.name+'</span><span class="award-card-leader '+lc+'">'+leader+'</span></div><div class="award-card-progress"><span>Joel: '+a.joel+'</span><span>Rachel: '+a.rachel+'</span></div></div>';}).join('');}
+
+function renderAnnualAwards(){const year=state.awardsYear;const yearStart=new Date(year,0,1);const yearEnd=new Date(year,11,31);$('yearLabel').textContent=year.toString();const ws=p=>state.data.workouts.filter(x=>{const d=new Date(x.date);return d>=yearStart&&d<=yearEnd&&x.profile===p;});const pts=p=>calcPoints(state.data,p,yearStart,yearEnd);const totalSets=p=>ws(p).filter(x=>x.exercises).reduce((s,x)=>s+Object.values(x.exercises).reduce((ss,e)=>ss+(e.s||0),0),0);const morningWs=p=>ws(p).filter(x=>x.time&&parseInt(x.time.split(':')[0])<9).length;const eveningWs=p=>ws(p).filter(x=>x.time&&parseInt(x.time.split(':')[0])>=18).length;const activeMins=p=>ws(p).filter(x=>x.type==='sidon').reduce((s,x)=>s+(x.minutes||0),0)+ws(p).filter(x=>x.type==='run').reduce((s,x)=>s+(x.runTime||0),0);const bestType=p=>{const counts={};ws(p).forEach(x=>{counts[x.type]=(counts[x.type]||0)+1;});return Math.max(0,...Object.values(counts));};const awards=[
+{icon:'🏆',name:'Annual Achiever',desc:'Most points earned',joel:pts('joel'),rachel:pts('rachel')},
+{icon:'⭐',name:'Weekly Wonder',desc:'Most Weekly Winner wins',joel:0,rachel:0},
+{icon:'🌟',name:'Monthly Mountaineer',desc:'Most Monthly MVP wins',joel:0,rachel:0},
+{icon:'💪',name:'Gym Monster',desc:'Most strength workouts',joel:ws('joel').filter(x=>['upper','lower','core','custom'].includes(x.type)).length,rachel:ws('rachel').filter(x=>['upper','lower','core','custom'].includes(x.type)).length},
+{icon:'🏃',name:'Sprinter',desc:'Most runs',joel:ws('joel').filter(x=>x.type==='run').length,rachel:ws('rachel').filter(x=>x.type==='run').length},
+{icon:'📏',name:'Distance Dominator',desc:'Most km run',joel:ws('joel').filter(x=>x.type==='run').reduce((s,x)=>s+(x.distance||0),0),rachel:ws('rachel').filter(x=>x.type==='run').reduce((s,x)=>s+(x.distance||0),0)},
+{icon:'🔥',name:'Consistently Crushing',desc:'Longest streak this year',joel:getMaxStreak(state.data,'joel'),rachel:getMaxStreak(state.data,'rachel')},
+{icon:'🎯',name:'All-Star',desc:'Most All-Rounder wins',joel:0,rachel:0},
+{icon:'👟',name:'Step Champion',desc:'Most steps',joel:ws('joel').filter(x=>x.type==='steps').reduce((s,x)=>s+(x.steps||0),0),rachel:ws('rachel').filter(x=>x.type==='steps').reduce((s,x)=>s+(x.steps||0),0)},
+{icon:'🏋️',name:'Volume Emperor',desc:'Most total sets',joel:totalSets('joel'),rachel:totalSets('rachel')},
+{icon:'🌅',name:'Early Hawk',desc:'Most morning workouts',joel:morningWs('joel'),rachel:morningWs('rachel')},
+{icon:'🦉',name:'Night Owl',desc:'Most evening workouts',joel:eveningWs('joel'),rachel:eveningWs('rachel')},
+{icon:'👑',name:'Queen Bee',desc:'Most workout days',joel:[...new Set(ws('joel').filter(x=>['upper','lower','core','custom','run'].includes(x.type)).map(x=>x.date))].length,rachel:[...new Set(ws('rachel').filter(x=>['upper','lower','core','custom','run'].includes(x.type)).map(x=>x.date))].length},
+{icon:'🔥',name:'Calorie Crusher',desc:'Most active minutes',joel:activeMins('joel'),rachel:activeMins('rachel')},
+{icon:'🎯',name:'Fixated Fighter',desc:'Best single-type commitment',joel:bestType('joel'),rachel:bestType('rachel')},
+{icon:'📈',name:'Gains Galore',desc:'Biggest weight increase',joel:0,rachel:0},
+{icon:'💹',name:'Rep-el Alliance',desc:'Biggest rep increase',joel:0,rachel:0}
+];$('annualAwardsList').innerHTML=awards.map(a=>{let leader='tie',lc='tie';if(a.joel>a.rachel){leader='Joel';lc='joel';}else if(a.rachel>a.joel){leader='Rachel';lc='rachel';}return'<div class="award-card" onclick="showAward(\''+a.name+'\',\''+a.icon+'\',\''+a.desc+'\','+a.joel+','+a.rachel+',\'annual\')"><div class="award-card-header"><span class="award-card-icon">'+a.icon+'</span><span class="award-card-title">'+a.name+'</span><span class="award-card-leader '+lc+'">'+leader+'</span></div><div class="award-card-progress"><span>Joel: '+a.joel+'</span><span>Rachel: '+a.rachel+'</span></div></div>';}).join('');}
 function renderBadges(){if(!state.data.badges)state.data.badges={};let joelGold=0,joelSilver=0,rachelGold=0,rachelSilver=0;BADGES.forEach(b=>{const badge=state.data.badges[b.id];if(badge){if(badge.first==='joel'){joelGold++;if(badge.second==='rachel')rachelSilver++;}else if(badge.first==='rachel'){rachelGold++;if(badge.second==='joel')joelSilver++;}}});const medalSummary='<div class="medal-summary"><div class="medal-person joel"><span class="medal-name">💜 Joel</span><span class="medal-count">🥇'+joelGold+' 🥈'+joelSilver+'</span></div><div class="medal-person rachel"><span class="medal-name">🩵 Rachel</span><span class="medal-count">🥇'+rachelGold+' 🥈'+rachelSilver+'</span></div></div>';$('panelBadges').innerHTML=medalSummary+'<div class="badge-grid">'+BADGES.map(b=>{const badge=state.data.badges[b.id];const first=badge?.first;const second=badge?.second;let medals='';if(first)medals+='<span class="badge-medal gold">'+(first==='joel'?'J':'R')+'</span>';if(second)medals+='<span class="badge-medal silver">'+(second==='joel'?'J':'R')+'</span>';return'<div class="badge-item '+(first?'earned':'locked')+'" onclick="showBadge('+b.id+')"><div class="badge-icon">'+b.icon+'</div><div class="badge-name">'+b.name+'</div>'+(medals?'<div class="badge-medals">'+medals+'</div>':'')+'</div>';}).join('')+'</div>';}
 
 
@@ -551,6 +592,9 @@ $('rewardsNextMonth').addEventListener('click',()=>{state.rewardsMonth.setMonth(
 $('prevWeek').addEventListener('click',()=>{state.awardsWeek.setDate(state.awardsWeek.getDate()-7);renderWeeklyAwards();});
 $('nextWeek').addEventListener('click',()=>{state.awardsWeek.setDate(state.awardsWeek.getDate()+7);renderWeeklyAwards();});
 $('prevAwardMonth').addEventListener('click',()=>{state.awardsMonth.setMonth(state.awardsMonth.getMonth()-1);renderMonthlyAwards();});
+
+$('prevYear').addEventListener('click',()=>{state.awardsYear--;renderAnnualAwards();});
+$('nextYear').addEventListener('click',()=>{state.awardsYear++;renderAnnualAwards();});
 $('nextAwardMonth').addEventListener('click',()=>{state.awardsMonth.setMonth(state.awardsMonth.getMonth()+1);renderMonthlyAwards();});
 
 $$('.rewards-tab').forEach(t=>t.addEventListener('click',()=>{
@@ -559,6 +603,9 @@ $('rewardsNextMonth').addEventListener('click',()=>{state.rewardsMonth.setMonth(
 $('prevWeek').addEventListener('click',()=>{state.awardsWeek.setDate(state.awardsWeek.getDate()-7);renderWeeklyAwards();});
 $('nextWeek').addEventListener('click',()=>{state.awardsWeek.setDate(state.awardsWeek.getDate()+7);renderWeeklyAwards();});
 $('prevAwardMonth').addEventListener('click',()=>{state.awardsMonth.setMonth(state.awardsMonth.getMonth()-1);renderMonthlyAwards();});
+
+$('prevYear').addEventListener('click',()=>{state.awardsYear--;renderAnnualAwards();});
+$('nextYear').addEventListener('click',()=>{state.awardsYear++;renderAnnualAwards();});
 $('nextAwardMonth').addEventListener('click',()=>{state.awardsMonth.setMonth(state.awardsMonth.getMonth()+1);renderMonthlyAwards();});
 
 $$('.rewards-tab').forEach(x=>x.classList.remove('active'));$$('.rewards-panel').forEach(x=>x.classList.remove('active'));t.classList.add('active');$('panel'+t.dataset.tab.charAt(0).toUpperCase()+t.dataset.tab.slice(1)).classList.add('active');}));
@@ -566,7 +613,7 @@ $('settingsBtn').addEventListener('click',()=>{$('patInput').value=state.pat;sta
 $$('.settings-tab').forEach(t=>t.addEventListener('click',()=>{$$('.settings-tab').forEach(x=>x.classList.remove('active'));$$('.settings-panel').forEach(x=>x.classList.remove('active'));t.classList.add('active');$('settingsPanel'+t.dataset.tab.charAt(0).toUpperCase()+t.dataset.tab.slice(1)).classList.add('active');}));
 $$('#settingsPanelBase .settings-profile-btn').forEach(b=>b.addEventListener('click',()=>{$$('#settingsPanelBase .settings-profile-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.settingsProfile=b.dataset.profile;renderBaseSettings();}));
 function renderBaseSettings(){const p=state.settingsProfile;const base=state.data.base?.[p]||DEFAULT_BASE[p];let html='<div class="base-settings-group"><div class="base-settings-group-title">General</div><div class="base-setting-row"><label>🐕 Sidon (mins)</label><input type="number" data-key="sidonMins" value="'+(base.sidonMins||10)+'"></div><div class="base-setting-row"><label>👟 Steps</label><input type="number" data-key="steps" value="'+(base.steps||15000)+'"></div></div><div class="base-settings-group"><div class="base-settings-group-title">💪 Upper</div>'+renderBaseExercises(base.upper||DEFAULT_BASE[p].upper,'upper')+'</div><div class="base-settings-group"><div class="base-settings-group-title">🦵 Lower</div>'+renderBaseExercises(base.lower||DEFAULT_BASE[p].lower,'lower')+'</div><div class="base-settings-group"><div class="base-settings-group-title">🎯 Core</div>'+renderBaseExercises(base.core||DEFAULT_BASE[p].core,'core')+'</div>';$('baseSettingsContent').innerHTML=html;}
-function renderBaseExercises(exs,group){let html='';Object.entries(exs).forEach(([k,ex])=>{let inputs='<input type="number" data-group="'+group+'" data-ex="'+k+'" data-f="s" value="'+ex.s+'" placeholder="S">';if(ex.m!==undefined)inputs+='<input type="number" data-group="'+group+'" data-ex="'+k+'" data-f="m" value="'+ex.m+'" placeholder="M">';else inputs+='<input type="number" data-group="'+group+'" data-ex="'+k+'" data-f="r" value="'+ex.r+'" placeholder="R">';if(ex.w!==null&&ex.w!==undefined)inputs+='<input type="number" data-group="'+group+'" data-ex="'+k+'" data-f="w" value="'+ex.w+'" placeholder="Kg">';html+='<div class="base-setting-row"><label style="font-size:0.65rem;">'+EX_NAMES[k]+'</label><div style="display:flex;gap:0.15rem;">'+inputs+'</div></div>';});return html;}
+function renderBaseExercises(exs,group){let html='<div class="base-ex-header"><span></span><span>Sets</span><span>Reps</span><span>Kg/Min</span></div>';Object.entries(exs).forEach(([k,ex])=>{let col3='';if(ex.m!==undefined)col3='<input type="number" data-group="'+group+'" data-ex="'+k+'" data-f="m" value="'+ex.m+'" placeholder="Min">';else if(ex.w!==null&&ex.w!==undefined)col3='<input type="number" data-group="'+group+'" data-ex="'+k+'" data-f="w" value="'+ex.w+'" placeholder="Kg">';else col3='<span class="na">-</span>';html+='<div class="base-setting-row"><label>'+EX_NAMES[k]+'</label><input type="number" data-group="'+group+'" data-ex="'+k+'" data-f="s" value="'+ex.s+'" placeholder="Sets">'+(ex.m!==undefined?'<span class="na">-</span>':'<input type="number" data-group="'+group+'" data-ex="'+k+'" data-f="r" value="'+ex.r+'" placeholder="Reps">')+col3+'</div>';});return html;}
 
 $('cancelSettings').addEventListener('click',()=>$('settingsModal').classList.remove('active'));
 $('saveSettings').addEventListener('click',async()=>{state.pat=$('patInput').value.trim();localStorage.setItem('github_pat',state.pat);const p=state.settingsProfile;if(!state.data.base)state.data.base=JSON.parse(JSON.stringify(DEFAULT_BASE));if(!state.data.base[p])state.data.base[p]=JSON.parse(JSON.stringify(DEFAULT_BASE[p]));const sidonInput=$('baseSettingsContent').querySelector('[data-key="sidonMins"]');const stepsInput=$('baseSettingsContent').querySelector('[data-key="steps"]');if(sidonInput)state.data.base[p].sidonMins=parseInt(sidonInput.value)||10;if(stepsInput)state.data.base[p].steps=parseInt(stepsInput.value)||15000;['upper','lower','core'].forEach(group=>{if(!state.data.base[p][group])state.data.base[p][group]=JSON.parse(JSON.stringify(DEFAULT_BASE[p][group]));$('baseSettingsContent').querySelectorAll('[data-group="'+group+'"]').forEach(inp=>{const ex=inp.dataset.ex,f=inp.dataset.f;if(!state.data.base[p][group][ex])return;const val=f==='w'?parseFloat(inp.value):parseInt(inp.value);if(!isNaN(val))state.data.base[p][group][ex][f]=val;});});$('settingsModal').classList.remove('active');showToast('Settings saved!');if(state.pat&&!CONFIG.REPO_OWNER)await loadData();else if(state.pat)await saveData();});
