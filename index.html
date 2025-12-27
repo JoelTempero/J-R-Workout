@@ -431,7 +431,26 @@ function getMaxStreak(data,profile){const validTypes=['upper','lower','core','cu
 
 function getMonthStreak(data,profile,monthStart,monthEnd){const validTypes=['upper','lower','core','custom','run'];const dates=[...new Set(data.workouts.filter(w=>w.profile===profile&&validTypes.includes(w.type)&&new Date(w.date)>=monthStart&&new Date(w.date)<=monthEnd).map(w=>w.date))].sort();if(!dates.length)return 0;let max=1,curr=1;for(let i=1;i<dates.length;i++){const diff=(new Date(dates[i])-new Date(dates[i-1]))/(1000*60*60*24);if(diff===1)curr++;else curr=1;max=Math.max(max,curr);}return max;}
 function getWeightGain(data,profile){const ws=data.workouts.filter(w=>w.profile===profile&&w.type==='weight'&&w.bodyWeight).sort((a,b)=>new Date(a.date)-new Date(b.date));if(ws.length<2)return 0;return ws[ws.length-1].bodyWeight-ws[0].bodyWeight;}
-function calcPoints(data,profile,startDate,endDate){const validTypes=['upper','lower','core','custom','run'];const ws=data.workouts.filter(w=>w.profile===profile&&validTypes.includes(w.type)&&new Date(w.date)>=startDate&&new Date(w.date)<=endDate);let pts=0;ws.forEach(w=>{pts+=15;if(w.type==='run'){pts+=(w.distance||0)*2;pts+=Math.floor((w.runTime||0)/10);}if(w.exercises){Object.values(w.exercises).forEach(e=>{if(e.on){pts+=(e.s||0)*2;pts+=Math.floor((e.r||0)/5);pts+=Math.floor((e.w||0)/5);}});}});return pts;}
+function calcPoints(data,profile,startDate,endDate){
+const ws=data.workouts.filter(w=>w.profile===profile&&new Date(w.date)>=startDate&&new Date(w.date)<=endDate);
+const base=state.data.base?.[profile]||DEFAULT_BASE[profile];
+let pts=0;
+ws.forEach(w=>{
+if(w.type==='sidon')pts+=1;
+else if(w.type==='steps'&&(w.steps||0)>=10000)pts+=2;
+else if(w.type==='run')pts+=Math.floor(w.distance||0);
+else if(['upper','lower','core','custom'].includes(w.type)&&w.exercises){
+pts+=5;
+let increased=0;
+Object.entries(w.exercises).forEach(([k,e])=>{
+if(e.on||e.s){
+const baseEx=base[w.type]?.[k];
+if(baseEx&&e.r&&e.r>baseEx.r)increased++;
+else if(baseEx&&e.m&&e.m>baseEx.m)increased++;
+}});
+if(increased>=3)pts+=1;
+}});
+return pts;}
 function updateDots(){$$('#pinDots .pin-dot').forEach((d,i)=>d.classList.toggle('filled',i<state.pin.length));}
 function pinInput(n){if(state.pin.length<4){state.pin+=n;updateDots();if(state.pin.length===4){setTimeout(()=>{if(state.pin===CONFIG.PIN){$('pinScreen').classList.add('hidden');$('app').classList.add('active');localStorage.setItem('pin_verified','true');loadData();}else{$$('#pinDots .pin-dot').forEach(d=>d.classList.add('error'));setTimeout(()=>{state.pin='';$$('#pinDots .pin-dot').forEach(d=>d.classList.remove('error','filled'));},500);}},200);}}}
 $$('.pin-key').forEach(k=>{const handler=()=>{if(k.dataset.num!==undefined)pinInput(k.dataset.num);else if(k.dataset.action==='back'){state.pin=state.pin.slice(0,-1);updateDots();}};k.addEventListener('click',handler);k.addEventListener('touchend',e=>{e.preventDefault();handler();},{passive:false});});
