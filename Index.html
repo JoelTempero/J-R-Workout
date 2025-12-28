@@ -462,8 +462,35 @@ n.addEventListener('touchend',e=>{e.preventDefault();n.classList.remove('tapped'
 n.addEventListener('touchcancel',()=>{n.classList.remove('tapped');});
 n.addEventListener('click',e=>{if(!e.sourceCapabilities||!e.sourceCapabilities.firesTouchEvents)doNav();});
 });
-async function loadData(){if(!state.pat)return;$('syncStatus').classList.add('syncing');try{const u=await fetch('https://api.github.com/user',{headers:{'Authorization':'Bearer '+state.pat}});if(u.ok)CONFIG.REPO_OWNER=(await u.json()).login;const r=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+CONFIG.DATA_FILE,{headers:{'Authorization':'Bearer '+state.pat}});if(r.ok){const d=await r.json();state.data={...state.data,...JSON.parse(atob(d.content))};}}catch(e){console.error(e);}$('syncStatus').classList.remove('syncing');checkBadges();renderList();updateCompetitionBanner();}
-async function saveData(){if(!state.pat||!CONFIG.REPO_OWNER){showToast('Configure GitHub token',true);return false;}$('syncStatus').classList.add('syncing');try{const g=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+CONFIG.DATA_FILE,{headers:{'Authorization':'Bearer '+state.pat}});let sha=g.ok?(await g.json()).sha:null;const body={message:'Update '+new Date().toISOString(),content:btoa(unescape(encodeURIComponent(JSON.stringify(state.data,null,2))))};if(sha)body.sha=sha;const s=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+CONFIG.DATA_FILE,{method:'PUT',headers:{'Authorization':'Bearer '+state.pat,'Content-Type':'application/json'},body:JSON.stringify(body)});$('syncStatus').classList.remove('syncing');return s.ok;}catch(e){console.error(e);$('syncStatus').classList.remove('syncing');return false;}}
+async function loadData(){
+if(!state.pat)return;
+$('syncStatus').classList.add('syncing');
+try{
+const u=await fetch('https://api.github.com/user',{headers:{'Authorization':'Bearer '+state.pat}});
+if(u.ok){CONFIG.REPO_OWNER=(await u.json()).login;}
+else{console.error('Token validation failed:',u.status);showToast('Invalid token - update in Settings',true);$('syncStatus').classList.remove('syncing');return;}
+const r=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+CONFIG.DATA_FILE,{headers:{'Authorization':'Bearer '+state.pat}});
+if(r.ok){const d=await r.json();state.data={...state.data,...JSON.parse(atob(d.content))};}
+else if(r.status===404){console.log('No data file yet, will create on first save');}
+else{console.error('Load failed:',r.status);}
+}catch(e){console.error('Load error:',e);showToast('Network error loading data',true);}
+$('syncStatus').classList.remove('syncing');checkBadges();renderList();updateCompetitionBanner();}
+async function saveData(){
+if(!state.pat){showToast('No GitHub token - check Settings',true);return false;}
+if(!CONFIG.REPO_OWNER){showToast('Token invalid - update in Settings',true);return false;}
+$('syncStatus').classList.add('syncing');
+try{
+const g=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+CONFIG.DATA_FILE,{headers:{'Authorization':'Bearer '+state.pat}});
+let sha=null;
+if(g.ok){sha=(await g.json()).sha;}
+else if(g.status===401){$('syncStatus').classList.remove('syncing');showToast('Token expired - update in Settings',true);return false;}
+const body={message:'Update '+new Date().toISOString(),content:btoa(unescape(encodeURIComponent(JSON.stringify(state.data,null,2))))};
+if(sha)body.sha=sha;
+const s=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+CONFIG.DATA_FILE,{method:'PUT',headers:{'Authorization':'Bearer '+state.pat,'Content-Type':'application/json'},body:JSON.stringify(body)});
+$('syncStatus').classList.remove('syncing');
+if(!s.ok){const err=await s.json().catch(()=>({}));console.error('Save failed:',s.status,err);showToast('Sync error: '+(err.message||s.status),true);return false;}
+return true;
+}catch(e){console.error('Save error:',e);$('syncStatus').classList.remove('syncing');showToast('Network error',true);return false;}}
 function showToast(msg,err){const t=$('toast');t.textContent=msg;t.classList.toggle('error',err);t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
 
 function renderList(){
