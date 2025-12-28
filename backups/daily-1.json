@@ -1,31 +1,22 @@
 {
   "workouts": [
     {
-      "id": "mjpbra1wsu3oku6iet",
-      "profile": "rachel",
-      "type": "sidon",
-      "date": "2025-12-28",
-      "time": "19:04",
-      "timestamp": "2025-12-28T06:04:00.000Z",
-      "minutes": 10
-    },
-    {
       "id": "mjpbpbbk5hc51sx612r",
       "profile": "joel",
       "type": "sidon",
       "date": "2025-12-28",
-      "time": "19:03",
-      "timestamp": "2025-12-28T06:03:00.000Z",
+      "time": "13:30",
+      "timestamp": "2025-12-28T00:30:00.000Z",
       "minutes": 10
     },
     {
-      "id": "mjpbrz7v96et14d265",
+      "id": "mjpcof970ia0xat4i5lr",
       "profile": "joel",
-      "type": "steps",
+      "type": "sidon",
       "date": "2025-12-28",
-      "time": "19:04",
-      "timestamp": "2025-12-28T06:04:00.000Z",
-      "steps": 6654
+      "time": "09:30",
+      "timestamp": "2025-12-27T20:30:00.000Z",
+      "minutes": 10
     }
   ],
   "base": {
