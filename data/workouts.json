@@ -1,13 +1,13 @@
 {
   "workouts": [
     {
-      "id": "mjpbra1wsu3oku6iet",
-      "profile": "rachel",
-      "type": "sidon",
+      "id": "mjpbrz7v96et14d265",
+      "profile": "joel",
+      "type": "steps",
       "date": "2025-12-28",
       "time": "19:04",
       "timestamp": "2025-12-28T06:04:00.000Z",
-      "minutes": 10
+      "steps": 6654
     },
     {
       "id": "mjpbpbbk5hc51sx612r",
@@ -17,15 +17,6 @@
       "time": "19:03",
       "timestamp": "2025-12-28T06:03:00.000Z",
       "minutes": 10
-    },
-    {
-      "id": "mjpbrz7v96et14d265",
-      "profile": "joel",
-      "type": "steps",
-      "date": "2025-12-28",
-      "time": "19:04",
-      "timestamp": "2025-12-28T06:04:00.000Z",
-      "steps": 6654
     }
   ],
   "base": {
