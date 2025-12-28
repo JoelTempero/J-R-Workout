@@ -338,7 +338,14 @@
     <div class="modal-overlay" id="settingsModal"><div class="modal">
         <div class="modal-title">⚙️ Settings</div>
         <div class="settings-tabs"><button class="settings-tab active" data-tab="general">General</button><button class="settings-tab" data-tab="base">Base</button></div>
-        <div class="settings-panel active" id="settingsPanelGeneral"><div class="modal-section"><div class="modal-section-title">GitHub Token</div><input type="password" class="modal-input" id="patInput" placeholder="ghp_xxxx"></div></div>
+        <div class="settings-panel active" id="settingsPanelGeneral">
+<div class="modal-section"><div class="modal-section-title">GitHub Token</div><input type="password" class="modal-input" id="patInput" placeholder="ghp_xxxx"></div>
+<div class="modal-section"><div class="modal-section-title">Backups</div>
+<p style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.5rem;">Auto-backup runs daily. Last 7 days kept.</p>
+<div style="display:flex;gap:0.5rem;margin-bottom:0.5rem;"><input type="text" class="modal-input" id="milestoneNameInput" placeholder="Milestone name" style="flex:1;"><button class="modal-btn save" id="createMilestoneBtn" style="white-space:nowrap;">💾 Save</button></div>
+<div style="display:flex;gap:0.5rem;"><select class="modal-input" id="restoreSelect" style="flex:1;"><option value="">Select backup to restore...</option></select><button class="modal-btn cancel" id="restoreBtn">🔄 Restore</button></div>
+</div>
+</div>
         <div class="settings-panel" id="settingsPanelBase"><div class="settings-profile-toggle"><button class="settings-profile-btn joel active" data-profile="joel">Joel</button><button class="settings-profile-btn rachel" data-profile="rachel">Rachel</button></div><div id="baseSettingsContent"></div></div>
         <div class="modal-buttons"><button class="modal-btn cancel" id="cancelSettings">Close</button><button class="modal-btn save" id="saveSettings">Save</button></div>
     </div></div>
@@ -475,10 +482,84 @@ else if(r.status===404){console.log('No data file yet, will create on first save
 else{console.error('Load failed:',r.status);}
 }catch(e){console.error('Load error:',e);showToast('Network error loading data',true);}
 $('syncStatus').classList.remove('syncing');checkBadges();renderList();updateCompetitionBanner();}
+
+async function rotateBackups(){
+const backupDate=localStorage.getItem('last_backup_date');
+const today=new Date().toISOString().split('T')[0];
+if(backupDate===today)return;
+try{
+for(let i=6;i>=1;i--){
+const oldFile='backups/daily-'+i+'.json';
+const newFile='backups/daily-'+(i+1)+'.json';
+const r=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+oldFile,{headers:{'Authorization':'Bearer '+state.pat}});
+if(r.ok){
+const d=await r.json();
+const nr=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+newFile,{headers:{'Authorization':'Bearer '+state.pat}});
+const nsha=nr.ok?(await nr.json()).sha:null;
+const body={message:'Rotate backup '+i+' to '+(i+1),content:d.content};
+if(nsha)body.sha=nsha;
+await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+newFile,{method:'PUT',headers:{'Authorization':'Bearer '+state.pat,'Content-Type':'application/json'},body:JSON.stringify(body)});
+}}
+const curr=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+CONFIG.DATA_FILE,{headers:{'Authorization':'Bearer '+state.pat}});
+if(curr.ok){
+const cd=await curr.json();
+const d1=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/backups/daily-1.json',{headers:{'Authorization':'Bearer '+state.pat}});
+const d1sha=d1.ok?(await d1.json()).sha:null;
+const body={message:'Daily backup '+today,content:cd.content};
+if(d1sha)body.sha=d1sha;
+await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/backups/daily-1.json',{method:'PUT',headers:{'Authorization':'Bearer '+state.pat,'Content-Type':'application/json'},body:JSON.stringify(body)});
+}
+localStorage.setItem('last_backup_date',today);
+console.log('Daily backup completed');
+}catch(e){console.error('Backup failed:',e);}}
+
+async function createMilestoneBackup(name){
+if(!name)return false;
+const safeName=name.toLowerCase().replace(/[^a-z0-9]/g,'-');
+try{
+const curr=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+CONFIG.DATA_FILE,{headers:{'Authorization':'Bearer '+state.pat}});
+if(!curr.ok)return false;
+const cd=await curr.json();
+const file='backups/milestone-'+safeName+'.json';
+const existing=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+file,{headers:{'Authorization':'Bearer '+state.pat}});
+const sha=existing.ok?(await existing.json()).sha:null;
+const body={message:'Milestone backup: '+name,content:cd.content};
+if(sha)body.sha=sha;
+const s=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+file,{method:'PUT',headers:{'Authorization':'Bearer '+state.pat,'Content-Type':'application/json'},body:JSON.stringify(body)});
+return s.ok;
+}catch(e){console.error('Milestone backup failed:',e);return false;}}
+
+async function listBackups(){
+const backups=[];
+try{
+for(let i=1;i<=7;i++){
+const r=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/backups/daily-'+i+'.json',{headers:{'Authorization':'Bearer '+state.pat}});
+if(r.ok)backups.push({name:'Daily backup '+i,file:'backups/daily-'+i+'.json'});}
+const dir=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/backups',{headers:{'Authorization':'Bearer '+state.pat}});
+if(dir.ok){
+const files=await dir.json();
+files.filter(f=>f.name.startsWith('milestone-')).forEach(f=>{
+backups.push({name:'Milestone: '+f.name.replace('milestone-','').replace('.json',''),file:'backups/'+f.name});});}
+}catch(e){console.error('List backups failed:',e);}
+return backups;}
+
+async function restoreBackup(file){
+try{
+const r=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+file,{headers:{'Authorization':'Bearer '+state.pat}});
+if(!r.ok)return false;
+const d=await r.json();
+const restored=JSON.parse(atob(d.content));
+state.data=restored;
+const saved=await saveData();
+if(saved){checkBadges();renderList();updateCompetitionBanner();}
+return saved;
+}catch(e){console.error('Restore failed:',e);return false;}}
+
 async function saveData(){
 if(!state.pat){showToast('No GitHub token - check Settings',true);return false;}
 if(!CONFIG.REPO_OWNER){showToast('Token invalid - update in Settings',true);return false;}
 $('syncStatus').classList.add('syncing');
+await rotateBackups();
 try{
 const g=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+CONFIG.DATA_FILE,{headers:{'Authorization':'Bearer '+state.pat}});
 let sha=null;
@@ -670,7 +751,7 @@ $$('.rewards-tab').forEach(t=>t.addEventListener('click',()=>{
 
 
 $$('.rewards-tab').forEach(x=>x.classList.remove('active'));$$('.rewards-panel').forEach(x=>x.classList.remove('active'));t.classList.add('active');$('panel'+t.dataset.tab.charAt(0).toUpperCase()+t.dataset.tab.slice(1)).classList.add('active');}));
-$('settingsBtn').addEventListener('click',()=>{$('patInput').value=state.pat;state.settingsProfile='joel';renderBaseSettings();$$('#settingsPanelBase .settings-profile-btn').forEach(b=>{b.classList.remove('active');if(b.dataset.profile==='joel')b.classList.add('active');});$('settingsModal').classList.add('active');});
+$('settingsBtn').addEventListener('click',()=>{$('patInput').value=state.pat;state.settingsProfile='joel';renderBaseSettings();$$('#settingsPanelBase .settings-profile-btn').forEach(b=>{b.classList.remove('active');if(b.dataset.profile==='joel')b.classList.add('active');});$('settingsModal').classList.add('active');loadBackupList();});
 $$('.settings-tab').forEach(t=>t.addEventListener('click',()=>{$$('.settings-tab').forEach(x=>x.classList.remove('active'));$$('.settings-panel').forEach(x=>x.classList.remove('active'));t.classList.add('active');$('settingsPanel'+t.dataset.tab.charAt(0).toUpperCase()+t.dataset.tab.slice(1)).classList.add('active');}));
 $$('#settingsPanelBase .settings-profile-btn').forEach(b=>b.addEventListener('click',()=>{$$('#settingsPanelBase .settings-profile-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.settingsProfile=b.dataset.profile;renderBaseSettings();}));
 function renderBaseSettings(){const p=state.settingsProfile;const base=state.data.base?.[p]||DEFAULT_BASE[p];let html='<div class="base-settings-group"><div class="base-settings-group-title">General</div><div class="base-setting-row"><label>🐕 Sidon (mins)</label><input type="number" data-key="sidonMins" value="'+(base.sidonMins||10)+'"></div><div class="base-setting-row"><label>👟 Steps</label><input type="number" data-key="steps" value="'+(base.steps||15000)+'"></div></div><div class="base-settings-group"><div class="base-settings-group-title">💪 Upper</div>'+renderBaseExercises(base.upper||DEFAULT_BASE[p].upper,'upper')+'</div><div class="base-settings-group"><div class="base-settings-group-title">🦵 Lower</div>'+renderBaseExercises(base.lower||DEFAULT_BASE[p].lower,'lower')+'</div><div class="base-settings-group"><div class="base-settings-group-title">🎯 Core</div>'+renderBaseExercises(base.core||DEFAULT_BASE[p].core,'core')+'</div>';$('baseSettingsContent').innerHTML=html;}
@@ -682,6 +763,34 @@ $('settingsModal').addEventListener('click',e=>{if(e.target.id==='settingsModal'
 $('settingsModal').addEventListener('touchend',e=>{if(e.target.id==='settingsModal'){e.preventDefault();$('settingsModal').classList.remove('active');}},{passive:false});
 $('deleteModal').addEventListener('click',e=>{if(e.target.id==='deleteModal'){$('deleteModal').classList.remove('active');state.deleteId=null;}});
 $('deleteModal').addEventListener('touchend',e=>{if(e.target.id==='deleteModal'){e.preventDefault();$('deleteModal').classList.remove('active');state.deleteId=null;}},{passive:false});
+
+$('createMilestoneBtn').addEventListener('click',async()=>{
+const name=$('milestoneNameInput').value.trim();
+if(!name){showToast('Enter a name',true);return;}
+$('createMilestoneBtn').textContent='Saving...';
+const ok=await createMilestoneBackup(name);
+$('createMilestoneBtn').textContent='💾 Save';
+if(ok){showToast('Milestone saved!');$('milestoneNameInput').value='';loadBackupList();}
+else showToast('Backup failed',true);
+});
+$('restoreBtn').addEventListener('click',async()=>{
+const file=$('restoreSelect').value;
+if(!file){showToast('Select a backup',true);return;}
+if(!confirm('Restore this backup? Current data will be overwritten.'))return;
+$('restoreBtn').textContent='Restoring...';
+const ok=await restoreBackup(file);
+$('restoreBtn').textContent='🔄 Restore';
+if(ok){showToast('Restored!');$('settingsModal').classList.remove('active');}
+else showToast('Restore failed',true);
+});
+async function loadBackupList(){
+const sel=$('restoreSelect');
+sel.innerHTML='<option value="">Loading...</option>';
+const backups=await listBackups();
+sel.innerHTML='<option value="">Select backup to restore...</option>';
+backups.forEach(b=>{const opt=document.createElement('option');opt.value=b.file;opt.textContent=b.name;sel.appendChild(opt);});
+}
+
 function init(){setDate();if(localStorage.getItem('pin_verified')==='true'){$('pinScreen').classList.add('hidden');$('app').classList.add('active');loadData();}}
 init();
 </script>
