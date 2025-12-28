@@ -1,15 +1,6 @@
 {
   "workouts": [
     {
-      "id": "mjpgsih7nge5gfuqhi",
-      "profile": "joel",
-      "type": "steps",
-      "date": "2025-12-28",
-      "time": "21:25",
-      "timestamp": "2025-12-28T08:25:00.000Z",
-      "steps": 8517
-    },
-    {
       "id": "mjpgsnpcyz1x4imvvif",
       "profile": "joel",
       "type": "steps",
