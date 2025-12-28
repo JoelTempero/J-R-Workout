@@ -23,8 +23,8 @@
       "profile": "rachel",
       "type": "steps",
       "date": "2025-12-28",
-      "time": "19:38",
-      "timestamp": "2025-12-28T06:38:00.000Z",
+      "time": "21:38",
+      "timestamp": "2025-12-28T08:38:00.000Z",
       "steps": 4800
     },
     {
@@ -260,7 +260,8 @@
   },
   "badges": {
     "3": {
-      "first": "joel"
+      "first": "joel",
+      "second": "rachel"
     }
   },
   "raceGoals": {
