@@ -34,14 +34,14 @@
         .app.active{display:flex}
         .header{padding:1rem 1.5rem;display:flex;align-items:center;background:var(--bg-card);position:sticky;top:0;z-index:50}
         .header-left{display:flex;align-items:center;gap:0.75rem}
-        .header-icon{font-size:1.5rem}
+        .header-icon{width:2.5rem;height:2.5rem;border-radius:8px}
         .header-title{font-size:1.25rem;font-weight:700}
         .header-date{color:var(--text-secondary);font-size:0.875rem}
         .page{display:none;flex:1;padding:1rem;overflow-y:auto;padding-bottom:20px}
         .page.active{display:block}
         .card{background:var(--bg-card);border-radius:16px;padding:1.25rem;margin-bottom:1rem}
         .card-title{font-size:1.1rem;font-weight:700;margin-bottom:1rem}
-        .competition-banner{background:linear-gradient(135deg,var(--joel-primary),var(--rachel-primary));border-radius:12px;padding:1rem;margin-bottom:1rem}
+        
         .competition-banner-title{font-size:0.75rem;text-transform:uppercase;opacity:0.9;margin-bottom:0.5rem}
         .competition-banner-content{display:flex;align-items:center;justify-content:space-between}
         .competition-leader{font-size:1.1rem;font-weight:700}
@@ -166,11 +166,11 @@
         .rewards-nav button:active{background:var(--bg-card)}
         .rewards-header{background:linear-gradient(135deg,var(--joel-primary),var(--rachel-primary));border-radius:16px;padding:1.25rem;margin-bottom:1rem;text-align:center}
         .rewards-month{font-size:0.75rem;text-transform:uppercase;opacity:0.9}
-        .rewards-points{display:flex;justify-content:space-around;margin-top:1rem}
-        .rewards-points-person{text-align:center}
-        .rewards-points-name{font-size:0.8rem;opacity:0.9;margin-bottom:0.25rem}
-        .rewards-points-value{font-size:2rem;font-weight:700}
-        .rewards-points-label{font-size:0.7rem;opacity:0.8}
+        
+        
+        
+        
+        
         .rewards-tabs{display:flex;gap:0.5rem;margin-bottom:1rem}
         .rewards-tab{flex:1;padding:0.6rem;border-radius:8px;background:var(--bg-input);color:var(--text-secondary);font-weight:600;font-size:0.8rem}
         .rewards-tab.active{background:var(--success);color:white}
@@ -275,9 +275,9 @@
         </div>
     </div>
     <div class="app" id="app">
-        <header class="header"><div class="header-left"><span class="header-icon">💪</span><div><div class="header-title">J&R Workout</div><div class="header-date" id="headerDate"></div></div></div></header>
+        <header class="header"><div class="header-left"><img src="icon.svg" class="header-icon" alt="App icon"><div><div class="header-title">J&R Workout</div><div class="header-date" id="headerDate"></div></div></div></header>
         <div class="page active" id="pageWorkouts">
-            <div class="competition-banner" id="competitionBanner"><div class="competition-banner-title">🏆 Monthly Competition</div><div class="competition-banner-content"><div class="competition-leader" id="competitionLeader">Loading...</div><div class="competition-stats" id="competitionStats"></div></div></div>
+            
             <div id="workoutsList"><div class="empty-state"><div class="empty-state-icon">🏋️</div><p>No workouts logged yet</p></div></div>
         </div>
         <div class="page" id="pageCalendar"><div class="card">
@@ -296,7 +296,7 @@
             <div class="chart-container"><canvas class="chart-canvas" id="statsChart"></canvas></div>
         </div></div>
         <div class="page" id="pageRewards">
-            <div class="rewards-header"><div class="rewards-nav"><button id="rewardsPrevMonth">‹</button><div class="rewards-month" id="rewardsMonth"></div><button id="rewardsNextMonth">›</button></div><div class="rewards-points"><div class="rewards-points-person"><div class="rewards-points-name">Joel</div><div class="rewards-points-value" id="joelPoints">0</div><div class="rewards-points-label">points</div></div><div class="rewards-points-person"><div class="rewards-points-name">Rachel</div><div class="rewards-points-value" id="rachelPoints">0</div><div class="rewards-points-label">points</div></div></div></div>
+            <div class="rewards-header"><div class="rewards-nav"><button id="rewardsPrevMonth">‹</button><div class="rewards-month" id="rewardsMonth"></div><button id="rewardsNextMonth">›</button></div></div>
             <div class="rewards-tabs"><button class="rewards-tab active" data-tab="weekly">Weekly</button><button class="rewards-tab" data-tab="monthly">Monthly</button><button class="rewards-tab" data-tab="annual">Annual</button><button class="rewards-tab" data-tab="badges">Badges</button></div>
             <div class="rewards-panel active" id="panelWeekly">
                 <div class="awards-nav"><button id="prevWeek">‹</button><span id="weekLabel"></span><button id="nextWeek">›</button></div>
@@ -438,32 +438,13 @@ function getMaxStreak(data,profile){const validTypes=['upper','lower','core','cu
 
 function getMonthStreak(data,profile,monthStart,monthEnd){const validTypes=['upper','lower','core','custom','run'];const dates=[...new Set(data.workouts.filter(w=>w.profile===profile&&validTypes.includes(w.type)&&new Date(w.date)>=monthStart&&new Date(w.date)<=monthEnd).map(w=>w.date))].sort();if(!dates.length)return 0;let max=1,curr=1;for(let i=1;i<dates.length;i++){const diff=(new Date(dates[i])-new Date(dates[i-1]))/(1000*60*60*24);if(diff===1)curr++;else curr=1;max=Math.max(max,curr);}return max;}
 function getWeightGain(data,profile){const ws=data.workouts.filter(w=>w.profile===profile&&w.type==='weight'&&w.bodyWeight).sort((a,b)=>new Date(a.date)-new Date(b.date));if(ws.length<2)return 0;return ws[ws.length-1].bodyWeight-ws[0].bodyWeight;}
-function calcPoints(data,profile,startDate,endDate){
-const ws=data.workouts.filter(w=>w.profile===profile&&new Date(w.date)>=startDate&&new Date(w.date)<=endDate);
-const base=state.data.base?.[profile]||DEFAULT_BASE[profile];
-let pts=0;
-ws.forEach(w=>{
-if(w.type==='sidon')pts+=1;
-else if(w.type==='steps'&&(w.steps||0)>=10000)pts+=2;
-else if(w.type==='run')pts+=Math.floor(w.distance||0);
-else if(['upper','lower','core','custom'].includes(w.type)&&w.exercises){
-pts+=5;
-let increased=0;
-Object.entries(w.exercises).forEach(([k,e])=>{
-if(e.on||e.s){
-const baseEx=base[w.type]?.[k];
-if(baseEx&&e.r&&e.r>baseEx.r)increased++;
-else if(baseEx&&e.m&&e.m>baseEx.m)increased++;
-}});
-if(increased>=3)pts+=1;
-}});
-return pts;}
+
 function updateDots(){$$('#pinDots .pin-dot').forEach((d,i)=>d.classList.toggle('filled',i<state.pin.length));}
 function pinInput(n){if(state.pin.length<4){state.pin+=n;updateDots();if(state.pin.length===4){setTimeout(()=>{if(state.pin===CONFIG.PIN){$('pinScreen').classList.add('hidden');$('app').classList.add('active');localStorage.setItem('pin_verified','true');loadData();}else{$$('#pinDots .pin-dot').forEach(d=>d.classList.add('error'));setTimeout(()=>{state.pin='';$$('#pinDots .pin-dot').forEach(d=>d.classList.remove('error','filled'));},500);}},200);}}}
 $$('.pin-key').forEach(k=>{const handler=()=>{if(k.dataset.num!==undefined)pinInput(k.dataset.num);else if(k.dataset.action==='back'){state.pin=state.pin.slice(0,-1);updateDots();}};k.addEventListener('click',handler);k.addEventListener('touchend',e=>{e.preventDefault();handler();},{passive:false});});
 function setDate(){$('headerDate').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});}
 document.querySelectorAll('.nav-item[data-page]').forEach(n=>{
-const doNav=()=>{const p=n.dataset.page;$$('.page').forEach(x=>x.classList.remove('active'));$(p).classList.add('active');$$('.nav-item').forEach(x=>x.classList.remove('active','tapped'));n.classList.add('active');if(p==='pageCalendar')renderCal();if(p==='pageStats')renderChart();if(p==='pageWorkouts'){renderList();updateCompetitionBanner();}if(p==='pageRewards')renderRewards();};
+const doNav=()=>{const p=n.dataset.page;$$('.page').forEach(x=>x.classList.remove('active'));$(p).classList.add('active');$$('.nav-item').forEach(x=>x.classList.remove('active','tapped'));n.classList.add('active');if(p==='pageCalendar')renderCal();if(p==='pageStats')renderChart();if(p==='pageWorkouts'){renderList();}if(p==='pageRewards')renderRewards();};
 n.addEventListener('touchstart',e=>{n.classList.add('tapped');},{passive:true});
 n.addEventListener('touchend',e=>{e.preventDefault();n.classList.remove('tapped');doNav();},{passive:false});
 n.addEventListener('touchcancel',()=>{n.classList.remove('tapped');});
@@ -481,7 +462,7 @@ if(r.ok){const d=await r.json();state.data={...state.data,...JSON.parse(atob(d.c
 else if(r.status===404){console.log('No data file yet, will create on first save');}
 else{console.error('Load failed:',r.status);}
 }catch(e){console.error('Load error:',e);showToast('Network error loading data',true);}
-$('syncStatus').classList.remove('syncing');checkBadges();renderList();updateCompetitionBanner();}
+$('syncStatus').classList.remove('syncing');checkBadges();renderList();}
 
 async function rotateBackups(){
 const backupDate=localStorage.getItem('last_backup_date');
@@ -551,7 +532,7 @@ const d=await r.json();
 const restored=JSON.parse(atob(d.content));
 state.data=restored;
 const saved=await saveData();
-if(saved){checkBadges();renderList();updateCompetitionBanner();}
+if(saved){checkBadges();renderList();}
 return saved;
 }catch(e){console.error('Restore failed:',e);return false;}}
 
@@ -627,12 +608,12 @@ function openLog(type,edit=null){
 function renderExercises(exs,editEx,startOff){return Object.entries(exs).map(([k,ex])=>{const ed=editEx[k]||{};const on=Object.keys(editEx).length>0?ed.on===1:(startOff?false:ex.on);return'<div class="exercise-item" data-ex="'+k+'"><div class="exercise-header"><span class="exercise-name">'+EX_NAMES[k]+'</span><button class="exercise-toggle '+(on?'active':'')+'" data-k="'+k+'"></button></div><div class="exercise-inputs '+(on?'':'disabled')+'" data-k="'+k+'"><div class="input-group"><label>Sets</label><input type="number" data-f="s" value="'+(ed.s??ex.s)+'"></div>'+(ex.m!==undefined?'<div class="input-group"><label>Mins</label><input type="number" data-f="m" value="'+(ed.m??ex.m)+'"></div>':'<div class="input-group"><label>Reps</label><input type="number" data-f="r" value="'+(ed.r??ex.r)+'"></div>')+(ex.w!=null?'<div class="input-group"><label>Kg</label><input type="number" data-f="w" step="0.5" value="'+(ed.w??ex.w)+'"></div>':'')+'</div></div>';}).join('');}
 function attachToggleListeners(){const c=$('logPages');c.querySelectorAll('.exercise-toggle').forEach(t=>{t.onclick=()=>{t.classList.toggle('active');c.querySelector('.exercise-inputs[data-k="'+t.dataset.k+'"]').classList.toggle('disabled',!t.classList.contains('active'));};});}
 window.closeLog=t=>{const p=$('logPage_'+t);if(p)p.remove();};
-window.submitLog=async(type,editId)=>{const date=$('logDate').value,time=$('logTime').value;let w={id:editId||genId(),profile:state.logProfile,type,date,time,timestamp:new Date(date+'T'+time).toISOString()};if(type==='sidon')w.minutes=parseInt($('sidonMins').value)||0;else if(type==='steps')w.steps=parseInt($('stepCount').value)||0;else if(type==='weight')w.bodyWeight=parseFloat($('bodyWeight').value)||0;else if(type==='run'){w.runType=state.runType;w.distance=parseFloat($('runDistance').value)||0;w.runTime=parseInt($('runTime').value)||0;}else{const exs={};document.querySelectorAll('.exercise-item').forEach(item=>{const k=item.dataset.ex,tog=item.querySelector('.exercise-toggle'),on=tog.classList.contains('active');if(!on)return;exs[k]={on:1};item.querySelectorAll('.exercise-inputs input').forEach(inp=>{const f=inp.dataset.f,v=f==='w'?parseFloat(inp.value):parseInt(inp.value);if(!isNaN(v))exs[k][f]=v;});});w.exercises=exs;}if(!state.data.workouts)state.data.workouts=[];if(editId){const i=state.data.workouts.findIndex(x=>x.id===editId);if(i!==-1)state.data.workouts[i]=w;}else state.data.workouts.push(w);checkBadges();const ok=await saveData();if(ok){showToast(editId?'Updated!':'Logged! 💪');closeLog(type);renderList();updateCompetitionBanner();}else showToast('Failed to save',true);};
+window.submitLog=async(type,editId)=>{const date=$('logDate').value,time=$('logTime').value;let w={id:editId||genId(),profile:state.logProfile,type,date,time,timestamp:new Date(date+'T'+time).toISOString()};if(type==='sidon')w.minutes=parseInt($('sidonMins').value)||0;else if(type==='steps')w.steps=parseInt($('stepCount').value)||0;else if(type==='weight')w.bodyWeight=parseFloat($('bodyWeight').value)||0;else if(type==='run'){w.runType=state.runType;w.distance=parseFloat($('runDistance').value)||0;w.runTime=parseInt($('runTime').value)||0;}else{const exs={};document.querySelectorAll('.exercise-item').forEach(item=>{const k=item.dataset.ex,tog=item.querySelector('.exercise-toggle'),on=tog.classList.contains('active');if(!on)return;exs[k]={on:1};item.querySelectorAll('.exercise-inputs input').forEach(inp=>{const f=inp.dataset.f,v=f==='w'?parseFloat(inp.value):parseInt(inp.value);if(!isNaN(v))exs[k][f]=v;});});w.exercises=exs;}if(!state.data.workouts)state.data.workouts=[];if(editId){const i=state.data.workouts.findIndex(x=>x.id===editId);if(i!==-1)state.data.workouts[i]=w;}else state.data.workouts.push(w);checkBadges();const ok=await saveData();if(ok){showToast(editId?'Updated!':'Logged! 💪');closeLog(type);renderList();}else showToast('Failed to save',true);};
 
 
 $('cancelDelete').addEventListener('click',()=>{$('deleteModal').classList.remove('active');state.deleteId=null;});
-$('confirmDelete').addEventListener('click',async()=>{if(state.deleteId){state.data.workouts=state.data.workouts.filter(x=>x.id!==state.deleteId);checkBadges();if(await saveData()){showToast('Deleted');renderList();updateCompetitionBanner();}else showToast('Failed',true);}$('deleteModal').classList.remove('active');state.deleteId=null;});
-function updateCompetitionBanner(){const now=new Date();const start=getMonthStart(now);const joelPts=calcPoints(state.data,'joel',start,now);const rachelPts=calcPoints(state.data,'rachel',start,now);let leader,stats;if(joelPts>rachelPts){leader='💜 Joel is leading!';stats='<span style="background:rgba(255,255,255,0.2);padding:0.25rem 0.5rem;border-radius:6px;font-weight:700;">💜 '+joelPts+'</span> <span style="opacity:0.7;margin:0 0.25rem;">vs</span> <span style="opacity:0.8;">🩵 '+rachelPts+'</span>';}else if(rachelPts>joelPts){leader='🩵 Rachel is leading!';stats='<span style="background:rgba(255,255,255,0.2);padding:0.25rem 0.5rem;border-radius:6px;font-weight:700;">🩵 '+rachelPts+'</span> <span style="opacity:0.7;margin:0 0.25rem;">vs</span> <span style="opacity:0.8;">💜 '+joelPts+'</span>';}else{leader="It's a tie!";stats='<span style="background:rgba(255,255,255,0.2);padding:0.25rem 0.5rem;border-radius:6px;">'+joelPts+' pts each</span>';}$('competitionLeader').textContent=leader;$('competitionStats').innerHTML=stats;}
+$('confirmDelete').addEventListener('click',async()=>{if(state.deleteId){state.data.workouts=state.data.workouts.filter(x=>x.id!==state.deleteId);checkBadges();if(await saveData()){showToast('Deleted');renderList();}else showToast('Failed',true);}$('deleteModal').classList.remove('active');state.deleteId=null;});
+
 function checkBadges(){
 const newBadges={};
 BADGES.forEach(b=>{
@@ -669,9 +650,8 @@ ctx.strokeStyle='#2d2d4a';ctx.lineWidth=1;const steps=5;for(let i=0;i<=steps;i++
 ctx.fillStyle='#64748b';ctx.font='9px system-ui';ctx.textAlign='center';dateLabels.forEach(dl=>{const x=sx(dl.date);if(x>=pad.l&&x<=W-pad.r)ctx.fillText(dl.label,x,H-pad.b+15);});
 series.forEach(s=>{if(!s.data.length)return;ctx.strokeStyle=s.color;ctx.lineWidth=2.5;ctx.lineCap='round';ctx.lineJoin='round';if(s.dash)ctx.setLineDash(s.dash);else ctx.setLineDash([]);ctx.beginPath();s.data.forEach((d,i)=>{const x=Math.max(pad.l,Math.min(W-pad.r,sx(d.x)));const y=Math.max(pad.t,Math.min(H-pad.b,sy(d.y)));if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);});ctx.stroke();ctx.setLineDash([]);s.data.forEach(d=>{const x=Math.max(pad.l,Math.min(W-pad.r,sx(d.x)));const y=Math.max(pad.t,Math.min(H-pad.b,sy(d.y)));ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fillStyle=s.color;ctx.fill();});});}
 updateMetricTogglesVisibility();
-function renderRewards(){const now=state.rewardsMonth;$('rewardsMonth').textContent=now.toLocaleDateString('en-US',{month:'long',year:'numeric'});const monthStart=getMonthStart(now);$('joelPoints').textContent=calcPoints(state.data,'joel',monthStart,now);$('rachelPoints').textContent=calcPoints(state.data,'rachel',monthStart,now);renderWeeklyAwards();renderMonthlyAwards();renderAnnualAwards();renderBadges();}
-function renderWeeklyAwards(){const weekStart=getWeekStart(state.awardsWeek);const weekEnd=new Date(weekStart);weekEnd.setDate(weekEnd.getDate()+6);$('weekLabel').textContent=weekStart.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' - '+weekEnd.toLocaleDateString('en-US',{month:'short',day:'numeric'});const ws=p=>state.data.workouts.filter(x=>{const d=new Date(x.date);return d>=weekStart&&d<=weekEnd&&x.profile===p;});const pts=p=>calcPoints(state.data,p,weekStart,weekEnd);const morningWs=p=>ws(p).filter(x=>x.time&&parseInt(x.time.split(':')[0])<9).length;const eveningWs=p=>ws(p).filter(x=>x.time&&parseInt(x.time.split(':')[0])>=18).length;const activeMins=p=>ws(p).filter(x=>x.type==='sidon').reduce((s,x)=>s+(x.minutes||0),0)+ws(p).filter(x=>x.type==='run').reduce((s,x)=>s+(x.runTime||0),0);const awards=[
-{icon:'👑',name:'Weekly Winner',desc:'Most points scored this week',joel:pts('joel'),rachel:pts('rachel')},
+function renderRewards(){const now=state.rewardsMonth;$('rewardsMonth').textContent=now.toLocaleDateString('en-US',{month:'long',year:'numeric'});renderWeeklyAwards();renderMonthlyAwards();renderAnnualAwards();renderBadges();}
+function renderWeeklyAwards(){const weekStart=getWeekStart(state.awardsWeek);const weekEnd=new Date(weekStart);weekEnd.setDate(weekEnd.getDate()+6);$('weekLabel').textContent=weekStart.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' - '+weekEnd.toLocaleDateString('en-US',{month:'short',day:'numeric'});const ws=p=>state.data.workouts.filter(x=>{const d=new Date(x.date);return d>=weekStart&&d<=weekEnd&&x.profile===p;});const morningWs=p=>ws(p).filter(x=>x.time&&parseInt(x.time.split(':')[0])<9).length;const eveningWs=p=>ws(p).filter(x=>x.time&&parseInt(x.time.split(':')[0])>=18).length;const sidonMins=p=>ws(p).filter(x=>x.type==='sidon').reduce((s,x)=>s+(x.minutes||0),0);const activeMins=p=>sidonMins(p)+ws(p).filter(x=>x.type==='run').reduce((s,x)=>s+(x.runTime||0),0);const baseAwards=[
 {icon:'💪',name:'Gym Rat',desc:'Most strength workouts',joel:ws('joel').filter(x=>['upper','lower','core','custom'].includes(x.type)).length,rachel:ws('rachel').filter(x=>['upper','lower','core','custom'].includes(x.type)).length},
 {icon:'🏃',name:'Runner',desc:'Most runs',joel:ws('joel').filter(x=>x.type==='run').length,rachel:ws('rachel').filter(x=>x.type==='run').length},
 {icon:'📏',name:'Distance King',desc:'Most km run',joel:ws('joel').filter(x=>x.type==='run').reduce((s,x)=>s+(x.distance||0),0),rachel:ws('rachel').filter(x=>x.type==='run').reduce((s,x)=>s+(x.distance||0),0)},
@@ -682,10 +662,14 @@ function renderWeeklyAwards(){const weekStart=getWeekStart(state.awardsWeek);con
 {icon:'⏰',name:'Early Riser',desc:'Most morning workouts',joel:morningWs('joel'),rachel:morningWs('rachel')},
 {icon:'🌙',name:'Night Grinder',desc:'Most evening workouts',joel:eveningWs('joel'),rachel:eveningWs('rachel')},
 {icon:'⚡',name:'Busiest Bee',desc:'Most workout days',joel:[...new Set(ws('joel').filter(x=>['upper','lower','core','custom','run'].includes(x.type)).map(x=>x.date))].length,rachel:[...new Set(ws('rachel').filter(x=>['upper','lower','core','custom','run'].includes(x.type)).map(x=>x.date))].length},
-{icon:'🔥',name:'Calorie Crusher',desc:'Most active minutes',joel:activeMins('joel'),rachel:activeMins('rachel')}
-];$('weeklyAwardsList').innerHTML=awards.map(a=>{let leader='tie',lc='tie';if(a.joel>a.rachel){leader='Joel';lc='joel';}else if(a.rachel>a.joel){leader='Rachel';lc='rachel';}return'<div class="award-card" onclick="showAward(\''+a.name+'\',\''+a.icon+'\',\''+a.desc+'\','+a.joel+','+a.rachel+',\'weekly\')"><div class="award-card-header"><span class="award-card-icon">'+a.icon+'</span><span class="award-card-title">'+a.name+'</span><span class="award-card-leader '+lc+'">'+leader+'</span></div><div class="award-card-progress"><span>Joel: '+a.joel+'</span><span>Rachel: '+a.rachel+'</span></div></div>';}).join('');}
-function renderMonthlyAwards(){const monthStart=getMonthStart(state.awardsMonth);const monthEnd=new Date(monthStart.getFullYear(),monthStart.getMonth()+1,0);$('monthLabel').textContent=monthStart.toLocaleDateString('en-US',{month:'long',year:'numeric'});const ws=p=>state.data.workouts.filter(x=>{const d=new Date(x.date);return d>=monthStart&&d<=monthEnd&&x.profile===p;});const pts=p=>calcPoints(state.data,p,monthStart,monthEnd);const totalSets=p=>ws(p).filter(x=>x.exercises).reduce((s,x)=>s+Object.values(x.exercises).reduce((ss,e)=>ss+(e.s||0),0),0);const workoutTypes=p=>[...new Set(ws(p).map(x=>x.type))].length;const bestType=p=>{const counts={};ws(p).forEach(x=>{counts[x.type]=(counts[x.type]||0)+1;});return Math.max(0,...Object.values(counts));};const awards=[
-{icon:'👑',name:'Monthly MVP',desc:'Most points earned',joel:pts('joel'),rachel:pts('rachel')},
+{icon:'🔥',name:'Calorie Crusher',desc:'Most active minutes',joel:activeMins('joel'),rachel:activeMins('rachel')},
+{icon:'🐕',name:'Sneaky Sidon',desc:'Most Sidon minutes',joel:sidonMins('joel'),rachel:sidonMins('rachel')}
+];
+let joelWins=0,rachelWins=0;
+baseAwards.forEach(a=>{if(a.joel>a.rachel)joelWins++;else if(a.rachel>a.joel)rachelWins++;});
+const awards=[{icon:'👑',name:'Weekly Winner',desc:'Most awards earned this week',joel:joelWins,rachel:rachelWins},...baseAwards];
+$('weeklyAwardsList').innerHTML=awards.map(a=>{let leader='tie',lc='tie';if(a.joel>a.rachel){leader='Joel';lc='joel';}else if(a.rachel>a.joel){leader='Rachel';lc='rachel';}return'<div class="award-card" onclick="showAward(\''+a.name+'\',\''+a.icon+'\',\''+a.desc+'\','+a.joel+','+a.rachel+',\'weekly\')"><div class="award-card-header"><span class="award-card-icon">'+a.icon+'</span><span class="award-card-title">'+a.name+'</span><span class="award-card-leader '+lc+'">'+leader+'</span></div><div class="award-card-progress"><span>Joel: '+a.joel+'</span><span>Rachel: '+a.rachel+'</span></div></div>';}).join('');}
+function renderMonthlyAwards(){const monthStart=getMonthStart(state.awardsMonth);const monthEnd=new Date(monthStart.getFullYear(),monthStart.getMonth()+1,0);$('monthLabel').textContent=monthStart.toLocaleDateString('en-US',{month:'long',year:'numeric'});const ws=p=>state.data.workouts.filter(x=>{const d=new Date(x.date);return d>=monthStart&&d<=monthEnd&&x.profile===p;});const totalSets=p=>ws(p).filter(x=>x.exercises).reduce((s,x)=>s+Object.values(x.exercises).reduce((ss,e)=>ss+(e.s||0),0),0);const workoutTypes=p=>[...new Set(ws(p).map(x=>x.type))].length;const bestType=p=>{const counts={};ws(p).forEach(x=>{counts[x.type]=(counts[x.type]||0)+1;});return Math.max(0,...Object.values(counts));};const sidonMins=p=>ws(p).filter(x=>x.type==='sidon').reduce((s,x)=>s+(x.minutes||0),0);const baseAwards=[
 {icon:'✅',name:'Perfect Attendance',desc:'Longest streak this month',joel:getMonthStreak(state.data,'joel',monthStart,monthEnd),rachel:getMonthStreak(state.data,'rachel',monthStart,monthEnd)},
 {icon:'🔥',name:'Iron Will',desc:'Days with workouts',joel:[...new Set(ws('joel').filter(x=>['upper','lower','core','custom','run'].includes(x.type)).map(x=>x.date))].length,rachel:[...new Set(ws('rachel').filter(x=>['upper','lower','core','custom','run'].includes(x.type)).map(x=>x.date))].length},
 {icon:'🏋️',name:'Volume Monarch',desc:'Total sets completed',joel:totalSets('joel'),rachel:totalSets('rachel')},
@@ -696,11 +680,15 @@ function renderMonthlyAwards(){const monthStart=getMonthStart(state.awardsMonth)
 {icon:'🎯',name:'Focused Fighter',desc:'Best single-type commitment',joel:bestType('joel'),rachel:bestType('rachel')},
 {icon:'🏆',name:'Weekly Dominator',desc:'Most weekly awards won',joel:0,rachel:0},
 {icon:'📈',name:'Gains Train',desc:'Biggest weight increase',joel:0,rachel:0},
-{icon:'📈',name:'Rep-co',desc:'Biggest rep increase',joel:0,rachel:0}
-];$('monthlyAwardsList').innerHTML=awards.map(a=>{let leader='tie',lc='tie';if(a.joel>a.rachel){leader='Joel';lc='joel';}else if(a.rachel>a.joel){leader='Rachel';lc='rachel';}return'<div class="award-card" onclick="showAward(\''+a.name+'\',\''+a.icon+'\',\''+a.desc+'\','+a.joel+','+a.rachel+',\'monthly\')"><div class="award-card-header"><span class="award-card-icon">'+a.icon+'</span><span class="award-card-title">'+a.name+'</span><span class="award-card-leader '+lc+'">'+leader+'</span></div><div class="award-card-progress"><span>Joel: '+a.joel+'</span><span>Rachel: '+a.rachel+'</span></div></div>';}).join('');}
+{icon:'📈',name:'Rep-co',desc:'Biggest rep increase',joel:0,rachel:0},
+{icon:'🐕',name:'Swift Sidon',desc:'Most Sidon minutes',joel:sidonMins('joel'),rachel:sidonMins('rachel')}
+];
+let joelWins=0,rachelWins=0;
+baseAwards.forEach(a=>{if(a.joel>a.rachel)joelWins++;else if(a.rachel>a.joel)rachelWins++;});
+const awards=[{icon:'👑',name:'Monthly MVP',desc:'Most awards earned this month',joel:joelWins,rachel:rachelWins},...baseAwards];
+$('monthlyAwardsList').innerHTML=awards.map(a=>{let leader='tie',lc='tie';if(a.joel>a.rachel){leader='Joel';lc='joel';}else if(a.rachel>a.joel){leader='Rachel';lc='rachel';}return'<div class="award-card" onclick="showAward(\''+a.name+'\',\''+a.icon+'\',\''+a.desc+'\','+a.joel+','+a.rachel+',\'monthly\')"><div class="award-card-header"><span class="award-card-icon">'+a.icon+'</span><span class="award-card-title">'+a.name+'</span><span class="award-card-leader '+lc+'">'+leader+'</span></div><div class="award-card-progress"><span>Joel: '+a.joel+'</span><span>Rachel: '+a.rachel+'</span></div></div>';}).join('');}
 
-function renderAnnualAwards(){const year=state.awardsYear;const yearStart=new Date(year,0,1);const yearEnd=new Date(year,11,31);$('yearLabel').textContent=year.toString();const ws=p=>state.data.workouts.filter(x=>{const d=new Date(x.date);return d>=yearStart&&d<=yearEnd&&x.profile===p;});const pts=p=>calcPoints(state.data,p,yearStart,yearEnd);const totalSets=p=>ws(p).filter(x=>x.exercises).reduce((s,x)=>s+Object.values(x.exercises).reduce((ss,e)=>ss+(e.s||0),0),0);const morningWs=p=>ws(p).filter(x=>x.time&&parseInt(x.time.split(':')[0])<9).length;const eveningWs=p=>ws(p).filter(x=>x.time&&parseInt(x.time.split(':')[0])>=18).length;const activeMins=p=>ws(p).filter(x=>x.type==='sidon').reduce((s,x)=>s+(x.minutes||0),0)+ws(p).filter(x=>x.type==='run').reduce((s,x)=>s+(x.runTime||0),0);const bestType=p=>{const counts={};ws(p).forEach(x=>{counts[x.type]=(counts[x.type]||0)+1;});return Math.max(0,...Object.values(counts));};const awards=[
-{icon:'🏆',name:'Annual Achiever',desc:'Most points earned',joel:pts('joel'),rachel:pts('rachel')},
+function renderAnnualAwards(){const year=state.awardsYear;const yearStart=new Date(year,0,1);const yearEnd=new Date(year,11,31);$('yearLabel').textContent=year.toString();const ws=p=>state.data.workouts.filter(x=>{const d=new Date(x.date);return d>=yearStart&&d<=yearEnd&&x.profile===p;});const totalSets=p=>ws(p).filter(x=>x.exercises).reduce((s,x)=>s+Object.values(x.exercises).reduce((ss,e)=>ss+(e.s||0),0),0);const morningWs=p=>ws(p).filter(x=>x.time&&parseInt(x.time.split(':')[0])<9).length;const eveningWs=p=>ws(p).filter(x=>x.time&&parseInt(x.time.split(':')[0])>=18).length;const sidonMins=p=>ws(p).filter(x=>x.type==='sidon').reduce((s,x)=>s+(x.minutes||0),0);const activeMins=p=>sidonMins(p)+ws(p).filter(x=>x.type==='run').reduce((s,x)=>s+(x.runTime||0),0);const bestType=p=>{const counts={};ws(p).forEach(x=>{counts[x.type]=(counts[x.type]||0)+1;});return Math.max(0,...Object.values(counts));};const baseAwards=[
 {icon:'⭐',name:'Weekly Wonder',desc:'Most Weekly Winner wins',joel:0,rachel:0},
 {icon:'🌟',name:'Monthly Mountaineer',desc:'Most Monthly MVP wins',joel:0,rachel:0},
 {icon:'💪',name:'Gym Monster',desc:'Most strength workouts',joel:ws('joel').filter(x=>['upper','lower','core','custom'].includes(x.type)).length,rachel:ws('rachel').filter(x=>['upper','lower','core','custom'].includes(x.type)).length},
@@ -716,8 +704,13 @@ function renderAnnualAwards(){const year=state.awardsYear;const yearStart=new Da
 {icon:'🔥',name:'Calorie Crusher',desc:'Most active minutes',joel:activeMins('joel'),rachel:activeMins('rachel')},
 {icon:'🎯',name:'Fixated Fighter',desc:'Best single-type commitment',joel:bestType('joel'),rachel:bestType('rachel')},
 {icon:'📈',name:'Gains Galore',desc:'Biggest weight increase',joel:0,rachel:0},
-{icon:'💹',name:'Rep-el Alliance',desc:'Biggest rep increase',joel:0,rachel:0}
-];$('annualAwardsList').innerHTML=awards.map(a=>{let leader='tie',lc='tie';if(a.joel>a.rachel){leader='Joel';lc='joel';}else if(a.rachel>a.joel){leader='Rachel';lc='rachel';}return'<div class="award-card" onclick="showAward(\''+a.name+'\',\''+a.icon+'\',\''+a.desc+'\','+a.joel+','+a.rachel+',\'annual\')"><div class="award-card-header"><span class="award-card-icon">'+a.icon+'</span><span class="award-card-title">'+a.name+'</span><span class="award-card-leader '+lc+'">'+leader+'</span></div><div class="award-card-progress"><span>Joel: '+a.joel+'</span><span>Rachel: '+a.rachel+'</span></div></div>';}).join('');}
+{icon:'💹',name:'Rep-el Alliance',desc:'Biggest rep increase',joel:0,rachel:0},
+{icon:'🐕',name:'Super Sidon',desc:'Most Sidon minutes',joel:sidonMins('joel'),rachel:sidonMins('rachel')}
+];
+let joelWins=0,rachelWins=0;
+baseAwards.forEach(a=>{if(a.joel>a.rachel)joelWins++;else if(a.rachel>a.joel)rachelWins++;});
+const awards=[{icon:'🏆',name:'Annual Achiever',desc:'Most awards won this year',joel:joelWins,rachel:rachelWins},...baseAwards];
+$('annualAwardsList').innerHTML=awards.map(a=>{let leader='tie',lc='tie';if(a.joel>a.rachel){leader='Joel';lc='joel';}else if(a.rachel>a.joel){leader='Rachel';lc='rachel';}return'<div class="award-card" onclick="showAward(\''+a.name+'\',\''+a.icon+'\',\''+a.desc+'\','+a.joel+','+a.rachel+',\'annual\')"><div class="award-card-header"><span class="award-card-icon">'+a.icon+'</span><span class="award-card-title">'+a.name+'</span><span class="award-card-leader '+lc+'">'+leader+'</span></div><div class="award-card-progress"><span>Joel: '+a.joel+'</span><span>Rachel: '+a.rachel+'</span></div></div>';}).join('');}
 function renderBadges(){if(!state.data.badges)state.data.badges={};let joelGold=0,joelSilver=0,rachelGold=0,rachelSilver=0;BADGES.forEach(b=>{const badge=state.data.badges[b.id];if(badge){if(badge.first==='joel'){joelGold++;if(badge.second==='rachel')rachelSilver++;}else if(badge.first==='rachel'){rachelGold++;if(badge.second==='joel')joelSilver++;}}});const medalSummary='<div class="medal-summary"><div class="medal-person joel"><span class="medal-name">💜 Joel</span><span class="medal-count">🥇'+joelGold+' 🥈'+joelSilver+'</span></div><div class="medal-person rachel"><span class="medal-name">🩵 Rachel</span><span class="medal-count">🥇'+rachelGold+' 🥈'+rachelSilver+'</span></div></div>';$('panelBadges').innerHTML=medalSummary+'<div class="badge-grid">'+BADGES.map(b=>{const badge=state.data.badges[b.id];const first=badge?.first;const second=badge?.second;let medals='';if(first)medals+='<span class="badge-medal gold">'+(first==='joel'?'J':'R')+'</span>';if(second)medals+='<span class="badge-medal silver">'+(second==='joel'?'J':'R')+'</span>';return'<div class="badge-item '+(first?'earned':'locked')+'" onclick="showBadge('+b.id+')"><div class="badge-icon">'+b.icon+'</div><div class="badge-name">'+b.name+'</div>'+(medals?'<div class="badge-medals">'+medals+'</div>':'')+'</div>';}).join('')+'</div>';}
 
 
