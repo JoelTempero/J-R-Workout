@@ -17,6 +17,15 @@
       "time": "09:30",
       "timestamp": "2025-12-27T20:30:00.000Z",
       "minutes": 10
+    },
+    {
+      "id": "mjpczlyimhkosa6z5yg",
+      "profile": "rachel",
+      "type": "steps",
+      "date": "2025-12-28",
+      "time": "19:38",
+      "timestamp": "2025-12-28T06:38:00.000Z",
+      "steps": 4800
     }
   ],
   "base": {
