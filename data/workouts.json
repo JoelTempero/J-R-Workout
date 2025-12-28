@@ -1,5 +1,15 @@
 {
-  "workouts": [],
+  "workouts": [
+    {
+      "id": "mjpbpaqmqcvmj8q56ge",
+      "profile": "joel",
+      "type": "sidon",
+      "date": "2025-12-28",
+      "time": "19:03",
+      "timestamp": "2025-12-28T06:03:00.000Z",
+      "minutes": 10
+    }
+  ],
   "base": {
     "rachel": {
       "sidonMins": 10,
