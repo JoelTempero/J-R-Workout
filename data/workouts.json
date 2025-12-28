@@ -1,21 +1,12 @@
 {
   "workouts": [
     {
-      "id": "mjpbmymwr0gfojo9lb",
-      "profile": "joel",
+      "id": "mjpbnshfd4tl7z2pe1",
+      "profile": "rachel",
       "type": "sidon",
       "date": "2025-12-28",
-      "time": "13:30",
-      "timestamp": "2025-12-28T00:30:00.000Z",
-      "minutes": 10
-    },
-    {
-      "id": "mjpbna31t7hw8rljgp",
-      "profile": "joel",
-      "type": "sidon",
-      "date": "2025-12-28",
-      "time": "09:30",
-      "timestamp": "2025-12-27T20:30:00.000Z",
+      "time": "19:01",
+      "timestamp": "2025-12-28T06:01:00.000Z",
       "minutes": 10
     }
   ],
