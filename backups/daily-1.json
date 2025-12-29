@@ -1,6 +1,33 @@
 {
   "workouts": [
     {
+      "id": "mjpczlyimhkosa6z5yg",
+      "profile": "rachel",
+      "type": "steps",
+      "date": "2025-12-28",
+      "time": "21:38",
+      "timestamp": "2025-12-28T08:38:00.000Z",
+      "steps": 4800
+    },
+    {
+      "id": "mjpgsnpcyz1x4imvvif",
+      "profile": "joel",
+      "type": "steps",
+      "date": "2025-12-28",
+      "time": "21:25",
+      "timestamp": "2025-12-28T08:25:00.000Z",
+      "steps": 8517
+    },
+    {
+      "id": "mjpgsxfx3cvnr0ipv0g",
+      "profile": "joel",
+      "type": "sidon",
+      "date": "2025-12-28",
+      "time": "20:30",
+      "timestamp": "2025-12-28T07:30:00.000Z",
+      "minutes": 10
+    },
+    {
       "id": "mjpbpbbk5hc51sx612r",
       "profile": "joel",
       "type": "sidon",
@@ -17,6 +44,15 @@
       "time": "09:30",
       "timestamp": "2025-12-27T20:30:00.000Z",
       "minutes": 10
+    },
+    {
+      "id": "mjqkfu3xmhx68sfylr",
+      "profile": "joel",
+      "type": "sidon",
+      "date": "2025-12-29",
+      "time": "08:55",
+      "timestamp": "2025-12-28T19:55:00.000Z",
+      "minutes": 20
     }
   ],
   "base": {
@@ -231,7 +267,12 @@
       }
     }
   },
-  "badges": {},
+  "badges": {
+    "3": {
+      "first": "joel",
+      "second": "rachel"
+    }
+  },
   "raceGoals": {
     "joel": [
       {
