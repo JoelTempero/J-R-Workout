@@ -370,7 +370,7 @@ const EX_NAMES={pushups:'Pushups',tricepDips:'Tricep Dips',latPulldowns:'Lat Pul
 const BADGES=[
 {id:1,icon:'🎯',name:'First Blood',desc:'Log first workout',check:(d,p)=>d.workouts.some(w=>w.profile===p&&['upper','lower','core','custom','run'].includes(w.type))},
 {id:2,icon:'🌅',name:'Early Bird',desc:'Log before 7am',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.time&&parseInt(w.time.split(':')[0])<7)},
-{id:3,icon:'🦉',name:'Night Owl',desc:'Log after 9pm',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.time&&parseInt(w.time.split(':')[0])>=21)},
+{id:3,icon:'🦉',name:'Night Owl',desc:'Log after 9pm',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.time&&parseInt(w.time.split(':')[0])>=21&&!['steps','weight'].includes(w.type))},
 {id:4,icon:'💪',name:'Upper Starter',desc:'First Upper Body',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.type==='upper')},
 {id:5,icon:'🦵',name:'Leg Day',desc:'First Lower Body',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.type==='lower')},
 {id:6,icon:'🎯',name:'Core Starter',desc:'First Core workout',check:(d,p)=>d.workouts.some(w=>w.profile===p&&w.type==='core')},
@@ -465,11 +465,13 @@ else{console.error('Load failed:',r.status);}
 $('syncStatus').classList.remove('syncing');checkBadges();renderList();}
 
 async function rotateBackups(){
+if(!state.pat||!CONFIG.REPO_OWNER)return;
 const backupDate=localStorage.getItem('last_backup_date');
 const today=new Date().toISOString().split('T')[0];
 if(backupDate===today)return;
 try{
 for(let i=6;i>=1;i--){
+try{
 const oldFile='backups/daily-'+i+'.json';
 const newFile='backups/daily-'+(i+1)+'.json';
 const r=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+oldFile,{headers:{'Authorization':'Bearer '+state.pat}});
@@ -480,7 +482,8 @@ const nsha=nr.ok?(await nr.json()).sha:null;
 const body={message:'Rotate backup '+i+' to '+(i+1),content:d.content};
 if(nsha)body.sha=nsha;
 await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+newFile,{method:'PUT',headers:{'Authorization':'Bearer '+state.pat,'Content-Type':'application/json'},body:JSON.stringify(body)});
-}}
+}}catch(e){}}
+try{
 const curr=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+CONFIG.DATA_FILE,{headers:{'Authorization':'Bearer '+state.pat}});
 if(curr.ok){
 const cd=await curr.json();
@@ -489,10 +492,9 @@ const d1sha=d1.ok?(await d1.json()).sha:null;
 const body={message:'Daily backup '+today,content:cd.content};
 if(d1sha)body.sha=d1sha;
 await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/backups/daily-1.json',{method:'PUT',headers:{'Authorization':'Bearer '+state.pat,'Content-Type':'application/json'},body:JSON.stringify(body)});
-}
 localStorage.setItem('last_backup_date',today);
 console.log('Daily backup completed');
-}catch(e){console.error('Backup failed:',e);}}
+}}catch(e){console.error('Backup failed:',e);}}catch(e){console.error('Backup error:',e);}}
 
 async function createMilestoneBackup(name){
 if(!name)return false;
@@ -651,7 +653,7 @@ ctx.fillStyle='#64748b';ctx.font='9px system-ui';ctx.textAlign='center';dateLabe
 series.forEach(s=>{if(!s.data.length)return;ctx.strokeStyle=s.color;ctx.lineWidth=2.5;ctx.lineCap='round';ctx.lineJoin='round';if(s.dash)ctx.setLineDash(s.dash);else ctx.setLineDash([]);ctx.beginPath();s.data.forEach((d,i)=>{const x=Math.max(pad.l,Math.min(W-pad.r,sx(d.x)));const y=Math.max(pad.t,Math.min(H-pad.b,sy(d.y)));if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);});ctx.stroke();ctx.setLineDash([]);s.data.forEach(d=>{const x=Math.max(pad.l,Math.min(W-pad.r,sx(d.x)));const y=Math.max(pad.t,Math.min(H-pad.b,sy(d.y)));ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fillStyle=s.color;ctx.fill();});});}
 updateMetricTogglesVisibility();
 function renderRewards(){const now=state.rewardsMonth;$('rewardsMonth').textContent=now.toLocaleDateString('en-US',{month:'long',year:'numeric'});renderWeeklyAwards();renderMonthlyAwards();renderAnnualAwards();renderBadges();}
-function renderWeeklyAwards(){const weekStart=getWeekStart(state.awardsWeek);const weekEnd=new Date(weekStart);weekEnd.setDate(weekEnd.getDate()+6);$('weekLabel').textContent=weekStart.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' - '+weekEnd.toLocaleDateString('en-US',{month:'short',day:'numeric'});const ws=p=>state.data.workouts.filter(x=>{const d=new Date(x.date);return d>=weekStart&&d<=weekEnd&&x.profile===p;});const morningWs=p=>ws(p).filter(x=>x.time&&parseInt(x.time.split(':')[0])<9).length;const eveningWs=p=>ws(p).filter(x=>x.time&&parseInt(x.time.split(':')[0])>=18).length;const sidonMins=p=>ws(p).filter(x=>x.type==='sidon').reduce((s,x)=>s+(x.minutes||0),0);const activeMins=p=>sidonMins(p)+ws(p).filter(x=>x.type==='run').reduce((s,x)=>s+(x.runTime||0),0);const baseAwards=[
+function renderWeeklyAwards(){const weekStart=getWeekStart(state.awardsWeek);const weekEnd=new Date(weekStart);weekEnd.setDate(weekEnd.getDate()+6);$('weekLabel').textContent=weekStart.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' - '+weekEnd.toLocaleDateString('en-US',{month:'short',day:'numeric'});const ws=p=>state.data.workouts.filter(x=>{const d=new Date(x.date);return d>=weekStart&&d<=weekEnd&&x.profile===p;});const morningWs=p=>ws(p).filter(x=>x.time&&parseInt(x.time.split(':')[0])<8&&!['steps','weight'].includes(x.type)).length;const eveningWs=p=>ws(p).filter(x=>x.time&&parseInt(x.time.split(':')[0])>=18&&!['steps','weight'].includes(x.type)).length;const sidonMins=p=>ws(p).filter(x=>x.type==='sidon').reduce((s,x)=>s+(x.minutes||0),0);const activeMins=p=>sidonMins(p)+ws(p).filter(x=>x.type==='run').reduce((s,x)=>s+(x.runTime||0),0);const baseAwards=[
 {icon:'💪',name:'Gym Rat',desc:'Most strength workouts',joel:ws('joel').filter(x=>['upper','lower','core','custom'].includes(x.type)).length,rachel:ws('rachel').filter(x=>['upper','lower','core','custom'].includes(x.type)).length},
 {icon:'🏃',name:'Runner',desc:'Most runs',joel:ws('joel').filter(x=>x.type==='run').length,rachel:ws('rachel').filter(x=>x.type==='run').length},
 {icon:'📏',name:'Distance King',desc:'Most km run',joel:ws('joel').filter(x=>x.type==='run').reduce((s,x)=>s+(x.distance||0),0),rachel:ws('rachel').filter(x=>x.type==='run').reduce((s,x)=>s+(x.distance||0),0)},
@@ -688,7 +690,7 @@ baseAwards.forEach(a=>{if(a.joel>a.rachel)joelWins++;else if(a.rachel>a.joel)rac
 const awards=[{icon:'👑',name:'Monthly MVP',desc:'Most awards earned this month',joel:joelWins,rachel:rachelWins},...baseAwards];
 $('monthlyAwardsList').innerHTML=awards.map(a=>{let leader='tie',lc='tie';if(a.joel>a.rachel){leader='Joel';lc='joel';}else if(a.rachel>a.joel){leader='Rachel';lc='rachel';}return'<div class="award-card" onclick="showAward(\''+a.name+'\',\''+a.icon+'\',\''+a.desc+'\','+a.joel+','+a.rachel+',\'monthly\')"><div class="award-card-header"><span class="award-card-icon">'+a.icon+'</span><span class="award-card-title">'+a.name+'</span><span class="award-card-leader '+lc+'">'+leader+'</span></div><div class="award-card-progress"><span>Joel: '+a.joel+'</span><span>Rachel: '+a.rachel+'</span></div></div>';}).join('');}
 
-function renderAnnualAwards(){const year=state.awardsYear;const yearStart=new Date(year,0,1);const yearEnd=new Date(year,11,31);$('yearLabel').textContent=year.toString();const ws=p=>state.data.workouts.filter(x=>{const d=new Date(x.date);return d>=yearStart&&d<=yearEnd&&x.profile===p;});const totalSets=p=>ws(p).filter(x=>x.exercises).reduce((s,x)=>s+Object.values(x.exercises).reduce((ss,e)=>ss+(e.s||0),0),0);const morningWs=p=>ws(p).filter(x=>x.time&&parseInt(x.time.split(':')[0])<9).length;const eveningWs=p=>ws(p).filter(x=>x.time&&parseInt(x.time.split(':')[0])>=18).length;const sidonMins=p=>ws(p).filter(x=>x.type==='sidon').reduce((s,x)=>s+(x.minutes||0),0);const activeMins=p=>sidonMins(p)+ws(p).filter(x=>x.type==='run').reduce((s,x)=>s+(x.runTime||0),0);const bestType=p=>{const counts={};ws(p).forEach(x=>{counts[x.type]=(counts[x.type]||0)+1;});return Math.max(0,...Object.values(counts));};const baseAwards=[
+function renderAnnualAwards(){const year=state.awardsYear;const yearStart=new Date(year,0,1);const yearEnd=new Date(year,11,31);$('yearLabel').textContent=year.toString();const ws=p=>state.data.workouts.filter(x=>{const d=new Date(x.date);return d>=yearStart&&d<=yearEnd&&x.profile===p;});const totalSets=p=>ws(p).filter(x=>x.exercises).reduce((s,x)=>s+Object.values(x.exercises).reduce((ss,e)=>ss+(e.s||0),0),0);const morningWs=p=>ws(p).filter(x=>x.time&&parseInt(x.time.split(':')[0])<8&&!['steps','weight'].includes(x.type)).length;const eveningWs=p=>ws(p).filter(x=>x.time&&parseInt(x.time.split(':')[0])>=18&&!['steps','weight'].includes(x.type)).length;const sidonMins=p=>ws(p).filter(x=>x.type==='sidon').reduce((s,x)=>s+(x.minutes||0),0);const activeMins=p=>sidonMins(p)+ws(p).filter(x=>x.type==='run').reduce((s,x)=>s+(x.runTime||0),0);const bestType=p=>{const counts={};ws(p).forEach(x=>{counts[x.type]=(counts[x.type]||0)+1;});return Math.max(0,...Object.values(counts));};const baseAwards=[
 {icon:'⭐',name:'Weekly Wonder',desc:'Most Weekly Winner wins',joel:0,rachel:0},
 {icon:'🌟',name:'Monthly Mountaineer',desc:'Most Monthly MVP wins',joel:0,rachel:0},
 {icon:'💪',name:'Gym Monster',desc:'Most strength workouts',joel:ws('joel').filter(x=>['upper','lower','core','custom'].includes(x.type)).length,rachel:ws('rachel').filter(x=>['upper','lower','core','custom'].includes(x.type)).length},
