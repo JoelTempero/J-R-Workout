@@ -373,7 +373,7 @@ window.showDetails=id=>{const w=state.data.workouts.find(x=>x.id===id);if(!w||!w
 window.showBadge=id=>{const b=BADGES.find(x=>x.id===id);if(!b)return;const badge=state.data.badges?.[b.id];document.getElementById('badgeModalTitle').textContent=b.icon+' '+b.name;let html='<p style="margin-bottom:1rem;color:var(--text-secondary);">'+b.desc+'</p>';if(badge&&badge.first){html+='<div style="display:flex;flex-direction:column;gap:0.5rem;"><div style="display:flex;align-items:center;gap:0.5rem;"><span style="font-size:1.5rem;">🥇</span><span style="font-weight:700;color:'+(badge.first==='joel'?'var(--joel-secondary)':'var(--rachel-secondary)')+'">'+(badge.first==='joel'?'Joel':'Rachel')+' (Gold)</span></div>';if(badge.second){html+='<div style="display:flex;align-items:center;gap:0.5rem;"><span style="font-size:1.5rem;">🥈</span><span style="font-weight:700;color:'+(badge.second==='joel'?'var(--joel-secondary)':'var(--rachel-secondary)')+'">'+(badge.second==='joel'?'Joel':'Rachel')+' (Silver)</span></div>';}html+='</div>';}else{html+='<p style="color:var(--text-muted);">Not yet earned</p>';}document.getElementById('badgeModalContent').innerHTML=html;document.getElementById('badgeModal').classList.add('active');};
 window.showAward=(name,icon,desc,joel,rachel,type)=>{let winner='tie',winnerName="It's a tie!";if(joel>rachel){winner='joel';winnerName='👑 Joel wins!';}else if(rachel>joel){winner='rachel';winnerName='👑 Rachel wins!';}document.getElementById('awardModalTitle').textContent=icon+' '+name;document.getElementById('awardModalContent').innerHTML='<p style="color:var(--text-secondary);margin-bottom:1rem;">'+desc+'</p><div style="display:flex;justify-content:space-around;margin-bottom:1rem;"><div style="text-align:center;"><div style="font-size:1.5rem;font-weight:700;color:var(--joel-primary);">'+joel+'</div><div style="font-size:0.85rem;color:var(--text-muted);">💜 Joel</div></div><div style="text-align:center;"><div style="font-size:1.5rem;font-weight:700;color:var(--rachel-primary);">'+rachel+'</div><div style="font-size:0.85rem;color:var(--text-muted);">🩵 Rachel</div></div></div><div style="text-align:center;font-weight:700;font-size:1.1rem;color:'+(winner==='joel'?'var(--joel-primary)':winner==='rachel'?'var(--rachel-primary)':'var(--warning)')+';display:block;">'+winnerName+'</div>';document.getElementById('awardModal').classList.add('active');};
 
-const CONFIG={PIN:'9743',REPO_OWNER:'',REPO_NAME:'J-R-Workout',DATA_FILE:'data/workouts.json'};
+const CONFIG={PIN:'9743',REPO_OWNER:localStorage.getItem('repo_owner')||'',REPO_NAME:'J-R-Workout',DATA_FILE:'data/workouts.json'};
 const DEFAULT_BASE={rachel:{sidonMins:10,steps:15000,upper:{pushups:{s:3,r:5,w:null,on:1},tricepDips:{s:3,r:5,w:null,on:1},latPulldowns:{s:3,r:10,w:30,on:1},tricepPulldowns:{s:3,r:10,w:10,on:1},bicepCurls:{s:3,r:10,w:7,on:1},lateralRaises:{s:3,r:10,w:3,on:1}},lower:{weightedSquats:{s:3,r:10,w:7,on:1},jumpingLunges:{s:3,r:10,w:null,on:1},deadlifts:{s:3,r:10,w:14,on:1},hipThrusts:{s:3,r:10,w:7,on:1},weightedStepUps:{s:3,r:10,w:7,on:1},calfRaises:{s:3,r:15,w:null,on:1}},core:{rotatingPlank:{s:3,m:2,on:1},vSitTwists:{s:3,r:10,w:null,on:1},mountainClimbers:{s:3,r:20,w:null,on:1},situps:{s:3,r:15,w:null,on:1}}},joel:{sidonMins:10,steps:9000,upper:{pushups:{s:3,r:5,w:null,on:1},tricepDips:{s:3,r:5,w:null,on:1},latPulldowns:{s:3,r:10,w:30,on:1},tricepPulldowns:{s:3,r:10,w:10,on:1},bicepCurls:{s:3,r:10,w:7,on:1},lateralRaises:{s:3,r:10,w:3,on:1}},lower:{weightedSquats:{s:3,r:10,w:7,on:1},jumpingLunges:{s:3,r:10,w:null,on:1},deadlifts:{s:3,r:10,w:14,on:1},hipThrusts:{s:3,r:10,w:7,on:1},weightedStepUps:{s:3,r:10,w:7,on:1},calfRaises:{s:3,r:15,w:null,on:1}},core:{rotatingPlank:{s:3,m:2,on:1},vSitTwists:{s:3,r:10,w:null,on:1},mountainClimbers:{s:3,r:20,w:null,on:1},situps:{s:3,r:15,w:null,on:1}}}};
 const EX_NAMES={pushups:'Pushups',tricepDips:'Tricep Dips',latPulldowns:'Lat Pulldowns',tricepPulldowns:'Tricep Pulldowns',bicepCurls:'Bicep Curls',lateralRaises:'Lateral Raises',weightedSquats:'Weighted Squats',jumpingLunges:'Jumping Lunges',deadlifts:'Deadlifts',hipThrusts:'Hip Thrusts',weightedStepUps:'Weighted Step Ups',calfRaises:'Calf Raises',rotatingPlank:'Rotating Plank',vSitTwists:'V-Sit Twists',mountainClimbers:'Mountain Climbers',situps:'Situps'};
 const BADGES=[
@@ -464,7 +464,7 @@ if(!state.pat)return;
 $('syncStatus').classList.add('syncing');
 try{
 const u=await fetch('https://api.github.com/user',{headers:{'Authorization':'Bearer '+state.pat}});
-if(u.ok){CONFIG.REPO_OWNER=(await u.json()).login;}
+if(u.ok){CONFIG.REPO_OWNER=(await u.json()).login;localStorage.setItem('repo_owner',CONFIG.REPO_OWNER);}
 else{console.error('Token validation failed:',u.status);showToast('Invalid token - update in Settings',true);$('syncStatus').classList.remove('syncing');return;}
 const r=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+CONFIG.DATA_FILE,{headers:{'Authorization':'Bearer '+state.pat}});
 if(r.ok){const d=await r.json();state.data={...state.data,...JSON.parse(atob(d.content))};}
@@ -549,7 +549,13 @@ return saved;
 
 async function saveData(){
 if(!state.pat){showToast('No GitHub token - check Settings',true);return false;}
-if(!CONFIG.REPO_OWNER){showToast('Token invalid - update in Settings',true);return false;}
+if(!CONFIG.REPO_OWNER){
+try{
+const u=await fetch('https://api.github.com/user',{headers:{'Authorization':'Bearer '+state.pat}});
+if(u.ok){CONFIG.REPO_OWNER=(await u.json()).login;localStorage.setItem('repo_owner',CONFIG.REPO_OWNER);}
+else{showToast('Token invalid - update in Settings',true);return false;}
+}catch(e){showToast('Network error - try again',true);return false;}
+}
 $('syncStatus').classList.add('syncing');
 await rotateBackups();
 try{
