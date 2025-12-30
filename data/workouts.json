@@ -19,6 +19,15 @@
       "steps": 8256
     },
     {
+      "id": "mjt1emvzmdano62tmyk",
+      "profile": "joel",
+      "type": "sidon",
+      "date": "2025-12-31",
+      "time": "08:53",
+      "timestamp": "2025-12-30T19:53:00.000Z",
+      "minutes": 10
+    },
+    {
       "id": "mjru4alu4wva4j9sbte",
       "profile": "joel",
       "type": "steps",
@@ -99,15 +108,6 @@
       "date": "2025-12-28",
       "time": "09:30",
       "timestamp": "2025-12-27T20:30:00.000Z",
-      "minutes": 10
-    },
-    {
-      "id": "mjt1emvzmdano62tmyk",
-      "profile": "joel",
-      "type": "sidon",
-      "date": "2025-12-30",
-      "time": "08:53",
-      "timestamp": "2025-12-29T19:53:00.000Z",
       "minutes": 10
     }
   ],
