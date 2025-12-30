@@ -1,6 +1,17 @@
 {
   "workouts": [
     {
+      "id": "mjqmfdhvhh6rpayr5gq",
+      "profile": "rachel",
+      "type": "run",
+      "date": "2025-12-29",
+      "time": "16:50",
+      "timestamp": "2025-12-29T03:50:00.000Z",
+      "runType": "outside",
+      "distance": 1.8,
+      "runTime": 13
+    },
+    {
       "id": "mjqkfu3xmhx68sfylr",
       "profile": "joel",
       "type": "sidon",
@@ -55,15 +66,13 @@
       "minutes": 10
     },
     {
-      "id": "mjqmfdhvhh6rpayr5gq",
-      "profile": "rachel",
-      "type": "run",
+      "id": "mjru4alu4wva4j9sbte",
+      "profile": "joel",
+      "type": "steps",
       "date": "2025-12-29",
-      "time": "16:50",
-      "timestamp": "2025-12-29T03:50:00.000Z",
-      "runType": "outside",
-      "distance": 1.8,
-      "runTime": 13
+      "time": "21:30",
+      "timestamp": "2025-12-29T08:30:00.000Z",
+      "steps": 10760
     }
   ],
   "base": {
