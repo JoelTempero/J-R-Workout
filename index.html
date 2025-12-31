@@ -469,17 +469,12 @@ n.addEventListener('touchcancel',()=>{n.classList.remove('tapped');});
 n.addEventListener('click',e=>{if(!e.sourceCapabilities||!e.sourceCapabilities.firesTouchEvents)doNav();});
 });
 async function loadData(){
-if(!state.pat)return;
 $('syncStatus').classList.add('syncing');
 try{
-const u=await fetch('https://api.github.com/user',{headers:{'Authorization':'Bearer '+state.pat}});
-if(u.ok){CONFIG.REPO_OWNER=(await u.json()).login;localStorage.setItem('repo_owner',CONFIG.REPO_OWNER);}
-else{console.error('Token validation failed:',u.status);showToast('Invalid token - update in Settings',true);$('syncStatus').classList.remove('syncing');return;}
-const r=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+CONFIG.DATA_FILE,{headers:{'Authorization':'Bearer '+state.pat}});
-if(r.ok){const d=await r.json();state.data={...state.data,...JSON.parse(atob(d.content))};}
-else if(r.status===404){console.log('No data file yet, will create on first save');}
-else{console.error('Load failed:',r.status);}
-}catch(e){console.error('Load error:',e);showToast('Network error loading data',true);}
+const doc=await db.collection('data').doc('workouts').get();
+if(doc.exists){state.data={...state.data,...doc.data()};}
+console.log('Data loaded from Firebase');
+}catch(e){console.error('Load error:',e);showToast('Error loading data',true);}
 $('syncStatus').classList.remove('syncing');checkBadges();renderList();}
 
 
@@ -492,28 +487,13 @@ $('syncStatus').classList.remove('syncing');checkBadges();renderList();}
 
 
 async function saveData(){
-if(!state.pat){showToast('No GitHub token - check Settings',true);return false;}
-if(!CONFIG.REPO_OWNER){
-try{
-const u=await fetch('https://api.github.com/user',{headers:{'Authorization':'Bearer '+state.pat}});
-if(u.ok){CONFIG.REPO_OWNER=(await u.json()).login;localStorage.setItem('repo_owner',CONFIG.REPO_OWNER);}
-else{showToast('Token invalid - update in Settings',true);return false;}
-}catch(e){showToast('Network error - try again',true);return false;}
-}
 $('syncStatus').classList.add('syncing');
 try{
-const g=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+CONFIG.DATA_FILE,{headers:{'Authorization':'Bearer '+state.pat}});
-let sha=null;
-if(g.ok){sha=(await g.json()).sha;}
-else if(g.status===401){$('syncStatus').classList.remove('syncing');showToast('Token expired - update in Settings',true);return false;}
-const body={message:'Update '+new Date().toISOString(),content:btoa(unescape(encodeURIComponent(JSON.stringify(state.data,null,2))))};
-if(sha)body.sha=sha;
-const s=await fetch('https://api.github.com/repos/'+CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME+'/contents/'+CONFIG.DATA_FILE,{method:'PUT',headers:{'Authorization':'Bearer '+state.pat,'Content-Type':'application/json'},body:JSON.stringify(body)});
+await db.collection('data').doc('workouts').set(JSON.parse(JSON.stringify(state.data)));
 $('syncStatus').classList.remove('syncing');
-if(!s.ok){const err=await s.json().catch(()=>({}));console.error('Save failed:',s.status,err,'Repo:',CONFIG.REPO_OWNER+'/'+CONFIG.REPO_NAME);showToast('Sync error: '+(err.message||s.status),true);return false;}
-rotateBackups().catch(e=>console.log('Backup skipped:',e));
+console.log('Data saved to Firebase');
 return true;
-}catch(e){console.error('Save error:',e);$('syncStatus').classList.remove('syncing');showToast('Network error',true);return false;}}
+}catch(e){console.error('Save error:',e);$('syncStatus').classList.remove('syncing');showToast('Failed to save: '+e.message,true);return false;}}
 function showToast(msg,err){const t=$('toast');t.textContent=msg;t.classList.toggle('error',err);t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
 
 function renderList(){
@@ -712,7 +692,7 @@ function renderBaseSettings(){const p=state.settingsProfile;const base=state.dat
 function renderBaseExercises(exs,group){let html='<div class="base-ex-header"><span></span><span>Sets</span><span>Reps</span><span>Kg/Min</span></div>';Object.entries(exs).forEach(([k,ex])=>{let col3='';if(ex.m!==undefined)col3='<input type="number" data-group="'+group+'" data-ex="'+k+'" data-f="m" value="'+ex.m+'" placeholder="Min">';else if(ex.w!==null&&ex.w!==undefined)col3='<input type="number" data-group="'+group+'" data-ex="'+k+'" data-f="w" value="'+ex.w+'" placeholder="Kg">';else col3='<span class="na">-</span>';html+='<div class="base-setting-row"><label>'+EX_NAMES[k]+'</label><input type="number" data-group="'+group+'" data-ex="'+k+'" data-f="s" value="'+ex.s+'" placeholder="Sets">'+(ex.m!==undefined?'<span class="na">-</span>':'<input type="number" data-group="'+group+'" data-ex="'+k+'" data-f="r" value="'+ex.r+'" placeholder="Reps">')+col3+'</div>';});return html;}
 
 $('cancelSettings').addEventListener('click',()=>$('settingsModal').classList.remove('active'));
-$('saveSettings').addEventListener('click',async()=>{const p=state.settingsProfile;if(!state.data.base)state.data.base=JSON.parse(JSON.stringify(DEFAULT_BASE));if(!state.data.base[p])state.data.base[p]=JSON.parse(JSON.stringify(DEFAULT_BASE[p]));const sidonInput=$('baseSettingsContent').querySelector('[data-key="sidonMins"]');const stepsInput=$('baseSettingsContent').querySelector('[data-key="steps"]');if(sidonInput)state.data.base[p].sidonMins=parseInt(sidonInput.value)||10;if(stepsInput)state.data.base[p].steps=parseInt(stepsInput.value)||15000;['upper','lower','core'].forEach(group=>{if(!state.data.base[p][group])state.data.base[p][group]=JSON.parse(JSON.stringify(DEFAULT_BASE[p][group]));$('baseSettingsContent').querySelectorAll('[data-group="'+group+'"]').forEach(inp=>{const ex=inp.dataset.ex,f=inp.dataset.f;if(!state.data.base[p][group][ex])return;const val=f==='w'?parseFloat(inp.value):parseInt(inp.value);if(!isNaN(val))state.data.base[p][group][ex][f]=val;});});$('settingsModal').classList.remove('active');showToast('Settings saved!');if(state.pat&&!CONFIG.REPO_OWNER)await loadData();else if(state.pat)await saveData();});
+$('saveSettings').addEventListener('click',async()=>{const p=state.settingsProfile;if(!state.data.base)state.data.base=JSON.parse(JSON.stringify(DEFAULT_BASE));if(!state.data.base[p])state.data.base[p]=JSON.parse(JSON.stringify(DEFAULT_BASE[p]));const sidonInput=$('baseSettingsContent').querySelector('[data-key="sidonMins"]');const stepsInput=$('baseSettingsContent').querySelector('[data-key="steps"]');if(sidonInput)state.data.base[p].sidonMins=parseInt(sidonInput.value)||10;if(stepsInput)state.data.base[p].steps=parseInt(stepsInput.value)||15000;['upper','lower','core'].forEach(group=>{if(!state.data.base[p][group])state.data.base[p][group]=JSON.parse(JSON.stringify(DEFAULT_BASE[p][group]));$('baseSettingsContent').querySelectorAll('[data-group="'+group+'"]').forEach(inp=>{const ex=inp.dataset.ex,f=inp.dataset.f;if(!state.data.base[p][group][ex])return;const val=f==='w'?parseFloat(inp.value):parseInt(inp.value);if(!isNaN(val))state.data.base[p][group][ex][f]=val;});});$('settingsModal').classList.remove('active');showToast('Settings saved!');await saveData();});
 $('settingsModal').addEventListener('click',e=>{if(e.target.id==='settingsModal')$('settingsModal').classList.remove('active');});
 $('settingsModal').addEventListener('touchend',e=>{if(e.target.id==='settingsModal'){e.preventDefault();$('settingsModal').classList.remove('active');}},{passive:false});
 $('deleteModal').addEventListener('click',e=>{if(e.target.id==='deleteModal'){$('deleteModal').classList.remove('active');state.deleteId=null;}});
