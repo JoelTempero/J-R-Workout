@@ -268,8 +268,6 @@
         .details-exercise-info{font-size:0.85rem;color:var(--text-secondary)}
         .details-exercise-info span{margin-right:1rem}
     </style>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 </head>
 <body>
     <div class="sync-status" id="syncStatus"></div>
@@ -335,7 +333,7 @@
         <div class="log-options-title">What are you logging?</div>
         <button class="log-option-btn" data-log="sidon"><span class="icon">🐕</span> Sidon Walk</button>
         <button class="log-option-btn" data-log="steps"><span class="icon">👟</span> Step Count</button>
-        <button class="log-option-btn" data-log="run"><span class="icon">🏃</span> Run</button>
+        <button class="log-option-btn" data-log="run"><span class="icon">🏃</span> Run / Walk</button>
         <button class="log-option-btn" data-log="upper"><span class="icon">💪</span> Upper Body</button>
         <button class="log-option-btn" data-log="lower"><span class="icon">🦵</span> Lower Body</button>
         <button class="log-option-btn" data-log="core"><span class="icon">🎯</span> Core</button>
@@ -349,6 +347,12 @@
         <div class="modal-title">⚙️ Settings</div>
         <div class="settings-tabs"><button class="settings-tab active" data-tab="general">General</button><button class="settings-tab" data-tab="base">Base</button></div>
         <div class="settings-panel active" id="settingsPanelGeneral">
+<div class="modal-section"><div class="modal-section-title">Active Profile</div>
+<div style="display:flex;gap:0.5rem;margin-bottom:1rem;">
+<button class="switch-profile-btn" data-profile="joel" style="flex:1;padding:0.75rem;border-radius:8px;border:2px solid var(--joel-primary);background:transparent;color:var(--text-primary);font-weight:600;cursor:pointer;">💜 Joel</button>
+<button class="switch-profile-btn" data-profile="rachel" style="flex:1;padding:0.75rem;border-radius:8px;border:2px solid var(--rachel-primary);background:transparent;color:var(--text-primary);font-weight:600;cursor:pointer;">🩵 Rachel</button>
+</div>
+</div>
 <div class="modal-section"><div class="modal-section-title">Data Sync</div>
 <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:0.5rem;">✅ Connected to Firebase</p>
 <p style="font-size:0.75rem;color:var(--text-muted);">Data syncs automatically to the cloud.</p>
@@ -365,6 +369,8 @@
         <div id="awardModalContent"></div>
         <div class="modal-buttons"><button class="modal-btn save" id="closeAward">Close</button></div>
     </div></div>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 <script>
 window.deleteW=id=>{state.deleteId=id;document.getElementById('deleteModal').classList.add('active');};
 window.editW=id=>{const w=state.data.workouts.find(x=>x.id===id);if(w)openLog(w.type,w);};
@@ -444,11 +450,11 @@ const BADGES=[
 {id:56,icon:'🏰',name:'Thousand Strong',desc:'1000 workouts',check:(d,p)=>d.workouts.filter(w=>w.profile===p&&['upper','lower','core','custom','run'].includes(w.type)).length>=1000}
 ];
 
-let state={pin:'',data:{workouts:[],base:JSON.parse(JSON.stringify(DEFAULT_BASE)),badges:{},raceGoals:{joel:[],rachel:[]},awardHistory:[]},month:new Date(),rewardsMonth:new Date(),awardsWeek:new Date(),awardsMonth:new Date(),awardsYear:new Date().getFullYear(),calFilter:'all',chartRange:'week',chartExercise:'bodyWeight',chartMetrics:{weight:true,reps:false,sets:false},chartProfile:'joel',pat:localStorage.getItem('github_pat')||'',deleteId:null,logProfile:'joel',settingsProfile:'joel',runType:'outside'};
+let state={pin:'',data:{workouts:[],base:JSON.parse(JSON.stringify(DEFAULT_BASE)),badges:{},raceGoals:{joel:[],rachel:[]},awardHistory:[]},month:new Date(),rewardsMonth:new Date(),awardsWeek:new Date(),awardsMonth:new Date(),awardsYear:new Date().getFullYear(),calFilter:'all',chartRange:'week',chartExercise:'bodyWeight',chartMetrics:{weight:true,reps:false,sets:false},chartProfile:'joel',pat:localStorage.getItem('github_pat')||'',deleteId:null,settingsProfile:'joel',runType:'outside'};
 const $=id=>document.getElementById(id),$$=sel=>document.querySelectorAll(sel),genId=()=>Date.now().toString(36)+Math.random().toString(36).substr(2);
 const fmtDateShort=d=>new Date(d).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
 const fmtTime=t=>{if(!t)return'';const[h,m]=t.split(':');const hr=parseInt(h);return (hr%12||12)+':'+m+(hr>=12?' PM':' AM');};
-const getIcon=t=>({sidon:'🐕',steps:'👟',run:'🏃',upper:'💪',lower:'🦵',core:'🎯',custom:'⚡',weight:'⚖️'})[t]||'🏋️';
+const getIcon=(t,w)=>t==='run'&&w&&w.isWalk?'🚶':({sidon:'🐕',steps:'👟',run:'🏃',upper:'💪',lower:'🦵',core:'🎯',custom:'⚡',weight:'⚖️'})[t]||'🏋️';
 const getTitle=t=>({sidon:'Sidon Walk',steps:'Step Count',run:'Run',upper:'Upper Body',lower:'Lower Body',core:'Core',custom:'Custom',weight:'Weight Log'})[t]||'Workout';
 function getWeekStart(d){const date=new Date(d);date.setHours(0,0,0,0);const day=date.getDay();const diff=date.getDate()-day+(day===0?-6:1);date.setDate(diff);return date;}
 function getMonthStart(d){const date=new Date(d.getFullYear(),d.getMonth(),1);date.setHours(0,0,0,0);return date;}
@@ -458,7 +464,7 @@ function getMonthStreak(data,profile,monthStart,monthEnd){const validTypes=['upp
 function getWeightGain(data,profile){const ws=data.workouts.filter(w=>w.profile===profile&&w.type==='weight'&&w.bodyWeight).sort((a,b)=>new Date(a.date)-new Date(b.date));if(ws.length<2)return 0;return ws[ws.length-1].bodyWeight-ws[0].bodyWeight;}
 
 function updateDots(){$$('#pinDots .pin-dot').forEach((d,i)=>d.classList.toggle('filled',i<state.pin.length));}
-function pinInput(n){if(state.pin.length<4){state.pin+=n;updateDots();if(state.pin.length===4){setTimeout(()=>{if(state.pin===CONFIG.PIN){$('pinScreen').classList.add('hidden');$('app').classList.add('active');localStorage.setItem('pin_verified','true');loadData();}else{$$('#pinDots .pin-dot').forEach(d=>d.classList.add('error'));setTimeout(()=>{state.pin='';$$('#pinDots .pin-dot').forEach(d=>d.classList.remove('error','filled'));},500);}},200);}}}
+function pinInput(n){if(state.pin.length<4){state.pin+=n;updateDots();if(state.pin.length===4){setTimeout(()=>{if(state.pin===CONFIG.PIN){$('pinScreen').classList.add('hidden');$('profileScreen').style.display='flex';localStorage.setItem('pin_verified','true');}else{$$('#pinDots .pin-dot').forEach(d=>d.classList.add('error'));setTimeout(()=>{state.pin='';$$('#pinDots .pin-dot').forEach(d=>d.classList.remove('error','filled'));},500);}},200);}}}
 $$('.pin-key').forEach(k=>{const handler=()=>{if(k.dataset.num!==undefined)pinInput(k.dataset.num);else if(k.dataset.action==='back'){state.pin=state.pin.slice(0,-1);updateDots();}};k.addEventListener('click',handler);k.addEventListener('touchend',e=>{e.preventDefault();handler();},{passive:false});});
 function setDate(){$('headerDate').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});}
 document.querySelectorAll('.nav-item[data-page]').forEach(n=>{
@@ -549,7 +555,7 @@ function openLog(type,edit=null){
 function renderExercises(exs,editEx,startOff){return Object.entries(exs).map(([k,ex])=>{const ed=editEx[k]||{};const on=Object.keys(editEx).length>0?ed.on===1:(startOff?false:ex.on);return'<div class="exercise-item" data-ex="'+k+'"><div class="exercise-header"><span class="exercise-name">'+EX_NAMES[k]+'</span><button class="exercise-toggle '+(on?'active':'')+'" data-k="'+k+'"></button></div><div class="exercise-inputs '+(on?'':'disabled')+'" data-k="'+k+'"><div class="input-group"><label>Sets</label><input type="number" data-f="s" value="'+(ed.s??ex.s)+'"></div>'+(ex.m!==undefined?'<div class="input-group"><label>Mins</label><input type="number" data-f="m" value="'+(ed.m??ex.m)+'"></div>':'<div class="input-group"><label>Reps</label><input type="number" data-f="r" value="'+(ed.r??ex.r)+'"></div>')+(ex.w!=null?'<div class="input-group"><label>Kg</label><input type="number" data-f="w" step="0.5" value="'+(ed.w??ex.w)+'"></div>':'')+'</div></div>';}).join('');}
 function attachToggleListeners(){const c=$('logPages');c.querySelectorAll('.exercise-toggle').forEach(t=>{t.onclick=()=>{t.classList.toggle('active');c.querySelector('.exercise-inputs[data-k="'+t.dataset.k+'"]').classList.toggle('disabled',!t.classList.contains('active'));};});}
 window.closeLog=t=>{const p=$('logPage_'+t);if(p)p.remove();};
-window.submitLog=async(type,editId)=>{const date=$('logDate').value,time=$('logTime').value;let w={id:editId||genId(),profile:state.logProfile,type,date,time,timestamp:new Date(date+'T'+time).toISOString()};if(type==='sidon')w.minutes=parseInt($('sidonMins').value)||0;else if(type==='steps')w.steps=parseInt($('stepCount').value)||0;else if(type==='weight')w.bodyWeight=parseFloat($('bodyWeight').value)||0;else if(type==='run'){w.runType=state.runType;w.distance=parseFloat($('runDistance').value)||0;w.runTime=parseInt($('runTime').value)||0;}else{const exs={};document.querySelectorAll('.exercise-item').forEach(item=>{const k=item.dataset.ex,tog=item.querySelector('.exercise-toggle'),on=tog.classList.contains('active');if(!on)return;exs[k]={on:1};item.querySelectorAll('.exercise-inputs input').forEach(inp=>{const f=inp.dataset.f,v=f==='w'?parseFloat(inp.value):parseInt(inp.value);if(!isNaN(v))exs[k][f]=v;});});w.exercises=exs;}if(!state.data.workouts)state.data.workouts=[];if(editId){const i=state.data.workouts.findIndex(x=>x.id===editId);if(i!==-1)state.data.workouts[i]=w;}else state.data.workouts.push(w);checkBadges();const ok=await saveData();if(ok){showToast(editId?'Updated!':'Logged! 💪');closeLog(type);renderList();}else showToast('Failed to save',true);};
+window.submitLog=async(type,editId)=>{const date=$('logDate').value,time=$('logTime').value;let w={id:editId||genId(),profile:state.profile,type,date,time,timestamp:new Date(date+'T'+time).toISOString()};if(type==='sidon')w.minutes=parseInt($('sidonMins').value)||0;else if(type==='steps')w.steps=parseInt($('stepCount').value)||0;else if(type==='weight')w.bodyWeight=parseFloat($('bodyWeight').value)||0;else if(type==='run'){w.runType=state.runType;w.isWalk=state.isWalk;w.distance=parseFloat($('runDistance').value)||0;w.runTime=parseInt($('runTime').value)||0;}else{const exs={};document.querySelectorAll('.exercise-item').forEach(item=>{const k=item.dataset.ex,tog=item.querySelector('.exercise-toggle'),on=tog.classList.contains('active');if(!on)return;exs[k]={on:1};item.querySelectorAll('.exercise-inputs input').forEach(inp=>{const f=inp.dataset.f,v=f==='w'?parseFloat(inp.value):parseInt(inp.value);if(!isNaN(v))exs[k][f]=v;});});w.exercises=exs;}if(!state.data.workouts)state.data.workouts=[];if(editId){const i=state.data.workouts.findIndex(x=>x.id===editId);if(i!==-1)state.data.workouts[i]=w;}else state.data.workouts.push(w);checkBadges();const ok=await saveData();if(ok){showToast(editId?'Updated!':'Logged! 💪');closeLog(type);renderList();}else showToast('Failed to save',true);};
 
 
 $('cancelDelete').addEventListener('click',()=>{$('deleteModal').classList.remove('active');state.deleteId=null;});
@@ -685,7 +691,22 @@ $$('.rewards-tab').forEach(t=>t.addEventListener('click',()=>{
 
 
 $$('.rewards-tab').forEach(x=>x.classList.remove('active'));$$('.rewards-panel').forEach(x=>x.classList.remove('active'));t.classList.add('active');$('panel'+t.dataset.tab.charAt(0).toUpperCase()+t.dataset.tab.slice(1)).classList.add('active');}));
-$('settingsBtn').addEventListener('click',()=>{state.settingsProfile='joel';renderBaseSettings();$$('#settingsPanelBase .settings-profile-btn').forEach(b=>{b.classList.remove('active');if(b.dataset.profile==='joel')b.classList.add('active');});$('settingsModal').classList.add('active');});
+document.querySelectorAll('.switch-profile-btn').forEach(btn=>{
+btn.addEventListener('click',()=>{
+state.profile=btn.dataset.profile;
+localStorage.setItem('active_profile',state.profile);
+document.querySelectorAll('.switch-profile-btn').forEach(b=>{
+b.style.background=b.dataset.profile===state.profile?(b.dataset.profile==='joel'?'var(--joel-primary)':'var(--rachel-primary)'):'transparent';
+b.style.color=b.dataset.profile===state.profile?'#fff':'var(--text-primary)';
+});
+showToast('Switched to '+(state.profile==='joel'?'Joel 💜':'Rachel 🩵'));
+});
+});
+$('settingsBtn').addEventListener('click',()=>{
+document.querySelectorAll('.switch-profile-btn').forEach(b=>{
+b.style.background=b.dataset.profile===state.profile?(b.dataset.profile==='joel'?'var(--joel-primary)':'var(--rachel-primary)'):'transparent';
+b.style.color=b.dataset.profile===state.profile?'#fff':'var(--text-primary)';
+});state.settingsProfile=state.profile;renderBaseSettings();$$('#settingsPanelBase .settings-profile-btn').forEach(b=>{b.classList.remove('active');if(b.dataset.profile==='joel')b.classList.add('active');});$('settingsModal').classList.add('active');});
 $$('.settings-tab').forEach(t=>t.addEventListener('click',()=>{$$('.settings-tab').forEach(x=>x.classList.remove('active'));$$('.settings-panel').forEach(x=>x.classList.remove('active'));t.classList.add('active');$('settingsPanel'+t.dataset.tab.charAt(0).toUpperCase()+t.dataset.tab.slice(1)).classList.add('active');}));
 $$('#settingsPanelBase .settings-profile-btn').forEach(b=>b.addEventListener('click',()=>{$$('#settingsPanelBase .settings-profile-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.settingsProfile=b.dataset.profile;renderBaseSettings();}));
 function renderBaseSettings(){const p=state.settingsProfile;const base=state.data.base?.[p]||DEFAULT_BASE[p];let html='<div class="base-settings-group"><div class="base-settings-group-title">General</div><div class="base-setting-row"><label>🐕 Sidon (mins)</label><input type="number" data-key="sidonMins" value="'+(base.sidonMins||10)+'"></div><div class="base-setting-row"><label>👟 Steps</label><input type="number" data-key="steps" value="'+(base.steps||15000)+'"></div></div><div class="base-settings-group"><div class="base-settings-group-title">💪 Upper</div>'+renderBaseExercises(base.upper||DEFAULT_BASE[p].upper,'upper')+'</div><div class="base-settings-group"><div class="base-settings-group-title">🦵 Lower</div>'+renderBaseExercises(base.lower||DEFAULT_BASE[p].lower,'lower')+'</div><div class="base-settings-group"><div class="base-settings-group-title">🎯 Core</div>'+renderBaseExercises(base.core||DEFAULT_BASE[p].core,'core')+'</div>';$('baseSettingsContent').innerHTML=html;}
@@ -698,7 +719,16 @@ $('settingsModal').addEventListener('touchend',e=>{if(e.target.id==='settingsMod
 $('deleteModal').addEventListener('click',e=>{if(e.target.id==='deleteModal'){$('deleteModal').classList.remove('active');state.deleteId=null;}});
 $('deleteModal').addEventListener('touchend',e=>{if(e.target.id==='deleteModal'){e.preventDefault();$('deleteModal').classList.remove('active');state.deleteId=null;}},{passive:false});
 
-function init(){setDate();if(localStorage.getItem('pin_verified')==='true'){$('pinScreen').classList.add('hidden');$('app').classList.add('active');loadData();}}
+function init(){setDate();if(localStorage.getItem('pin_verified')==='true'){$('pinScreen').classList.add('hidden');const savedProfile=localStorage.getItem('active_profile');if(savedProfile){state.profile=savedProfile;$('app').classList.add('active');loadData();}else{$('profileScreen').style.display='flex';}}}
+document.querySelectorAll('.profile-select-btn').forEach(btn=>{
+btn.addEventListener('click',()=>{
+state.profile=btn.dataset.profile;
+localStorage.setItem('active_profile',state.profile);
+$('profileScreen').style.display='none';
+$('app').classList.add('active');
+loadData();
+});
+});
 init();
 </script>
 </body>
