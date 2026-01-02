@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://*.firebaseio.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://firestore.googleapis.com; style-src 'self' 'unsafe-inline';">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#1a1a2e">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -379,8 +378,6 @@
         <div id="awardModalContent"></div>
         <div class="modal-buttons"><button class="modal-btn save" id="closeAward">Close</button></div>
     </div></div>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 <script>
 window.deleteW=id=>{state.deleteId=id;document.getElementById('deleteModal').classList.add('active');};
 window.editW=id=>{const w=state.data.workouts.find(x=>x.id===id);if(w)openLog(w.type,w);};
@@ -389,16 +386,8 @@ window.showBadge=id=>{const b=BADGES.find(x=>x.id===id);if(!b)return;const badge
 window.showAward=(name,icon,desc,joel,rachel,type)=>{let winner='tie',winnerName="It's a tie!";if(joel>rachel){winner='joel';winnerName='👑 Joel wins!';}else if(rachel>joel){winner='rachel';winnerName='👑 Rachel wins!';}document.getElementById('awardModalTitle').textContent=icon+' '+name;document.getElementById('awardModalContent').innerHTML='<p style="color:var(--text-secondary);margin-bottom:1rem;">'+desc+'</p><div style="display:flex;justify-content:space-around;margin-bottom:1rem;"><div style="text-align:center;"><div style="font-size:1.5rem;font-weight:700;color:var(--joel-primary);">'+joel+'</div><div style="font-size:0.85rem;color:var(--text-muted);">💜 Joel</div></div><div style="text-align:center;"><div style="font-size:1.5rem;font-weight:700;color:var(--rachel-primary);">'+rachel+'</div><div style="font-size:0.85rem;color:var(--text-muted);">🩵 Rachel</div></div></div><div style="text-align:center;font-weight:700;font-size:1.1rem;color:'+(winner==='joel'?'var(--joel-primary)':winner==='rachel'?'var(--rachel-primary)':'var(--warning)')+';display:block;">'+winnerName+'</div>';document.getElementById('awardModal').classList.add('active');};
 
 const CONFIG={PIN:'9743'};
-const firebaseConfig={
-apiKey:"AIzaSyAzPKsJWOpTLHI35ZNNw9bLcmfiUzxthlE",
-authDomain:"j-r-workout.firebaseapp.com",
-projectId:"j-r-workout",
-storageBucket:"j-r-workout.firebasestorage.app",
-messagingSenderId:"272499421818",
-appId:"1:272499421818:web:a80439aae43de1bfa741c3"
-};
-firebase.initializeApp(firebaseConfig);
-const db=firebase.firestore();
+const FIREBASE_PROJECT="j-r-workout";
+const FIRESTORE_URL="https://firestore.googleapis.com/v1/projects/"+FIREBASE_PROJECT+"/databases/(default)/documents";
 const DEFAULT_BASE={rachel:{sidonMins:10,steps:15000,upper:{pushups:{s:3,r:5,w:null,on:1},tricepDips:{s:3,r:5,w:null,on:1},latPulldowns:{s:3,r:10,w:30,on:1},tricepPulldowns:{s:3,r:10,w:10,on:1},bicepCurls:{s:3,r:10,w:7,on:1},lateralRaises:{s:3,r:10,w:3,on:1}},lower:{weightedSquats:{s:3,r:10,w:7,on:1},jumpingLunges:{s:3,r:10,w:null,on:1},deadlifts:{s:3,r:10,w:14,on:1},hipThrusts:{s:3,r:10,w:7,on:1},weightedStepUps:{s:3,r:10,w:7,on:1},calfRaises:{s:3,r:15,w:null,on:1}},core:{rotatingPlank:{s:3,m:2,on:1},vSitTwists:{s:3,r:10,w:null,on:1},mountainClimbers:{s:3,r:20,w:null,on:1},situps:{s:3,r:15,w:null,on:1}}},joel:{sidonMins:10,steps:9000,upper:{pushups:{s:3,r:5,w:null,on:1},tricepDips:{s:3,r:5,w:null,on:1},latPulldowns:{s:3,r:10,w:30,on:1},tricepPulldowns:{s:3,r:10,w:10,on:1},bicepCurls:{s:3,r:10,w:7,on:1},lateralRaises:{s:3,r:10,w:3,on:1}},lower:{weightedSquats:{s:3,r:10,w:7,on:1},jumpingLunges:{s:3,r:10,w:null,on:1},deadlifts:{s:3,r:10,w:14,on:1},hipThrusts:{s:3,r:10,w:7,on:1},weightedStepUps:{s:3,r:10,w:7,on:1},calfRaises:{s:3,r:15,w:null,on:1}},core:{rotatingPlank:{s:3,m:2,on:1},vSitTwists:{s:3,r:10,w:null,on:1},mountainClimbers:{s:3,r:20,w:null,on:1},situps:{s:3,r:15,w:null,on:1}}}};
 const EX_NAMES={pushups:'Pushups',tricepDips:'Tricep Dips',latPulldowns:'Lat Pulldowns',tricepPulldowns:'Tricep Pulldowns',bicepCurls:'Bicep Curls',lateralRaises:'Lateral Raises',weightedSquats:'Weighted Squats',jumpingLunges:'Jumping Lunges',deadlifts:'Deadlifts',hipThrusts:'Hip Thrusts',weightedStepUps:'Weighted Step Ups',calfRaises:'Calf Raises',rotatingPlank:'Rotating Plank',vSitTwists:'V-Sit Twists',mountainClimbers:'Mountain Climbers',situps:'Situps'};
 const BADGES=[
@@ -487,8 +476,23 @@ n.addEventListener('click',e=>{if(!e.sourceCapabilities||!e.sourceCapabilities.f
 async function loadData(){
 $('syncStatus').classList.add('syncing');
 try{
-const doc=await db.collection('data').doc('workouts').get();
-if(doc.exists){state.data={...state.data,...doc.data()};}
+const r=await fetch(FIRESTORE_URL+'/data/workouts');
+if(r.ok){
+const doc=await r.json();
+if(doc.fields){
+const parsed={};
+if(doc.fields.workouts&&doc.fields.workouts.arrayValue&&doc.fields.workouts.arrayValue.values){
+parsed.workouts=doc.fields.workouts.arrayValue.values.map(v=>JSON.parse(v.stringValue));
+}else{parsed.workouts=[];}
+if(doc.fields.badges&&doc.fields.badges.stringValue){
+parsed.badges=JSON.parse(doc.fields.badges.stringValue);
+}else{parsed.badges={};}
+if(doc.fields.base&&doc.fields.base.stringValue){
+parsed.base=JSON.parse(doc.fields.base.stringValue);
+}else{parsed.base={};}
+state.data={...state.data,...parsed};
+}
+}
 console.log('Data loaded from Firebase');
 }catch(e){console.error('Load error:',e);showToast('Error loading data',true);}
 $('syncStatus').classList.remove('syncing');checkBadges();renderList();}
@@ -505,8 +509,18 @@ $('syncStatus').classList.remove('syncing');checkBadges();renderList();}
 async function saveData(){
 $('syncStatus').classList.add('syncing');
 try{
-await db.collection('data').doc('workouts').set(JSON.parse(JSON.stringify(state.data)));
+const body={fields:{
+workouts:{arrayValue:{values:state.data.workouts.map(w=>({stringValue:JSON.stringify(w)}))}},
+badges:{stringValue:JSON.stringify(state.data.badges||{})},
+base:{stringValue:JSON.stringify(state.data.base||{})}
+}};
+const r=await fetch(FIRESTORE_URL+'/data/workouts',{
+method:'PATCH',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify(body)
+});
 $('syncStatus').classList.remove('syncing');
+if(!r.ok){const err=await r.text();console.error('Save failed:',err);showToast('Failed to save',true);return false;}
 console.log('Data saved to Firebase');
 return true;
 }catch(e){console.error('Save error:',e);$('syncStatus').classList.remove('syncing');showToast('Failed to save: '+e.message,true);return false;}}
