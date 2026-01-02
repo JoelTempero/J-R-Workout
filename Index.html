@@ -281,7 +281,7 @@
             <button class="pin-key" data-num="7">7</button><button class="pin-key" data-num="8">8</button><button class="pin-key" data-num="9">9</button>
             <button class="pin-key empty"></button><button class="pin-key" data-num="0">0</button><button class="pin-key" data-action="back">&#x232B;</button>
         </div>
-    <div class="pin-screen" id="profileScreen" style="display:none;background:red !important;">
+    <div class="pin-screen" id="profileScreen" style="display:none;">
         <div class="pin-container" style="text-align:center;">
             <img src="icon.svg" style="width:80px;height:80px;border-radius:16px;margin-bottom:1rem;" alt="App icon">
             <h1 style="font-size:1.5rem;margin-bottom:0.5rem;">Who's working out?</h1>
@@ -378,8 +378,9 @@
         <div id="awardModalContent"></div>
         <div class="modal-buttons"><button class="modal-btn save" id="closeAward">Close</button></div>
     </div></div>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 <script>
-console.log("Script loaded");
 window.deleteW=id=>{state.deleteId=id;document.getElementById('deleteModal').classList.add('active');};
 window.editW=id=>{const w=state.data.workouts.find(x=>x.id===id);if(w)openLog(w.type,w);};
 window.showDetails=id=>{const w=state.data.workouts.find(x=>x.id===id);if(!w||!w.exercises)return;document.getElementById('detailsModalTitle').textContent=getIcon(w.type)+' '+getTitle(w.type);let html='';Object.entries(w.exercises).filter(([k,v])=>v.on===1||v.on===true).forEach(([k,v])=>{let info='<span>'+(v.s||0)+' sets</span>';if(v.m!==undefined)info+='<span>'+(v.m||0)+' mins</span>';else if(v.r!==undefined)info+='<span>'+(v.r||0)+' reps</span>';if(v.w)info+='<span>'+v.w+' kg</span>';html+='<div class="details-exercise"><div class="details-exercise-name">'+(EX_NAMES[k]||k)+'</div><div class="details-exercise-info">'+info+'</div></div>';});if(!html)html='<p style="color:var(--text-muted);">No exercises recorded</p>';document.getElementById('detailsModalContent').innerHTML=html;document.getElementById('detailsModal').classList.add('active');};
@@ -387,8 +388,16 @@ window.showBadge=id=>{const b=BADGES.find(x=>x.id===id);if(!b)return;const badge
 window.showAward=(name,icon,desc,joel,rachel,type)=>{let winner='tie',winnerName="It's a tie!";if(joel>rachel){winner='joel';winnerName='👑 Joel wins!';}else if(rachel>joel){winner='rachel';winnerName='👑 Rachel wins!';}document.getElementById('awardModalTitle').textContent=icon+' '+name;document.getElementById('awardModalContent').innerHTML='<p style="color:var(--text-secondary);margin-bottom:1rem;">'+desc+'</p><div style="display:flex;justify-content:space-around;margin-bottom:1rem;"><div style="text-align:center;"><div style="font-size:1.5rem;font-weight:700;color:var(--joel-primary);">'+joel+'</div><div style="font-size:0.85rem;color:var(--text-muted);">💜 Joel</div></div><div style="text-align:center;"><div style="font-size:1.5rem;font-weight:700;color:var(--rachel-primary);">'+rachel+'</div><div style="font-size:0.85rem;color:var(--text-muted);">🩵 Rachel</div></div></div><div style="text-align:center;font-weight:700;font-size:1.1rem;color:'+(winner==='joel'?'var(--joel-primary)':winner==='rachel'?'var(--rachel-primary)':'var(--warning)')+';display:block;">'+winnerName+'</div>';document.getElementById('awardModal').classList.add('active');};
 
 const CONFIG={PIN:'9743'};
-const FIREBASE_PROJECT="j-r-workout";
-const FIRESTORE_URL="https://firestore.googleapis.com/v1/projects/"+FIREBASE_PROJECT+"/databases/(default)/documents";
+const firebaseConfig={
+apiKey:"AIzaSyAzPKsJWOpTLHI35ZNNw9bLcmfiUzxthlE",
+authDomain:"j-r-workout.firebaseapp.com",
+projectId:"j-r-workout",
+storageBucket:"j-r-workout.firebasestorage.app",
+messagingSenderId:"272499421818",
+appId:"1:272499421818:web:a80439aae43de1bfa741c3"
+};
+firebase.initializeApp(firebaseConfig);
+const db=firebase.firestore();
 const DEFAULT_BASE={rachel:{sidonMins:10,steps:15000,upper:{pushups:{s:3,r:5,w:null,on:1},tricepDips:{s:3,r:5,w:null,on:1},latPulldowns:{s:3,r:10,w:30,on:1},tricepPulldowns:{s:3,r:10,w:10,on:1},bicepCurls:{s:3,r:10,w:7,on:1},lateralRaises:{s:3,r:10,w:3,on:1}},lower:{weightedSquats:{s:3,r:10,w:7,on:1},jumpingLunges:{s:3,r:10,w:null,on:1},deadlifts:{s:3,r:10,w:14,on:1},hipThrusts:{s:3,r:10,w:7,on:1},weightedStepUps:{s:3,r:10,w:7,on:1},calfRaises:{s:3,r:15,w:null,on:1}},core:{rotatingPlank:{s:3,m:2,on:1},vSitTwists:{s:3,r:10,w:null,on:1},mountainClimbers:{s:3,r:20,w:null,on:1},situps:{s:3,r:15,w:null,on:1}}},joel:{sidonMins:10,steps:9000,upper:{pushups:{s:3,r:5,w:null,on:1},tricepDips:{s:3,r:5,w:null,on:1},latPulldowns:{s:3,r:10,w:30,on:1},tricepPulldowns:{s:3,r:10,w:10,on:1},bicepCurls:{s:3,r:10,w:7,on:1},lateralRaises:{s:3,r:10,w:3,on:1}},lower:{weightedSquats:{s:3,r:10,w:7,on:1},jumpingLunges:{s:3,r:10,w:null,on:1},deadlifts:{s:3,r:10,w:14,on:1},hipThrusts:{s:3,r:10,w:7,on:1},weightedStepUps:{s:3,r:10,w:7,on:1},calfRaises:{s:3,r:15,w:null,on:1}},core:{rotatingPlank:{s:3,m:2,on:1},vSitTwists:{s:3,r:10,w:null,on:1},mountainClimbers:{s:3,r:20,w:null,on:1},situps:{s:3,r:15,w:null,on:1}}}};
 const EX_NAMES={pushups:'Pushups',tricepDips:'Tricep Dips',latPulldowns:'Lat Pulldowns',tricepPulldowns:'Tricep Pulldowns',bicepCurls:'Bicep Curls',lateralRaises:'Lateral Raises',weightedSquats:'Weighted Squats',jumpingLunges:'Jumping Lunges',deadlifts:'Deadlifts',hipThrusts:'Hip Thrusts',weightedStepUps:'Weighted Step Ups',calfRaises:'Calf Raises',rotatingPlank:'Rotating Plank',vSitTwists:'V-Sit Twists',mountainClimbers:'Mountain Climbers',situps:'Situps'};
 const BADGES=[
@@ -464,7 +473,7 @@ function getMonthStreak(data,profile,monthStart,monthEnd){const validTypes=['upp
 function getWeightGain(data,profile){const ws=data.workouts.filter(w=>w.profile===profile&&w.type==='weight'&&w.bodyWeight).sort((a,b)=>new Date(a.date)-new Date(b.date));if(ws.length<2)return 0;return ws[ws.length-1].bodyWeight-ws[0].bodyWeight;}
 
 function updateDots(){$$('#pinDots .pin-dot').forEach((d,i)=>d.classList.toggle('filled',i<state.pin.length));}
-function pinInput(n){console.log('pinInput:',n,'current:',state.pin);if(state.pin.length<4){state.pin+=n;updateDots();if(state.pin.length===4){console.log('PIN complete, checking...');setTimeout(()=>{if(state.pin===CONFIG.PIN){console.log('PIN correct, showing profile screen');$('pinScreen').classList.add('hidden');$('profileScreen').style.display='flex';console.log('profileScreen display:',document.getElementById('profileScreen').style.display);localStorage.setItem('pin_verified','true');}else{$$('#pinDots .pin-dot').forEach(d=>d.classList.add('error'));setTimeout(()=>{state.pin='';$$('#pinDots .pin-dot').forEach(d=>d.classList.remove('error','filled'));},500);}},200);}}}
+function pinInput(n){if(state.pin.length<4){state.pin+=n;updateDots();if(state.pin.length===4){setTimeout(()=>{if(state.pin===CONFIG.PIN){$('pinScreen').classList.add('hidden');$('profileScreen').style.display='flex';localStorage.setItem('pin_verified','true');}else{$$('#pinDots .pin-dot').forEach(d=>d.classList.add('error'));setTimeout(()=>{state.pin='';$$('#pinDots .pin-dot').forEach(d=>d.classList.remove('error','filled'));},500);}},200);}}}
 $$('.pin-key').forEach(k=>{const handler=()=>{if(k.dataset.num!==undefined)pinInput(k.dataset.num);else if(k.dataset.action==='back'){state.pin=state.pin.slice(0,-1);updateDots();}};k.addEventListener('click',handler);k.addEventListener('touchend',e=>{e.preventDefault();handler();},{passive:false});});
 function setDate(){$('headerDate').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});}
 document.querySelectorAll('.nav-item[data-page]').forEach(n=>{
@@ -477,24 +486,8 @@ n.addEventListener('click',e=>{if(!e.sourceCapabilities||!e.sourceCapabilities.f
 async function loadData(){
 $('syncStatus').classList.add('syncing');
 try{
-const r=await fetch(FIRESTORE_URL+'/data/workouts');
-if(r.ok){
-const doc=await r.json();
-if(doc.fields){
-const parsed={};
-if(doc.fields.workouts&&doc.fields.workouts.arrayValue&&doc.fields.workouts.arrayValue.values){
-parsed.workouts=doc.fields.workouts.arrayValue.values.map(v=>JSON.parse(v.stringValue));
-}else{parsed.workouts=[];}
-if(doc.fields.badges&&doc.fields.badges.stringValue){
-parsed.badges=JSON.parse(doc.fields.badges.stringValue);
-}else{parsed.badges={};}
-if(doc.fields.base&&doc.fields.base.stringValue){
-parsed.base=JSON.parse(doc.fields.base.stringValue);
-}else{parsed.base={};}
-state.data={...state.data,...parsed};
-}
-}
-console.log('Data loaded from Firebase');
+const doc=await db.collection('data').doc('workouts').get();
+if(doc.exists){state.data={...state.data,...doc.data()};}
 }catch(e){console.error('Load error:',e);showToast('Error loading data',true);}
 $('syncStatus').classList.remove('syncing');checkBadges();renderList();}
 
@@ -510,19 +503,8 @@ $('syncStatus').classList.remove('syncing');checkBadges();renderList();}
 async function saveData(){
 $('syncStatus').classList.add('syncing');
 try{
-const body={fields:{
-workouts:{arrayValue:{values:state.data.workouts.map(w=>({stringValue:JSON.stringify(w)}))}},
-badges:{stringValue:JSON.stringify(state.data.badges||{})},
-base:{stringValue:JSON.stringify(state.data.base||{})}
-}};
-const r=await fetch(FIRESTORE_URL+'/data/workouts',{
-method:'PATCH',
-headers:{'Content-Type':'application/json'},
-body:JSON.stringify(body)
-});
+await db.collection('data').doc('workouts').set(JSON.parse(JSON.stringify(state.data)));
 $('syncStatus').classList.remove('syncing');
-if(!r.ok){const err=await r.text();console.error('Save failed:',err);showToast('Failed to save',true);return false;}
-console.log('Data saved to Firebase');
 return true;
 }catch(e){console.error('Save error:',e);$('syncStatus').classList.remove('syncing');showToast('Failed to save: '+e.message,true);return false;}}
 function showToast(msg,err){const t=$('toast');t.textContent=msg;t.classList.toggle('error',err);t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
@@ -744,7 +726,7 @@ $('settingsModal').addEventListener('touchend',e=>{if(e.target.id==='settingsMod
 $('deleteModal').addEventListener('click',e=>{if(e.target.id==='deleteModal'){$('deleteModal').classList.remove('active');state.deleteId=null;}});
 $('deleteModal').addEventListener('touchend',e=>{if(e.target.id==='deleteModal'){e.preventDefault();$('deleteModal').classList.remove('active');state.deleteId=null;}},{passive:false});
 
-function init(){console.log('Init starting');setDate();if(localStorage.getItem('pin_verified')==='true'){console.log('PIN already verified');$('pinScreen').classList.add('hidden');const savedProfile=localStorage.getItem('active_profile');if(savedProfile){state.profile=savedProfile;$('app').classList.add('active');loadData();}else{$('profileScreen').style.display='flex';}}}
+function init(){setDate();if(localStorage.getItem('pin_verified')==='true'){$('pinScreen').classList.add('hidden');const savedProfile=localStorage.getItem('active_profile');if(savedProfile){state.profile=savedProfile;$('app').classList.add('active');loadData();}else{$('profileScreen').style.display='flex';}}}
 document.querySelectorAll('.profile-select-btn').forEach(btn=>{
 btn.addEventListener('click',()=>{
 state.profile=btn.dataset.profile;
@@ -754,7 +736,7 @@ $('app').classList.add('active');
 loadData();
 });
 });
-console.log('About to call init');init();console.log('Init complete');
+init();
 </script>
 </body>
 </html>
