@@ -379,6 +379,7 @@
         <div class="modal-buttons"><button class="modal-btn save" id="closeAward">Close</button></div>
     </div></div>
 <script>
+console.log("Script loaded");
 window.deleteW=id=>{state.deleteId=id;document.getElementById('deleteModal').classList.add('active');};
 window.editW=id=>{const w=state.data.workouts.find(x=>x.id===id);if(w)openLog(w.type,w);};
 window.showDetails=id=>{const w=state.data.workouts.find(x=>x.id===id);if(!w||!w.exercises)return;document.getElementById('detailsModalTitle').textContent=getIcon(w.type)+' '+getTitle(w.type);let html='';Object.entries(w.exercises).filter(([k,v])=>v.on===1||v.on===true).forEach(([k,v])=>{let info='<span>'+(v.s||0)+' sets</span>';if(v.m!==undefined)info+='<span>'+(v.m||0)+' mins</span>';else if(v.r!==undefined)info+='<span>'+(v.r||0)+' reps</span>';if(v.w)info+='<span>'+v.w+' kg</span>';html+='<div class="details-exercise"><div class="details-exercise-name">'+(EX_NAMES[k]||k)+'</div><div class="details-exercise-info">'+info+'</div></div>';});if(!html)html='<p style="color:var(--text-muted);">No exercises recorded</p>';document.getElementById('detailsModalContent').innerHTML=html;document.getElementById('detailsModal').classList.add('active');};
@@ -743,7 +744,7 @@ $('settingsModal').addEventListener('touchend',e=>{if(e.target.id==='settingsMod
 $('deleteModal').addEventListener('click',e=>{if(e.target.id==='deleteModal'){$('deleteModal').classList.remove('active');state.deleteId=null;}});
 $('deleteModal').addEventListener('touchend',e=>{if(e.target.id==='deleteModal'){e.preventDefault();$('deleteModal').classList.remove('active');state.deleteId=null;}},{passive:false});
 
-function init(){setDate();if(localStorage.getItem('pin_verified')==='true'){$('pinScreen').classList.add('hidden');const savedProfile=localStorage.getItem('active_profile');if(savedProfile){state.profile=savedProfile;$('app').classList.add('active');loadData();}else{$('profileScreen').style.display='flex';}}}
+function init(){console.log('Init starting');setDate();if(localStorage.getItem('pin_verified')==='true'){console.log('PIN already verified');$('pinScreen').classList.add('hidden');const savedProfile=localStorage.getItem('active_profile');if(savedProfile){state.profile=savedProfile;$('app').classList.add('active');loadData();}else{$('profileScreen').style.display='flex';}}}
 document.querySelectorAll('.profile-select-btn').forEach(btn=>{
 btn.addEventListener('click',()=>{
 state.profile=btn.dataset.profile;
@@ -753,7 +754,7 @@ $('app').classList.add('active');
 loadData();
 });
 });
-init();
+console.log('About to call init');init();console.log('Init complete');
 </script>
 </body>
 </html>
