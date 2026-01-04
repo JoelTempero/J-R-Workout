@@ -576,7 +576,7 @@ const $=id=>document.getElementById(id),$$=sel=>document.querySelectorAll(sel),g
 const fmtDateShort=d=>new Date(d).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
 const fmtTime=t=>{if(!t)return'';const[h,m]=t.split(':');const hr=parseInt(h);return (hr%12||12)+':'+m+(hr>=12?' PM':' AM');};
 const getIcon=(t,w)=>({sidon:'🐕',steps:'👟',run:'🏃',walk:'🚶',upper:'💪',lower:'🦵',core:'🎯',custom:'⚡',weight:'⚖️'})[t]||'🏋️';
-const getTitle=t=>({sidon:'Sidon Walk',steps:'Step Count',run:'Run',upper:'Upper Body',lower:'Lower Body',core:'Core',custom:'Custom',weight:'Weight Log'})[t]||'Workout';
+const getTitle=t=>({sidon:'Sidon Walk',steps:'Step Count',run:'Run',walk:'Walk',upper:'Upper Body',lower:'Lower Body',core:'Core',custom:'Custom',weight:'Weight Log'})[t]||'Workout';
 function getWeekStart(d){const date=new Date(d);date.setHours(0,0,0,0);const day=date.getDay();const diff=date.getDate()-day+(day===0?-6:1);date.setDate(diff);return date;}
 function getMonthStart(d){const date=new Date(d.getFullYear(),d.getMonth(),1);date.setHours(0,0,0,0);return date;}
 function getMaxStreak(data,profile){const validTypes=['upper','lower','core','custom','run'];const dates=[...new Set(data.workouts.filter(w=>w.profile===profile&&validTypes.includes(w.type)).map(w=>w.date))].sort();if(!dates.length)return 0;let max=1,curr=1;for(let i=1;i<dates.length;i++){const diff=(new Date(dates[i])-new Date(dates[i-1]))/(1000*60*60*24);if(diff===1)curr++;else curr=1;max=Math.max(max,curr);}return max;}
